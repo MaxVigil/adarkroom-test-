@@ -1,25 +1,42 @@
 div#buildBtns {
 	position: absolute;
-	top: 50px;
+	top: 72px;
 	left: 0px;
 }
 
 div#buildBtns:before, div#craftBtns:before, div#buyBtns:before {
 	content: attr(data-legend);
-	position: relative;
-	top: -5px;
+	display: block;
+	margin-bottom: 7px;
+	font-weight: 600;
+	line-height: 1.2;
 }
 
 div#craftBtns {
 	position: absolute;
-	top: 50px;
-	left: 150px;
+	top: 72px;
+	left: 160px;
 }
 
 div#buyBtns {
 	position: absolute;
-	top: 50px;
-	left: 300px;
+	top: 72px;
+	left: 320px;
+}
+
+div#roomPanel > div.button.actionButton {
+	box-sizing: border-box;
+	width: 230px !important;
+	min-height: 42px;
+	padding: 8px 12px;
+	line-height: 1.25;
+	white-space: nowrap;
+}
+
+div#buildBtns > div.button,
+div#craftBtns > div.button,
+div#buyBtns > div.button {
+	margin-bottom: 8px;
 }
 
 div#storesContainer {
@@ -28,7 +45,7 @@ div#storesContainer {
 	right: 0px;
 	overflow-y: auto;
 	overflow-x: hidden;
-	padding-top: 13px;
+	padding-top: 17px;
 	padding-right: 2px;
 	box-sizing: border-box;
 }
@@ -38,7 +55,11 @@ div#stores:before, div#weapons:before {
 	background: white;
 	content: attr(data-legend);
 	left: 8px;
-	top: -13px;
+	top: -15px;
+	padding: 0 3px;
+	font-weight: 600;
+	line-height: 1.2;
+	pointer-events: none;
 }
 
 div#stores {
@@ -46,7 +67,7 @@ div#stores {
 	z-index:10;
 	border: 1px solid black;
 	cursor: default;
-	padding: 5px 10px;
+	padding: 12px 10px 7px;
 	width: 200px;
 }
 
@@ -60,6 +81,6 @@ div#weapons {
 	right: 0px;
 	border: 1px solid black;
 	cursor: default;
-	padding: 5px 10px;
+	padding: 12px 10px 7px;
 	width: 200px;
 }

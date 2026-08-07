@@ -413,6 +413,10 @@ div.storeRow div.tooltip.entityTooltip {
 	white-space: normal;
 }
 
+div.tooltip.entityTooltipFloating {
+	pointer-events: none;
+}
+
 div.tooltip .tooltipDescription {
 	margin-bottom: 5px;
 	padding-bottom: 5px;

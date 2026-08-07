@@ -396,8 +396,14 @@ var EntityDescriptions = {
   },
 
   positionTooltip: function(element) {
-    var tooltip = element.children('div.entityTooltip').first();
-    if(tooltip.length === 0 || !element.is(':hover')) return;
+    var sourceTooltip = element.children('div.entityTooltip').first();
+    if(sourceTooltip.length === 0 || !element.is(':hover')) return;
+
+    $('body > div.entityTooltipFloating').remove();
+    sourceTooltip.css('visibility', 'hidden');
+    var tooltip = sourceTooltip.clone()
+      .addClass('entityTooltipFloating')
+      .appendTo('body');
 
     var targetRect = element[0].getBoundingClientRect();
     var viewportPadding = 8;
@@ -438,17 +444,8 @@ var EntityDescriptions = {
   },
 
   resetTooltipPosition: function(element) {
-    element.children('div.entityTooltip').first().css({
-      position: '',
-      visibility: '',
-      display: '',
-      top: '',
-      left: '',
-      right: '',
-      bottom: '',
-      maxHeight: '',
-      overflowY: ''
-    });
+    $('body > div.entityTooltipFloating').remove();
+    element.children('div.entityTooltip').first().css('visibility', '');
   },
 
   init: function() {

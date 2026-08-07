@@ -1133,21 +1133,21 @@ var Room = {
 		var buildSection = $('#buildBtns');
 		var needsAppend = false;
 		if (buildSection.length === 0) {
-			buildSection = $('<div>').attr({ 'id': 'buildBtns', 'data-legend': _('build:') }).css('opacity', 0);
+			buildSection = $('<div>').attr({ 'id': 'buildBtns', 'data-legend': EntityDescriptions.name('build:') }).css('opacity', 0);
 			needsAppend = true;
 		}
 
 		var craftSection = $('#craftBtns');
 		var cNeedsAppend = false;
 		if (craftSection.length === 0 && $SM.get('game.buildings["workshop"]', true) > 0) {
-			craftSection = $('<div>').attr({ 'id': 'craftBtns', 'data-legend': _('craft:') }).css('opacity', 0);
+			craftSection = $('<div>').attr({ 'id': 'craftBtns', 'data-legend': EntityDescriptions.name('craft:') }).css('opacity', 0);
 			cNeedsAppend = true;
 		}
 
 		var buySection = $('#buyBtns');
 		var bNeedsAppend = false;
 		if (buySection.length === 0 && $SM.get('game.buildings["trading post"]', true) > 0) {
-			buySection = $('<div>').attr({ 'id': 'buyBtns', 'data-legend': _('buy:') }).css('opacity', 0);
+			buySection = $('<div>').attr({ 'id': 'buyBtns', 'data-legend': EntityDescriptions.name('buy:') }).css('opacity', 0);
 			bNeedsAppend = true;
 		}
 
