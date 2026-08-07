@@ -48,6 +48,7 @@ var Ship = {
 		new Button.Button({
 			id: 'reinforceButton',
 			text: _('reinforce hull'),
+			action: true,
 			click: Ship.reinforceHull,
 			width: '100px',
 			cost: {'alien alloy': Ship.ALLOY_PER_HULL}
@@ -57,6 +58,7 @@ var Ship = {
 		new Button.Button({
 			id: 'engineButton',
 			text: _('upgrade engine'),
+			action: true,
 			click: Ship.upgradeEngine,
 			width: '100px',
 			cost: {'alien alloy': Ship.ALLOY_PER_THRUSTER}
@@ -66,6 +68,7 @@ var Ship = {
 		var b = new Button.Button({
 			id: 'liftoffButton',
 			text: _('lift off'),
+			action: true,
 			click: Ship.checkLiftOff,
 			width: '100px',
 			cooldown: Ship.LIFTOFF_COOLDOWN

@@ -4,6 +4,7 @@
 var Room = {
 	// times in (minutes * seconds * milliseconds)
 	_FIRE_COOL_DELAY: 5 * 60 * 1000, // time after a stoke before the fire cools
+	_AUTO_STOKE_UI_VERSION: 2,
 	_ROOM_WARM_DELAY: 30 * 1000, // time between room temperature updates
 	_BUILDER_STATE_DELAY: 0.5 * 60 * 1000, // time between builder state updates
 	_STOKE_COOLDOWN: 10, // cooldown to stoke the fire
@@ -164,6 +165,46 @@ var Room = {
 				};
 			},
 			audio: AudioLibrary.BUILD_ARMOURY
+		},
+		'watchtower': {
+			name: _('watchtower'),
+			button: null,
+			maximum: 4,
+			availableMsg: _('builder says a watchtower could warn the village before beasts arrive'),
+			buildMsg: _('the watchtower rises above the settlement'),
+			maxMsg: _('the watchtower cannot be improved further'),
+			type: 'building',
+			cost: function () {
+				var level = $SM.get('game.buildings["watchtower"]', true);
+				var levelCosts = [
+					{ wood: 100, fur: 50 },
+					{ wood: 200, fur: 100, leather: 50 },
+					{ wood: 400, fur: 200, leather: 100, iron: 50 },
+					{ wood: 600, fur: 300, leather: 150, iron: 75, steel: 50 }
+				];
+				return levelCosts[Math.min(level, levelCosts.length - 1)];
+			},
+			audio: AudioLibrary.BUILD_HUT
+		},
+		'well': {
+			name: _('well'),
+			button: null,
+			maximum: 4,
+			availableMsg: _('builder says a well could help keep fires from spreading'),
+			buildMsg: _('cool water waits beneath the settlement'),
+			maxMsg: _('the well cannot be improved further'),
+			type: 'building',
+			cost: function () {
+				var level = $SM.get('game.buildings["well"]', true);
+				var levelCosts = [
+					{ wood: 150, fur: 25 },
+					{ wood: 250, fur: 50, leather: 10 },
+					{ wood: 400, fur: 75, leather: 25, iron: 15 },
+					{ wood: 600, fur: 100, leather: 50, iron: 30, steel: 15 }
+				];
+				return levelCosts[Math.min(level, levelCosts.length - 1)];
+			},
+			audio: AudioLibrary.BUILD_HUT
 		},
 		'torch': {
 			name: _('torch'),
@@ -531,6 +572,7 @@ var Room = {
 		new Button.Button({
 			id: 'lightButton',
 			text: _('light fire'),
+			action: true,
 			click: Room.lightFire,
 			cooldown: Room._STOKE_COOLDOWN,
 			width: '80px',
@@ -541,11 +583,32 @@ var Room = {
 		new Button.Button({
 			id: 'stokeButton',
 			text: _("stoke fire"),
+			action: true,
 			click: Room.stokeFire,
 			cooldown: Room._STOKE_COOLDOWN,
 			width: '80px',
 			cost: { 'wood': 1 }
 		}).appendTo('div#roomPanel');
+
+		var autoStokeControl = $('<div>')
+			.attr('id', 'autoStokeControl')
+			.appendTo('div#roomPanel');
+		$('<span>')
+			.addClass('autoStokeText')
+			.text(_('stoke automatically'))
+			.appendTo(autoStokeControl);
+		$('<button>')
+			.attr({
+				id: 'autoStokeToggle',
+				type: 'button',
+				role: 'switch',
+				'aria-checked': 'false'
+			})
+			.addClass('autoStokeSwitch')
+			.text('off')
+			.on('click.autoStoke', Room.toggleAutoStoke)
+			.appendTo(autoStokeControl);
+		EntityDescriptions.attach(autoStokeControl, 'auto fire', 'bottom right');
 
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
@@ -554,6 +617,8 @@ var Room = {
 		$.Dispatch('stateUpdate').subscribe(Room.handleStateUpdates);
 
 		Room.updateButton();
+		Room.ensureAutoStokeState();
+		Room.updateAutoStokeControl();
 		Room.updateStoresView();
 		Room.updateIncomeView();
 		Room.updateBuildButtons();
@@ -646,17 +711,23 @@ var Room = {
 	},
 
 	updateButton: function () {
-		var light = $('#lightButton.button');
-		var stoke = $('#stokeButton.button');
-		if ($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
+		var light = $('#lightButton.button', Room.panel);
+		var stoke = $('#stokeButton.button', Room.panel);
+		var fireIsDead = $SM.get('game.fire.value') == Room.FireEnum.Dead.value;
+		var autoStokeEnabled = Room.isAutoStokeEnabled();
+		if (fireIsDead) {
 			stoke.hide();
 			light.show();
 			if (stoke.hasClass('disabled')) {
 				Button.cooldown(light);
 			}
-		} else if (light.css('display') != 'none') {
-			stoke.show();
+		} else {
 			light.hide();
+			if (autoStokeEnabled) {
+				stoke.hide();
+			} else {
+				stoke.show();
+			}
 			if (light.hasClass('disabled')) {
 				Button.cooldown(stoke);
 			}
@@ -669,6 +740,58 @@ var Room = {
 			light.removeClass('free');
 			stoke.removeClass('free');
 		}
+		Room.updateAutoStokeControl();
+	},
+
+	isAutoStokeUnlocked: function () {
+		return $SM.get('game.builder.level', true) >= 4;
+	},
+
+	ensureAutoStokeState: function () {
+		if (Room.isAutoStokeUnlocked() && $SM.get('game.autoStokeUiVersion', true) !== Room._AUTO_STOKE_UI_VERSION) {
+			// The explicit switch starts off the first time this UI version appears.
+			$SM.set('game.autoStokeUiVersion', Room._AUTO_STOKE_UI_VERSION);
+			$SM.set('game.autoStoke', false);
+		}
+	},
+
+	isAutoStokeEnabled: function () {
+		return Room.isAutoStokeUnlocked() && $SM.get('game.autoStoke') === true;
+	},
+
+	toggleAutoStoke: function () {
+		if (!Room.isAutoStokeUnlocked()) return;
+		var enabled = !Room.isAutoStokeEnabled();
+		$SM.set('game.autoStoke', enabled);
+		Notifications.notify(
+			Room,
+			enabled ? _('automatic fire tending enabled') : _('automatic fire tending disabled')
+		);
+		Room.updateButton();
+	},
+
+	updateAutoStokeControl: function () {
+		var control = $('#autoStokeControl', Room.panel);
+		var toggle = $('#autoStokeToggle', Room.panel);
+		if (control.length === 0 || toggle.length === 0) return;
+
+		if (!Room.isAutoStokeUnlocked()) {
+			control.hide();
+			return;
+		}
+
+		Room.ensureAutoStokeState();
+		var enabled = Room.isAutoStokeEnabled();
+		var replacesManualAction = enabled && $SM.get('game.fire.value') > Room.FireEnum.Dead.value;
+		control
+			.show()
+			.toggleClass('enabled', enabled)
+			.toggleClass('replacesManualAction', replacesManualAction);
+		toggle.attr({
+			'aria-checked': enabled ? 'true' : 'false',
+			'aria-label': _('stoke automatically') + ': ' + (enabled ? 'on' : 'off')
+		});
+		toggle.toggleClass('enabled', enabled).text(enabled ? 'on' : 'off');
 	},
 
 	_fireTimer: null,
@@ -714,7 +837,7 @@ var Room = {
 			Notifications.notify(Room, _("the light from the fire spills from the windows, out into the dark"));
 			Engine.setTimeout(Room.updateBuilderState, Room._BUILDER_STATE_DELAY);
 		}
-		window.clearTimeout(Room._fireTimer);
+		Engine.clearTimeout(Room._fireTimer);
 		Room._fireTimer = Engine.setTimeout(Room.coolFire, Room._FIRE_COOL_DELAY);
 		Room.updateButton();
 		Room.setTitle();
@@ -727,11 +850,16 @@ var Room = {
 
 	coolFire: function () {
 		var wood = $SM.get('stores.wood');
-		if ($SM.get('game.fire.value') <= Room.FireEnum.Flickering.value &&
-			$SM.get('game.builder.level') > 3 && wood > 0) {
+		var fireValue = $SM.get('game.fire.value');
+		var autoStokeNeeded = Room.isAutoStokeEnabled() &&
+			fireValue > Room.FireEnum.Dead.value &&
+			fireValue <= Room.FireEnum.Flickering.value;
+		if (autoStokeNeeded && wood > 0) {
 			Notifications.notify(Room, _("builder stokes the fire"), true);
 			$SM.set('stores.wood', wood - 1);
 			$SM.set('game.fire', Room.FireEnum.fromInt($SM.get('game.fire.value') + 1));
+		} else if (autoStokeNeeded && wood <= 0) {
+			Notifications.notify(Room, _('automatic fire tending needs wood'), true);
 		}
 		if ($SM.get('game.fire.value') > 0) {
 			$SM.set('game.fire', Room.FireEnum.fromInt($SM.get('game.fire.value') - 1));
@@ -801,7 +929,7 @@ var Room = {
 		if (stores.length === 0) {
 			stores = $('<div>').attr({
 				'id': 'stores',
-				'data-legend': _('stores')
+				'data-legend': EntityDescriptions.name('stores')
 			}).css('opacity', 0);
 			needsAppend = true;
 		}
@@ -820,11 +948,15 @@ var Room = {
 		if (weapons.length === 0) {
 			weapons = $('<div>').attr({
 				'id': 'weapons',
-				'data-legend': _('weapons')
+				'data-legend': EntityDescriptions.name('weapons')
 			}).css('opacity', 0);
 			wNeedsAppend = true;
 		}
 		for (var k in $SM.get('stores')) {
+
+			if (EntityDescriptions.getType(k) === 'Role') {
+				continue;
+			}
 
 			if (k.indexOf('blueprint') > 0) {
 				// don't show blueprints
@@ -869,7 +1001,7 @@ var Room = {
 				$SM.set('stores["' + k + '"]', 0);
 			}
 
-			var lk = _(k);
+			var lk = EntityDescriptions.name(k);
 
 			// thieves?
 			if (typeof $SM.get('game.thieves') == 'undefined' && num > 5000 && $SM.get('features.location.world')) {
@@ -881,6 +1013,7 @@ var Room = {
 				$('<div>').addClass('row_key').text(lk).appendTo(row);
 				$('<div>').addClass('row_val').text(Math.floor(num)).appendTo(row);
 				$('<div>').addClass('clear').appendTo(row);
+				EntityDescriptions.attach(row, k, 'bottom right');
 				var curPrev = null;
 				location.children().each(function (i) {
 					var child = $(this);
@@ -928,6 +1061,8 @@ var Room = {
 			Outside.updateVillage();
 		}
 
+		Engine.fitStoresView();
+
 		if ($SM.get('stores.compass') && !Room.pathDiscovery) {
 			Room.pathDiscovery = true;
 			Path.openPath();
@@ -944,11 +1079,14 @@ var Room = {
 			var ttPos = index > 10 ? 'top right' : 'bottom right';
 			var tt = $('<div>').addClass('tooltip ' + ttPos);
 			var storeName = el.attr('id').substring(4).replace('-', ' ');
+			var hasIncome = false;
+			EntityDescriptions.addToTooltip(tt, storeName);
 			for (var incomeSource in $SM.get('income')) {
 				var income = $SM.get('income["' + incomeSource + '"]');
 				for (var store in income.stores) {
 					if (store == storeName && income.stores[store] !== 0) {
-						$('<div>').addClass('row_key').text(_(incomeSource)).appendTo(tt);
+						hasIncome = true;
+						$('<div>').addClass('row_key').text(EntityDescriptions.name(incomeSource)).appendTo(tt);
 						$('<div>')
 							.addClass('row_val')
 							.text(Engine.getIncomeMsg(income.stores[store], income.delay))
@@ -961,11 +1099,14 @@ var Room = {
 					}
 				}
 			}
-			if (tt.children().length > 0) {
+			if (hasIncome) {
 				var total = totalIncome[storeName].income;
 				$('<div>').addClass('total row_key').text(_('total')).appendTo(tt);
 				$('<div>').addClass('total row_val').text(Engine.getIncomeMsg(total, totalIncome[storeName].delay)).appendTo(tt);
+			}
+			if (tt.children().length > 0) {
 				tt.appendTo(el);
+				el.addClass('hasEntityDescription');
 			}
 		});
 	},
@@ -1114,105 +1255,184 @@ var Room = {
 		return false;
 	},
 
+	getButtonAvailability: function(item, cost, maxed, isTrade) {
+		if(maxed) {
+			if(item.maximum > 1) {
+				return { state: 'complete', label: EntityDescriptions.ui('maximumReached', item.maximum) };
+			}
+			if(isTrade) {
+				return { state: 'complete', label: EntityDescriptions.ui('purchased') };
+			}
+			return {
+				state: 'complete',
+				label: EntityDescriptions.ui(item.type === 'building' ? 'built' : 'crafted')
+			};
+		}
+
+		if(!isTrade && $SM.get('game.temperature.value') <= Room.TempEnum.Cold.value) {
+			return {
+				state: 'blocked',
+				label: EntityDescriptions.ui('unavailable'),
+				reason: EntityDescriptions.ui('tooCold')
+			};
+		}
+
+		if(!Button.canAfford(cost)) {
+			return { state: 'blocked', label: EntityDescriptions.ui('missingResources') };
+		}
+
+		return {
+			state: 'ready',
+			label: EntityDescriptions.ui(isTrade ? 'canBuy' : (item.type === 'building' ? 'canBuild' : 'canCraft'))
+		};
+	},
+
+	getCraftableButtonName: function(thing, craftable, current) {
+		if (!EntityDescriptions.isLevelledBuilding(thing)) {
+			return EntityDescriptions.name(thing);
+		}
+
+		var maximum = Number(craftable.maximum) || 1;
+		var nextLevel = Math.max(1, Math.min(maximum, (Number(current) || 0) + 1));
+		return EntityDescriptions.nameWithLevel(thing, nextLevel);
+	},
+
+	setButtonName: function(button, name) {
+		if (!button || button.length === 0) return;
+		var textNode = button.contents().filter(function() {
+			return this.nodeType === 3;
+		}).first();
+		if (textNode.length > 0) {
+			textNode[0].nodeValue = name;
+		} else {
+			button.prepend(document.createTextNode(name));
+		}
+	},
+
 	updateBuildButtons: function () {
+		var actions = $('#roomActions');
+		if(actions.length === 0) {
+			actions = $('<div>').attr('id', 'roomActions').appendTo('div#roomPanel');
+		}
+
 		var buildSection = $('#buildBtns');
 		var needsAppend = false;
 		if (buildSection.length === 0) {
-			buildSection = $('<div>').attr({ 'id': 'buildBtns', 'data-legend': _('build:') }).css('opacity', 0);
+			buildSection = $('<div>').attr({ 'id': 'buildBtns', 'data-legend': EntityDescriptions.name('build:') }).css('opacity', 0);
 			needsAppend = true;
 		}
 
 		var craftSection = $('#craftBtns');
 		var cNeedsAppend = false;
 		if (craftSection.length === 0 && $SM.get('game.buildings["workshop"]', true) > 0) {
-			craftSection = $('<div>').attr({ 'id': 'craftBtns', 'data-legend': _('craft:') }).css('opacity', 0);
+			craftSection = $('<div>').attr({ 'id': 'craftBtns', 'data-legend': EntityDescriptions.name('craft:') }).css('opacity', 0);
 			cNeedsAppend = true;
 		}
 
 		var buySection = $('#buyBtns');
 		var bNeedsAppend = false;
 		if (buySection.length === 0 && $SM.get('game.buildings["trading post"]', true) > 0) {
-			buySection = $('<div>').attr({ 'id': 'buyBtns', 'data-legend': _('buy:') }).css('opacity', 0);
+			buySection = $('<div>').attr({ 'id': 'buyBtns', 'data-legend': EntityDescriptions.name('buy:') }).css('opacity', 0);
 			bNeedsAppend = true;
 		}
 
 		for (var k in Room.Craftables) {
 			craftable = Room.Craftables[k];
-			var max = $SM.num(k, craftable) + 1 > craftable.maximum;
-			if (craftable.button == null) {
+			var current = $SM.num(k, craftable) || 0;
+			var max = typeof craftable.maximum === 'number' && current >= craftable.maximum;
+			var cost = craftable.cost();
+			var craftableButtonName = Room.getCraftableButtonName(k, craftable, current);
+			var craftButtonExisted = craftable.button != null && craftable.button.length > 0 && $.contains(document, craftable.button[0]);
+			if (craftable.button != null && !craftButtonExisted) {
+				craftable.button = null;
+			}
+			if (!craftButtonExisted) {
 				if (Room.craftUnlocked(k)) {
 					var loc = Room.needsWorkshop(craftable.type) ? craftSection : buildSection;
 					craftable.button = new Button.Button({
 						id: 'build_' + k.replace(/ /g, '-'),
-						cost: craftable.cost(),
-						text: _(k),
+						cost: cost,
+						text: craftableButtonName,
 						click: Room.build,
+						entity: k,
 						width: '80px',
 						ttPos: loc.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', k).appendTo(loc).animate({ opacity: 1 }, 300, 'linear');
 				}
-			} else {
-				// refresh the tooltip
-				var costTooltip = $('.tooltip', craftable.button);
-				costTooltip.empty();
-				var cost = craftable.cost();
-				for (var c in cost) {
-					$("<div>").addClass('row_key').text(_(c)).appendTo(costTooltip);
-					$("<div>").addClass('row_val').text(cost[c]).appendTo(costTooltip);
-				}
-				if (max && !craftable.button.hasClass('disabled')) {
+			}
+			if (craftable.button != null) {
+				Room.setButtonName(craftable.button, craftableButtonName);
+				if (max && craftButtonExisted && !craftable.button.hasClass('state-complete')) {
 					Notifications.notify(Room, craftable.maxMsg);
 				}
-			}
-			if (max) {
-				Button.setDisabled(craftable.button, true);
-			} else {
-				Button.setDisabled(craftable.button, false);
+				var craftAvailability = Room.getButtonAvailability(craftable, cost, max, false);
+				Button.setState(
+					craftable.button,
+					craftAvailability.state,
+					(craftAvailability.state === 'complete' ? '✓ ' : '') + craftAvailability.label
+				);
+				Button.updateCostTooltip(craftable.button, {
+					entity: k,
+					cost: cost,
+					state: craftAvailability.state,
+					status: craftAvailability.label,
+					reason: craftAvailability.reason,
+					hideCost: max
+				});
 			}
 		}
 
 		for (var g in Room.TradeGoods) {
 			good = Room.TradeGoods[g];
-			var goodsMax = $SM.num(g, good) + 1 > good.maximum;
-			if (good.button == null) {
+			var goodsCurrent = $SM.num(g, good) || 0;
+			var goodsMax = typeof good.maximum === 'number' && goodsCurrent >= good.maximum;
+			var goodCost = good.cost();
+			var buyButtonExisted = good.button != null && good.button.length > 0 && $.contains(document, good.button[0]);
+			if (good.button != null && !buyButtonExisted) {
+				good.button = null;
+			}
+			if (!buyButtonExisted) {
 				if (Room.buyUnlocked(g)) {
 					good.button = new Button.Button({
 						id: 'build_' + g,
-						cost: good.cost(),
-						text: _(g),
+						cost: goodCost,
+						text: EntityDescriptions.name(g),
 						click: Room.buy,
+						entity: g,
 						width: '80px',
 						ttPos: buySection.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', g).appendTo(buySection).animate({ opacity: 1 }, 300, 'linear');
 				}
-			} else {
-				// refresh the tooltip
-				var goodsCostTooltip = $('.tooltip', good.button);
-				goodsCostTooltip.empty();
-				var goodCost = good.cost();
-				for (var gc in goodCost) {
-					$("<div>").addClass('row_key').text(_(gc)).appendTo(goodsCostTooltip);
-					$("<div>").addClass('row_val').text(goodCost[gc]).appendTo(goodsCostTooltip);
-				}
-				if (goodsMax && !good.button.hasClass('disabled')) {
+			}
+			if (good.button != null) {
+				if (goodsMax && buyButtonExisted && !good.button.hasClass('state-complete')) {
 					Notifications.notify(Room, good.maxMsg);
 				}
-			}
-			if (goodsMax) {
-				Button.setDisabled(good.button, true);
-			} else {
-				Button.setDisabled(good.button, false);
+				var buyAvailability = Room.getButtonAvailability(good, goodCost, goodsMax, true);
+				Button.setState(
+					good.button,
+					buyAvailability.state,
+					(buyAvailability.state === 'complete' ? '✓ ' : '') + buyAvailability.label
+				);
+				Button.updateCostTooltip(good.button, {
+					entity: g,
+					cost: goodCost,
+					state: buyAvailability.state,
+					status: buyAvailability.label,
+					reason: buyAvailability.reason,
+					hideCost: goodsMax
+				});
 			}
 		}
 
 		if (needsAppend && buildSection.children().length > 0) {
-			buildSection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+			buildSection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
 		if (cNeedsAppend && craftSection.children().length > 0) {
-			craftSection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+			craftSection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
-		if (bNeedsAppend && buildSection.children().length > 0) {
-			buySection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+		if (bNeedsAppend && buySection.children().length > 0) {
+			buySection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
 	},
 
@@ -1230,8 +1450,11 @@ var Room = {
 		} else if (e.category == 'income') {
 			Room.updateStoresView();
 			Room.updateIncomeView();
-		} else if (e.stateName.indexOf('game.buildings') === 0) {
+		} else if (e.stateName.indexOf('game.buildings') === 0 || e.stateName === 'game.temperature.value') {
 			Room.updateBuildButtons();
+		} else if (e.stateName === 'game.builder.level' || e.stateName === 'game.autoStoke') {
+			Room.ensureAutoStokeState();
+			Room.updateButton();
 		}
 	},
 

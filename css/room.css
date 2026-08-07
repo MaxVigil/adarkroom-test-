@@ -1,31 +1,122 @@
-div#buildBtns {
+div#roomActions {
 	position: absolute;
-	top: 50px;
-	left: 0px;
+	top: 72px;
+	left: 0;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	align-items: start;
+	width: 466px;
+	max-width: calc(100% - 234px);
+	box-sizing: border-box;
+}
+
+div#buildBtns,
+div#craftBtns,
+div#buyBtns {
+	position: static;
+	min-width: 0;
 }
 
 div#buildBtns:before, div#craftBtns:before, div#buyBtns:before {
 	content: attr(data-legend);
-	position: relative;
-	top: -5px;
+	display: block;
+	margin-bottom: 7px;
+	font-weight: 700;
+	line-height: 1.2;
 }
 
-div#craftBtns {
-	position: absolute;
-	top: 50px;
-	left: 150px;
+div#roomPanel > div.button.actionButton {
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: auto !important;
+	min-width: 230px;
+	max-width: 466px;
+	min-height: 42px;
+	padding: 8px 16px;
+	line-height: 1.25;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
-div#buyBtns {
+div#autoStokeControl {
 	position: absolute;
-	top: 50px;
-	left: 300px;
+	top: 0;
+	left: 242px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	box-sizing: border-box;
+	width: 224px;
+	min-height: 42px;
+	padding: 4px 6px;
+}
+
+div#autoStokeControl .autoStokeText {
+	min-width: 0;
+	font-size: 13px;
+	line-height: 1.2;
+	text-align: left;
+	text-transform: none;
+}
+
+div#autoStokeControl.replacesManualAction {
+	left: 0;
+	width: 230px;
+}
+
+button#autoStokeToggle.autoStokeSwitch {
+	flex: 0 0 42px;
+	box-sizing: border-box;
+	height: 24px;
+	border: 1px solid currentColor;
+	padding: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+	font-size: 11px;
+	line-height: 22px;
+	text-align: center;
+	text-transform: lowercase;
+	cursor: pointer;
+}
+
+button#autoStokeToggle.autoStokeSwitch.enabled {
+	box-shadow: inset 0 0 0 1px currentColor;
+	font-weight: 700;
+}
+
+button#autoStokeToggle.autoStokeSwitch:focus-visible {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+div#buildBtns > div.button,
+div#craftBtns > div.button,
+div#buyBtns > div.button {
+	box-sizing: border-box;
+	width: 100% !important;
+	max-width: 100%;
+	min-width: 0;
+	padding: 7px 9px;
+	margin-bottom: 8px;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 div#storesContainer {
 	position: absolute;
 	top: 0px;
 	right: 0px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-top: 17px;
+	padding-right: 2px;
+	box-sizing: border-box;
+	overscroll-behavior: contain;
 }
 
 div#stores:before, div#weapons:before {
@@ -33,7 +124,11 @@ div#stores:before, div#weapons:before {
 	background: white;
 	content: attr(data-legend);
 	left: 8px;
-	top: -13px;
+	top: -15px;
+	padding: 0 3px;
+	font-weight: 700;
+	line-height: 1.2;
+	pointer-events: none;
 }
 
 div#stores {
@@ -41,7 +136,7 @@ div#stores {
 	z-index:10;
 	border: 1px solid black;
 	cursor: default;
-	padding: 5px 10px;
+	padding: 12px 10px 7px;
 	width: 200px;
 }
 
@@ -55,6 +150,30 @@ div#weapons {
 	right: 0px;
 	border: 1px solid black;
 	cursor: default;
-	padding: 5px 10px;
+	padding: 12px 10px 7px;
 	width: 200px;
+}
+
+@media (max-width: 760px) {
+	div#roomActions {
+		top: 130px;
+		grid-template-columns: minmax(0, 1fr);
+		width: 230px;
+		max-width: 230px;
+	}
+
+	div#roomPanel > div.button.actionButton {
+		max-width: calc(100vw - 24px);
+	}
+
+	div#autoStokeControl {
+		top: 58px;
+		left: 0;
+		width: 230px;
+		max-width: calc(100vw - 24px);
+	}
+
+	div#autoStokeControl.replacesManualAction {
+		top: 0;
+	}
 }

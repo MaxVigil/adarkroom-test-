@@ -71,6 +71,9 @@ Events.Outside = [
 		isAvailable: function() {
 			return Engine.activeModule == Outside && $SM.get('game.buildings["hut"]', true) > 0 && $SM.get('game.population', true) > 50;
 		},
+		triggerChance: function() {
+			return Outside.getHutFireChanceMultiplier();
+		},
 		scenes: {
 			'start': {
 				text: [
@@ -228,6 +231,9 @@ Events.Outside = [
 		title: _('A Beast Attack'),
 		isAvailable: function() {
 			return Engine.activeModule == Outside && $SM.get('game.population', true) > 0;
+		},
+		triggerChance: function() {
+			return Outside.getBeastAttackChanceMultiplier();
 		},
 		scenes: {
 			'start': {

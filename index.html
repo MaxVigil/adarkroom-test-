@@ -39,6 +39,10 @@
 				lang = localStorage.lang;
 			} catch(e) {}
 		}
+		// This test build intentionally exposes only English and Ukrainian.
+		if(lang != 'en' && lang != 'uk') {
+			lang = 'en';
+		}
 		// if a language different than english requested, load all translations
 		if(lang && lang != 'en'){
 			document.write('<script src="lang/'+lang+'/strings.js"><\/script>');
@@ -46,6 +50,7 @@
 		}
 	</script>
 	
+	<script src="script/entityDescriptions.js"></script>
 	<script src="script/Button.js"></script>
 	<script src="script/audioLibrary.js"></script>
 	<script src="script/audio.js"></script>
@@ -69,7 +74,6 @@
 	<script src="script/events/outside.js"></script>
 	<script src="script/events/encounters.js"></script>
   <script src="script/events/setpieces.js"></script>
-  <script src="script/events/marketing.js"></script>
 	<script src="script/events/executioner.js"></script>
 	
 	<script type='text/javascript'>

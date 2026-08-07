@@ -1,6 +1,14 @@
 /* Fonts */
-body, .tooltip, select.menuBtn {
-	font-family: "Times New Roman", Times, serif;
+@font-face {
+	font-family: "Commissioner";
+	src: url("../fonts/Commissioner-Variable.ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+body, .tooltip, select.menuBtn, textarea, input, button {
+	font-family: "Commissioner", Arial, sans-serif;
 	font-size: 16px;
 	font-weight: normal;
 	line-height: normal;
@@ -184,11 +192,15 @@ div#outerSlider > div {
 
 div#locationSlider {
 	position: absolute;
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
 }
 
 div.location {
 	position: relative;
-	float: left;
+	float: none;
+	flex: 0 0 700px;
 	width: 700px;
 }
 
@@ -241,10 +253,12 @@ div#notifyGradient {
 /* Button */
 
 div.button {
+	box-sizing: border-box;
 	position: relative;
 	text-align: center;
 	border: 1px solid black;
 	width: 100px;
+	min-width: 100px;
 	margin-bottom: 5px;
 	padding: 5px 10px;
 	cursor: pointer;
@@ -260,11 +274,69 @@ div.button:hover {
 	text-decoration: underline;
 }
 
+div.button.actionButton {
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+div.button.actionButton > div.tooltip {
+	text-transform: none;
+	letter-spacing: normal;
+}
+
 div.button.disabled, div.button.disabled:hover {
 	cursor: default;
 	border-color: #b2b2b2;
 	color: #b2b2b2;
 	text-decoration: none;
+}
+
+div.button.statefulButton {
+	min-height: 38px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	line-height: 1.1;
+}
+
+div.button.statefulButton:focus {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+div.button .buttonState {
+	display: block;
+	margin-top: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.1;
+	text-decoration: none;
+	white-space: normal;
+}
+
+div.button.state-ready,
+div.button.state-ready:hover {
+	border-style: solid;
+	box-shadow: inset 0 0 0 1px currentColor;
+	color: #111;
+	cursor: pointer;
+}
+
+div.button.state-blocked,
+div.button.state-blocked:hover {
+	border-color: #666;
+	border-style: dashed;
+	box-shadow: none;
+	color: #666;
+	cursor: help;
+}
+
+div.button.state-complete,
+div.button.state-complete:hover {
+	border-color: #777;
+	border-style: solid;
+	box-shadow: none;
+	color: #555;
+	cursor: help;
 }
 
 div.button div.cooldown {
@@ -384,6 +456,105 @@ div.button div.tooltip {
 	width: 100px;
 }
 
+div.tooltip.entityTooltip,
+div.button div.tooltip.entityTooltip,
+div.workerRow div.tooltip.entityTooltip,
+div.storeRow div.tooltip.entityTooltip {
+	box-sizing: border-box;
+	width: 280px;
+	max-width: calc(100vw - 16px);
+	line-height: 1.35;
+	white-space: normal;
+}
+
+div.tooltip.entityTooltipFloating {
+	pointer-events: none;
+}
+
+div.tooltip.tooltipSourceHidden {
+	display: none !important;
+}
+
+div.tooltip .tooltipDescription {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #bbb;
+	font-size: 13px;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
+}
+
+div.tooltip.costTooltip,
+div.button div.tooltip.costTooltip {
+	width: 360px !important;
+	max-width: calc(100vw - 16px);
+	padding: 8px 10px;
+	overflow-x: hidden;
+}
+
+div.tooltip .tooltipStatus {
+	margin-bottom: 4px;
+	font-weight: 700;
+}
+
+div.tooltip .tooltipReason {
+	margin-bottom: 6px;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+div.tooltip .tooltipCostTitle {
+	margin-top: 6px;
+	padding-top: 6px;
+	border-top: 1px solid #bbb;
+	font-weight: 700;
+}
+
+div.tooltip .costRow {
+	display: grid;
+	grid-template-columns: minmax(76px, 0.8fr) minmax(0, 1.4fr);
+	column-gap: 8px;
+	row-gap: 2px;
+	align-items: baseline;
+	margin-top: 4px;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+div.tooltip .costResource {
+	font-weight: 600;
+}
+
+div.tooltip .costAmounts {
+	min-width: 0;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+div.tooltip .costResult {
+	grid-column: 2;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+div.tooltip .costRow.sufficient .costResult {
+	color: #356b35;
+}
+
+div.tooltip .costRow.missing .costResult {
+	color: #923d2d;
+	font-weight: 700;
+}
+
+.hasEntityDescription {
+	cursor: help;
+}
+
+.supplyItem.hasEntityDescription {
+	position: relative;
+}
+
 /* Tooltip */
 
 div.tooltip {
@@ -422,6 +593,10 @@ div.tooltip:hover {
 
 .disabled:hover > div.tooltip, .button.free:hover > div.tooltip {
 	display: none;
+}
+
+.button.disabled.hasEntityDescription:hover > div.tooltip {
+	display: block;
 }
 
 #event .button.disabled:hover > div.tooltip {
@@ -485,6 +660,52 @@ body.noMask .eventPanel:after {
 body.noMask .eventPanel .button {
 	border-color: white;
 	color: white;
+}
+
+.eventPanel #exitButtons {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px 12px;
+	width: 100%;
+}
+
+.eventPanel #exitButtons > .button {
+	float: none;
+	box-sizing: border-box;
+	width: 100% !important;
+	min-width: 0;
+	max-width: 100%;
+	min-height: 44px;
+	margin: 0;
+	padding: 8px 12px;
+	line-height: 1.2;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.eventPanel #exitButtons.singleChoice {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.eventPanel #exitButtons.singleChoice > .button {
+	padding-right: 16px;
+	padding-left: 16px;
+}
+
+.eventPanel #exitButtons.oddChoices > .button.lastChoice {
+	grid-column: 1 / -1;
+}
+
+.eventPanel #exitButtons > .clear {
+	display: none;
+}
+
+.eventPanel.speedMenuPanel #description {
+	min-height: 72px;
+}
+
+.eventPanel.speedMenuPanel #exitButtons {
+	grid-template-columns: minmax(0, 1fr);
 }
 
 .eventTitle {

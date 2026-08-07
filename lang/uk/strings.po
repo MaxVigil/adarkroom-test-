@@ -322,7 +322,7 @@ msgstr "Отримати додаток"
 
 #: ../../script/engine.js:411
 msgid "bring the room with you."
-msgstr ""
+msgstr "візьміть кімнату із собою."
 
 #: ../../script/engine.js:414
 msgid "ios"
@@ -437,9 +437,8 @@ msgid "take:"
 msgstr "взяти:"
 
 #: ../../script/events.js:690
-#, fuzzy
 msgid "nothing to take"
-msgstr "нічого"
+msgstr "нічого брати"
 
 #: ../../script/events.js:720
 msgid "all"
@@ -722,9 +721,8 @@ msgid "it puts up little resistance before the knife."
 msgstr "ослаблена, перед ножем вона навіть не опирається."
 
 #: ../../script/events/outside.js:53
-#, fuzzy
 msgid "there was a beast. it's dead now"
-msgstr "гарчащий звір загинув"
+msgstr "тут був звір. тепер він мертвий"
 
 #: ../../script/events/outside.js:69
 msgid "Fire"
@@ -796,7 +794,7 @@ msgstr "кожної ночі чути крики."
 
 #: ../../script/events/outside.js:137
 msgid "sufferers are left to die"
-msgstr ""
+msgstr "хворих залишають помирати"
 
 #: ../../script/events/outside.js:153
 msgid "Plague"
@@ -836,7 +834,7 @@ msgstr "ті хто лишились ховають померлих."
 
 #: ../../script/events/outside.js:190
 msgid "epidemic is eradicated eventually"
-msgstr ""
+msgstr "зрештою епідемію подолано"
 
 #: ../../script/events/outside.js:204
 msgid "the plague rips through the village."
@@ -848,7 +846,7 @@ msgstr "єдина надія на швидку смерть."
 
 #: ../../script/events/outside.js:208
 msgid "population is almost exterminated"
-msgstr ""
+msgstr "населення майже винищено"
 
 #: ../../script/events/outside.js:224
 msgid "A Beast Attack"
@@ -872,7 +870,7 @@ msgstr "дикі звірі атакують селян"
 
 #: ../../script/events/outside.js:249
 msgid "predators become prey. price is unfair"
-msgstr ""
+msgstr "хижаки стають здобиччю. ціна несправедлива"
 
 #: ../../script/events/outside.js:258
 msgid "A Military Raid"
@@ -891,13 +889,12 @@ msgid "after a skirmish they are driven away, but not without losses."
 msgstr "після сутички вони пішли геть, але не без втрат."
 
 #: ../../script/events/outside.js:269
-#, fuzzy
 msgid "troops storm the village"
-msgstr "епідемія шириться селищем, вбиваючи всіх."
+msgstr "війська штурмують поселення"
 
 #: ../../script/events/outside.js:283
 msgid "warfare is bloodthirsty"
-msgstr ""
+msgstr "війна жадає крові"
 
 #: ../../script/events/room.js:6
 msgid "The Nomad"
@@ -2953,7 +2950,7 @@ msgstr "розпалити вогонь"
 
 #: ../../script/room.js:508
 msgid "stoke fire"
-msgstr "підкинути"
+msgstr "підкинути дровиняку"
 
 #: ../../script/room.js:545 ../../script/room.js:555 ../../script/room.js:703
 #: ../../script/room.js:707
@@ -3353,6 +3350,1068 @@ msgstr "світ втрачає барви..."
 #: ../../script/world.js:1015
 msgid "A Barren World"
 msgstr "Безплідний світ"
+
+# Нові рядки інтерфейсу та розширеного сюжету.
+#: ../../script/events/room.js:278
+msgid "300 wood"
+msgstr "300 деревини"
+
+#: ../../script/events/executioner.js:686
+msgid "a cacophony of decrepit machinery fills the room."
+msgstr "кімнату наповнює какофонія занедбаних механізмів."
+
+#: ../../script/events/executioner.js:339
+msgid "a dusty researcher clumsily hides in the shadows."
+msgstr "запилений дослідник незграбно ховається в тіні."
+
+#: ../../script/events/executioner.js:1588
+msgid "a few dusty corpses can be seen further down, but this deck appears to have been spared most of the combat."
+msgstr "далі видно кілька запилених тіл, але ця палуба, схоже, оминула найзапекліші бої."
+
+#: ../../script/events/executioner.js:1203
+msgid "a few useful items can be scavenged."
+msgstr "можна зібрати кілька корисних речей."
+
+#: ../../script/fabricator.js:57
+msgid "a handful of hypos. life in a vial."
+msgstr "жменька гіпо. життя у флаконі."
+
+#: ../../script/events/executioner.js:192
+msgid "a huge arthropod lunges from the shadows, its mandibles thrashing."
+msgstr "із тіні кидається величезне членистоноге, люто клацаючи жвалами."
+
+#: ../../script/events/executioner.js:534
+msgid "a large hatch grinds open, and the wind rushes in."
+msgstr "великий люк зі скреготом відчиняється, і всередину вривається вітер."
+
+#: ../../script/events/executioner.js:557
+msgid "a large hatch opens into a wide corridor."
+msgstr "великий люк веде до широкого коридору."
+
+#: ../../script/events/executioner.js:481
+msgid "a maintenance panel is embedded in the wall next to a large sealed door."
+msgstr "поряд із великими герметичними дверима в стіну вбудовано сервісну панель."
+
+#: ../../script/events/executioner.js:58
+msgid "a medical drone wheels out of control."
+msgstr "медичний дрон некеровано викочується назустріч."
+
+#: ../../script/events/executioner.js:34
+msgid "a mobile defence platform trundles around the corner."
+msgstr "з-за рогу гуркоче мобільна оборонна платформа."
+
+#: ../../script/events/executioner.js:2105
+msgid "a mutated beast leaps from its cell."
+msgstr "з камери вистрибує мутований звір."
+
+#: ../../script/events/executioner.js:119 ../../script/events/executioner.js:552
+msgid "A Ravaged Battleship"
+msgstr "Спустошений лінкор"
+
+#: ../../script/events/executioner.js:1492
+msgid "a regenerative machine hums uncannily by one of the courses."
+msgstr "біля одного з проходів моторошно гуде регенеративна машина."
+
+#: ../../script/events/executioner.js:1760
+msgid "a secure locker is set into one wall."
+msgstr "в одну зі стін вбудовано захищену шафу."
+
+#: ../../script/events/room.js:272 ../../script/events/room.js:275
+msgid "a shady builder passes through"
+msgstr "повз проходить підозрілий будівничий"
+
+#: ../../script/events/executioner.js:161
+msgid "a small knapsack hangs from a cluster of webs, a few feet from the floor."
+msgstr "невеликий наплічник висить у павутинні за кілька футів від підлоги."
+
+#: ../../script/fabricator.js:85
+msgid "a smooth, perfect sphere. its light is inextinguishable."
+msgstr "гладка, досконала сфера. її світло неможливо згасити."
+
+#: ../../script/events/executioner.js:1516
+msgid "a sparring automaton, still fully function and crusted with timeworn blood, lunges forward."
+msgstr "тренувальний автомат, досі справний і вкритий застарілою кров’ю, кидається вперед."
+
+#: ../../script/events/executioner.js:535
+msgid "a strange device sits on the floor. looks important."
+msgstr "на підлозі лежить дивний пристрій. схоже, важливий."
+
+#: ../../script/events/encounters.js:118
+msgid "A Two-Headed Creature"
+msgstr "Двоголова істота"
+
+#: ../../script/events/encounters.js:150
+msgid "a two-headed creature appears, the smaller head trembling"
+msgstr "з’являється двоголова істота; менша голова тремтить"
+
+#: ../../script/fabricator.js:99 ../../script/fabricator.js:136
+msgid "A Whirring Fabricator"
+msgstr "Фабрикатор, що гуде"
+
+#: ../../script/world.js:151
+msgid "A&nbsp;Ravaged&nbsp;Battleship"
+msgstr "Спустошений&nbsp;лінкор"
+
+#: ../../script/events/executioner.js:1918
+msgid "air whistles as the doors open. this section must have lower pressure than the rest of the ship."
+msgstr "коли двері відчиняються, повітря свистить. у цій секції тиск нижчий, ніж на решті корабля."
+
+#: ../../script/path.js:108
+msgid "ammunition"
+msgstr "боєприпаси"
+
+#: ../../script/events/executioner.js:465
+msgid "an ancient beast has made these ruins its home."
+msgstr "стародавній звір облаштував собі лігво в цих руїнах."
+
+#: ../../script/events/executioner.js:621
+msgid "an automated assembly line performs its empty routines, long since deprived of materials."
+msgstr "автоматична складальна лінія виконує порожні цикли, давно позбавлена матеріалів."
+
+#: ../../script/events/executioner.js:260
+msgid "an operative waits in ambush around the corner."
+msgstr "за рогом в засідці чекає оперативник."
+
+#: ../../script/events/executioner.js:979
+msgid "an unfinished automaton whirs to life."
+msgstr "незавершений автомат із дзижчанням оживає."
+
+#: ../../script/events/executioner.js:442
+msgid "ancient beast"
+msgstr "стародавній звір"
+
+#: ../../script/space.js:563
+msgid "android."
+msgstr "Android."
+
+#: ../../script/events/executioner.js:1886
+msgid "another checkpoint ahead, fitted with heavy doors."
+msgstr "попереду ще один пропускний пункт із важкими дверима."
+
+#: ../../script/events/executioner.js:1140
+msgid "another door at the end of the hall, sealed from this side."
+msgstr "у кінці коридору ще одні двері, заблоковані з цього боку."
+
+#: ../../script/events/executioner.js:2263
+msgid "approach"
+msgstr "наблизитися"
+
+#: ../../script/events/executioner.js:497
+msgid "as the lights come online, so too do the defence systems."
+msgstr "разом зі світлом оживають і системи оборони."
+
+#: ../../script/events/executioner.js:685
+msgid "assembly arms spark and jitter."
+msgstr "складальні маніпулятори іскрять і смикаються."
+
+#: ../../script/events/executioner.js:649
+msgid "assembly arms spin wildly out of control."
+msgstr "складальні маніпулятори некеровано шаленіють."
+
+#: ../../script/events/executioner.js:1022
+msgid "at the back of the workshop, elevator doors twitch and buzz."
+msgstr "у глибині майстерні двері ліфта сіпаються й дзижчать."
+
+#: ../../script/events/executioner.js:1650
+msgid "automated guardians still stalk the halls, unaware that their masters have long gone."
+msgstr "автоматичні вартові досі блукають коридорами, не знаючи, що їхні господарі давно зникли."
+
+#: ../../script/events/executioner.js:499
+msgid "automated turret"
+msgstr "автоматична турель"
+
+#: ../../script/events/executioner.js:381
+msgid "behind the barricade, a few weapons lay abandoned."
+msgstr "за барикадою покинуто кілька одиниць зброї."
+
+#: ../../script/events/executioner.js:1822
+msgid "better to move without drawing attention."
+msgstr "краще рухатися, не привертаючи уваги."
+
+#: ../../script/events/executioner.js:533
+msgid "beyond the bulkhead is a small antechamber, seemingly untouched by scavengers."
+msgstr "за перебіркою є невеликий передпокій, якого, схоже, не торкнулися мародери."
+
+#: ../../script/events/executioner.js:734
+msgid "bits of them can be scavenged."
+msgstr "з них можна зібрати дещо корисне."
+
+#: ../../script/events/executioner.js:1065
+msgid "blow it down"
+msgstr "підірвати"
+
+#: ../../script/fabricator.js:200
+msgid "blueprints"
+msgstr "креслення"
+
+#: ../../script/events/executioner.js:1302
+msgid "bodies litter the ground on either side."
+msgstr "з обох боків підлога всіяна тілами."
+
+#: ../../script/events.js:363
+msgid "boost"
+msgstr "підсилення"
+
+#: ../../script/events/executioner.js:60
+msgid "broken medic"
+msgstr "зламаний медик"
+
+#: ../../script/world.js:970
+msgid "builder knows the strange device when she sees it. takes it for herself real quick. doesn’t ask where it came from."
+msgstr "будівельниця одразу впізнає дивний пристрій і швидко забирає його собі. не питає, звідки він."
+
+#: ../../script/fabricator.js:26
+msgid "cargo drone"
+msgstr "вантажний дрон"
+
+#: ../../script/engine.js:601
+msgid "classic"
+msgstr "класична"
+
+#: ../../script/events/executioner.js:968
+msgid "clattering metal and old servos. something is coming..."
+msgstr "брязкіт металу й старих сервоприводів. щось наближається..."
+
+#: ../../script/events/executioner.js:1651
+msgid "clumsy machines, and easily avoided."
+msgstr "незграбні машини — їх легко оминути."
+
+#: ../../script/events/executioner.js:2155
+msgid "Command Deck"
+msgstr "Командна палуба"
+
+#: ../../script/events/executioner.js:583
+msgid "command deck"
+msgstr "командна палуба"
+
+#: ../../script/events/executioner.js:2089
+msgid "containment cells arranged at the back of the room, all open."
+msgstr "у глибині кімнати розташовані камери утримання. усі відчинені."
+
+#: ../../script/events/executioner.js:1070
+msgid "continue right"
+msgstr "йти праворуч"
+
+#: ../../script/events/executioner.js:1232
+msgid "could put the scrap to good use."
+msgstr "ці уламки ще можуть стати у пригоді."
+
+#: ../../script/events/executioner.js:1202
+msgid "crew cabins flank the hall, devoid of life."
+msgstr "обабіч коридору — порожні каюти екіпажу."
+
+#: ../../script/events/executioner.js:301
+msgid "crude attempts have been made to cut into the walls."
+msgstr "хтось грубо намагався прорізати стіни."
+
+#: ../../script/engine.js:598
+msgid "current speed:"
+msgstr "поточна швидкість:"
+
+#: ../../script/events/executioner.js:379
+msgid "debris is stacked in the corridor, forming a low barricade."
+msgstr "у коридорі складено уламки, що утворюють низьку барикаду."
+
+#: ../../script/events/executioner.js:160
+msgid "deeper into the ship, the darkness seems almost to writhe."
+msgstr "у глибині корабля темрява ніби ворушиться."
+
+#: ../../script/events/executioner.js:90
+msgid "defence turret"
+msgstr "оборонна турель"
+
+#: ../../script/events/executioner.js:2192
+msgid "detour through the officer's lounge."
+msgstr "обійти через офіцерську залу."
+
+#: ../../script/engine.js:1013
+msgid "disable audio"
+msgstr "вимкнути звук"
+
+#: ../../script/world.js:105
+msgid "disintegrate"
+msgstr "дезінтегрувати"
+
+#: ../../script/fabricator.js:45
+msgid "disruptor"
+msgstr "дизраптор"
+
+#: ../../script/events/executioner.js:1317
+msgid "documents are scattered down the hall, most charred and curled."
+msgstr "коридором розкидані документи; більшість обвуглені й скручені."
+
+#: ../../script/events/executioner.js:1366
+msgid "drew some attention with all that noise."
+msgstr "цей шум привернув увагу."
+
+#: ../../script/engine.js:1003
+msgid "ears flooded with new sensations."
+msgstr "вуха переповнюють нові відчуття."
+
+#: ../../script/events/executioner.js:1270
+msgid "easily avoided."
+msgstr "легко оминути."
+
+#: ../../script/events/executioner.js:604
+msgid "elevator doors open to a blasted corridor. debris covers the floor, piled into makeshift defences."
+msgstr "двері ліфта відчиняються в понівечений коридор. уламки на підлозі складено в імпровізовані укриття."
+
+#: ../../script/events/executioner.js:1587
+msgid "elevator doors open to an empty corridor."
+msgstr "двері ліфта відчиняються в порожній коридор."
+
+#: ../../script/events/executioner.js:605
+msgid "emergency lighting flickers."
+msgstr "аварійне освітлення мерехтить."
+
+#: ../../script/path.js:244
+msgid "emits a soft red glow"
+msgstr "випромінює м’яке червоне світло"
+
+#: ../../script/engine.js:1008
+msgid "enable audio"
+msgstr "увімкнути звук"
+
+#: ../../script/fabricator.js:9
+msgid "energy blade"
+msgstr "енергетичний клинок"
+
+#: ../../script/events/executioner.js:1520
+msgid "engage"
+msgstr "вступити в бій"
+
+#: ../../script/events/executioner.js:562
+msgid "engineering"
+msgstr "інженерний відсік"
+
+#: ../../script/events/executioner.js:599
+msgid "Engineering Wing"
+msgstr "Інженерне крило"
+
+#: ../../script/space.js:546
+msgid "expanded story. alternate ending. behind the scenes commentary. get the app."
+msgstr "розширена історія. альтернативна кінцівка. коментарі авторів. завантажте застосунок."
+
+#: ../../script/events/executioner.js:945
+msgid "experimental plans cover one wall, held by an unseen force."
+msgstr "одну зі стін вкривають експериментальні креслення, утримувані невидимою силою."
+
+#: ../../script/events/executioner.js:793
+msgid "extinguish"
+msgstr "загасити"
+
+#: ../../script/fabricator.js:144
+msgid "fabricate:"
+msgstr "виготовити:"
+
+#: ../../script/fabricator.js:6
+msgid "Fabricator"
+msgstr "Фабрикатор"
+
+#: ../../script/events/executioner.js:972
+msgid "fight"
+msgstr "битися"
+
+#: ../../script/events/executioner.js:2161
+msgid "fighting hadn't reached here, it seems."
+msgstr "схоже, бої сюди не дісталися."
+
+#: ../../script/fabricator.js:17
+msgid "fluid recycler"
+msgstr "рециркулятор рідини"
+
+#: ../../script/events/executioner.js:1764
+msgid "force locker"
+msgstr "силова шафа"
+
+#: ../../script/events/executioner.js:2236
+msgid "found some medical supplies in a discarded bag."
+msgstr "у покинутій сумці знайшлися медичні припаси."
+
+#: ../../script/events/executioner.js:1060
+msgid "further along, the corridor branches."
+msgstr "далі коридор розгалужується."
+
+#: ../../script/engine.js:595
+msgid "Game Speed"
+msgstr "Швидкість гри"
+
+#: ../../script/fabricator.js:82
+msgid "glow stone"
+msgstr "світлокамінь"
+
+#: ../../script/events/executioner.js:1779
+msgid "hinges rusted through. no challenge."
+msgstr "завіси проіржавіли наскрізь. жодної перешкоди."
+
+#: ../../script/path.js:239 ../../script/path.js:248
+msgid "hp"
+msgstr "HP"
+
+#: ../../script/fabricator.js:54
+msgid "hypo"
+msgstr "гіпо"
+
+#: ../../script/events/executioner.js:1383
+msgid "if only they'd been destroyed along with everything else."
+msgstr "якби ж їх знищило разом з усім іншим."
+
+#: ../../script/events/executioner.js:2289
+msgid "immortal wanderer"
+msgstr "безсмертний мандрівник"
+
+#: ../../script/events/executioner.js:2259
+msgid "in a flash, the figure is standing."
+msgstr "за мить постать уже стоїть."
+
+#: ../../script/space.js:555
+msgid "iOS."
+msgstr "iOS."
+
+#: ../../script/events/executioner.js:1698
+msgid "it had friends."
+msgstr "воно було не саме."
+
+#: ../../script/events/executioner.js:126
+msgid "it lists to the side in a deep crevasse, cut when it fell from the sky."
+msgstr "корабель лежить набік у глибокій ущелині, прорізаній під час падіння з неба."
+
+#: ../../script/events/executioner.js:2275
+msgid "it says it saw the rebellion coming. said it made arrangements."
+msgstr "воно каже, що передбачило повстання. каже, що підготувалося."
+
+#: ../../script/events/executioner.js:772
+msgid "it's no mystery why she no longer flies."
+msgstr "не дивно, що вона більше не літає."
+
+#: ../../script/events/executioner.js:622
+msgid "its final works lie forgotten, covered by a thin layer of dust."
+msgstr "його останні творіння лежать забуті під тонким шаром пилу."
+
+#: ../../script/fabricator.js:35
+msgid "kinetic armour"
+msgstr "кінетична броня"
+
+#: ../../script/events/executioner.js:1301
+msgid "large barricades bisect the corridor, scorched by weapons fire."
+msgstr "великі барикади перетинають коридор; їх обпалено вогнем зброї."
+
+#: ../../script/events/executioner.js:1023
+msgid "looks like a way out of here."
+msgstr "схоже, це вихід звідси."
+
+#: ../../script/events/executioner.js:1045
+msgid "looks like they tried to barricade the elevators."
+msgstr "схоже, ліфти намагалися забарикадувати."
+
+#: ../../script/events/executioner.js:2209
+msgid "lucky."
+msgstr "пощастило."
+
+#: ../../script/events/executioner.js:2107
+msgid "malformed experiment"
+msgstr "спотворений експеримент"
+
+#: ../../script/events/executioner.js:1342
+msgid "maps of the surface can still be found amongst the debris."
+msgstr "серед уламків іще можна знайти карти поверхні."
+
+#: ../../script/events/executioner.js:876
+msgid "marks on the door read 'research and development.' everything seems mostly untouched, but dead."
+msgstr "на дверях написано «дослідження та розробки». усе майже неушкоджене, але мертве."
+
+#: ../../script/events/executioner.js:576
+msgid "martial"
+msgstr "військовий відсік"
+
+#: ../../script/events/executioner.js:1039
+msgid "Martial Wing"
+msgstr "Військове крило"
+
+#: ../../script/events/executioner.js:7
+msgid "mechanical guard"
+msgstr "механічний вартовий"
+
+#: ../../script/events/executioner.js:36
+msgid "mechanical quadruped"
+msgstr "механічний чотириногий"
+
+#: ../../script/events/executioner.js:569
+msgid "medical"
+msgstr "медичний відсік"
+
+#: ../../script/events/executioner.js:1666
+msgid "medical gurneys are fixed to grooves running down the corridor walls."
+msgstr "медичні каталки закріплено в пазах уздовж стін коридору."
+
+#: ../../script/events/executioner.js:1582
+msgid "Medical Wing"
+msgstr "Медичне крило"
+
+#: ../../script/events/executioner.js:1044
+msgid "metal grinds, and the elevator doors open halfway. beyond is a brightly lit battlefield. remains litter the corridor, undisturbed by scavengers."
+msgstr "метал скрегоче, і двері ліфта відчиняються наполовину. за ними — яскраво освітлене поле бою. коридор усіяний рештками, яких не торкнулися мародери."
+
+#: ../../script/events/executioner.js:2193
+msgid "might be something useful here."
+msgstr "тут може бути щось корисне."
+
+#: ../../script/events/executioner.js:1714
+msgid "more medical robots stand frozen, attached by a network of wires."
+msgstr "далі нерухомо стоять медичні роботи, з’єднані мережею дротів."
+
+#: ../../script/events/executioner.js:837
+msgid "more signs of past combat down the hall. guard post is ransacked."
+msgstr "далі в коридорі ще більше слідів давнього бою. пост охорони пограбовано."
+
+#: ../../script/events/executioner.js:1731
+msgid "more strange graffiti adorns the walls."
+msgstr "стіни вкривають нові дивні графіті."
+
+#: ../../script/events/executioner.js:1515
+msgid "motion from the centre of the yard."
+msgstr "у центрі двору щось рухається."
+
+#: ../../script/events/executioner.js:1529
+msgid "murderous robot"
+msgstr "робот-убивця"
+
+#: ../../script/events/executioner.js:732
+msgid "must have been the engine room, once. the massive machines now stand inert, twisted and scorched by explosions."
+msgstr "колись це, мабуть, було машинне відділення. тепер величезні механізми нерухомі, понівечені й обпалені вибухами."
+
+#: ../../script/events/executioner.js:1823
+msgid "noises can be heard from the corridor outside."
+msgstr "з коридору зовні долинають звуки."
+
+#: ../../script/events/executioner.js:771
+msgid "none of the ship's engines escaped the destruction."
+msgstr "жоден із двигунів корабля не вцілів."
+
+#: ../../script/events/executioner.js:2139
+msgid "nothing more here."
+msgstr "тут більше нічого немає."
+
+#: ../../script/events/executioner.js:2280
+msgid "observe"
+msgstr "спостерігати"
+
+#: ../../script/events/executioner.js:877
+msgid "one machine thrums with power, and might still work."
+msgstr "одна машина гуде від енергії й, можливо, досі працює."
+
+#: ../../script/events/executioner.js:88
+msgid "one of the defence turrets still works."
+msgstr "одна з оборонних турелей досі працює."
+
+#: ../../script/path.js:110
+msgid "other"
+msgstr "інше"
+
+#: ../../script/events/executioner.js:1416
+msgid "past the checkpoint, banks of containment cells can be seen."
+msgstr "за пропускним пунктом видно ряди камер утримання."
+
+#: ../../script/events/executioner.js:1619
+msgid "past the checkpoint, the corridor is undamaged save for sporadic graffiti."
+msgstr "за пропускним пунктом коридор неушкоджений, якщо не зважати на поодинокі графіті."
+
+#: ../../script/engine.js:1004
+msgid "perhaps silence is safer?"
+msgstr "можливо, тиша безпечніша?"
+
+#: ../../script/events/executioner.js:482
+msgid "perhaps the ship’s systems are still operational."
+msgstr "можливо, системи корабля ще працюють."
+
+#: ../../script/path.js:175
+msgid "perks"
+msgstr "навички"
+
+#: ../../script/events/executioner.js:1566
+msgid "picked this deck clean."
+msgstr "цю палубу вже обібрали дочиста."
+
+#: ../../script/fabricator.js:73
+msgid "plasma rifle"
+msgstr "плазмова рушниця"
+
+#: ../../script/events/executioner.js:1432
+msgid "power cables running across the ceiling are split in several places, sparking occasionally."
+msgstr "силові кабелі під стелею розірвані в кількох місцях і час від часу іскрять."
+
+#: ../../script/events/executioner.js:486
+msgid "power cycle"
+msgstr "перезапустити живлення"
+
+#: ../../script/events/executioner.js:1988
+msgid "predictable paths."
+msgstr "передбачувані траєкторії."
+
+#: ../../script/events/executioner.js:1398
+msgid "ran straight into another one."
+msgstr "прямо попереду — ще одна."
+
+#: ../../script/path.js:239 ../../script/path.js:248
+msgid "restores"
+msgstr "відновлює"
+
+#: ../../script/events/executioner.js:821
+msgid "rows of inert security robots hang suspended from the ceiling."
+msgstr "ряди неактивних роботів охорони звисають зі стелі."
+
+#: ../../script/events/executioner.js:1231
+msgid "ruined defence turrets flank the corridor."
+msgstr "обабіч коридору стоять зруйновані оборонні турелі."
+
+#: ../../script/events/executioner.js:798
+msgid "rush through"
+msgstr "прорватися"
+
+#: ../../script/events/executioner.js:1950
+msgid "samples of something biological inside."
+msgstr "усередині зразки чогось біологічного."
+
+#: ../../script/events/room.js:273
+msgid "says he can build you a hut for less wood"
+msgstr "каже, що збудує хатину дешевше"
+
+#: ../../script/events/executioner.js:2276
+msgid "says it can't die."
+msgstr "каже, що не може померти."
+
+#: ../../script/events/executioner.js:1346
+msgid "scavenge maps"
+msgstr "зібрати карти"
+
+#: ../../script/events/executioner.js:302
+msgid "scraps of copper wire litter the floor."
+msgstr "підлога всіяна шматками мідного дроту."
+
+#: ../../script/events/executioner.js:1987
+msgid "security drones still patrol the hallways."
+msgstr "дрони охорони досі патрулюють коридори."
+
+#: ../../script/events/executioner.js:1887
+msgid "security is even tighter here."
+msgstr "тут охорона ще суворіша."
+
+#: ../../script/events.js:352
+msgid "shield"
+msgstr "щит"
+
+#: ../../script/events/executioner.js:1141
+msgid "should be able to open it."
+msgstr "це має відчинити двері."
+
+#: ../../script/events/executioner.js:414
+msgid "shuffling noises can be heard from within."
+msgstr "зсередини чути шарудіння."
+
+#: ../../script/world.js:112
+msgid "slice"
+msgstr "розсікти"
+
+#: ../../script/events/executioner.js:1382
+msgid "slipped past an automated sentry."
+msgstr "вдалося прослизнути повз автоматичного вартового."
+
+#: ../../script/events/executioner.js:1917
+msgid "slipped through unnoticed."
+msgstr "вдалося пройти непоміченим."
+
+#: ../../script/events/executioner.js:1269
+msgid "small sensors in the walls still look to be operational."
+msgstr "невеликі датчики в стінах, схоже, досі працюють."
+
+#: ../../script/events/executioner.js:2208
+msgid "small weapons cache in a cabinet."
+msgstr "у шафі — невеликий запас зброї."
+
+#: ../../script/events/executioner.js:2051
+msgid "some completed explosives in the corner."
+msgstr "у кутку лежить кілька готових вибухівок."
+
+#: ../../script/events/executioner.js:2090
+msgid "something moving up ahead."
+msgstr "попереду щось рухається."
+
+#: ../../script/events/executioner.js:1854
+msgid "something's wrong with this robot."
+msgstr "із цим роботом щось не так."
+
+#: ../../script/fabricator.js:67
+msgid "sometimes it is best to fight without restraint."
+msgstr "іноді краще битися без стримування."
+
+#: ../../script/fabricator.js:48
+msgid "somtimes it is best not to fight."
+msgstr "іноді краще не битися."
+
+#: ../../script/engine.js:999
+msgid "Sound Available!"
+msgstr "Доступний звук!"
+
+#: ../../script/engine.js:880
+msgid "sound off."
+msgstr "звук вимкнено."
+
+#: ../../script/engine.js:153 ../../script/engine.js:876
+msgid "sound on."
+msgstr "звук увімкнено."
+
+#: ../../script/events/executioner.js:788
+msgid "sparks cascade from a reactivated power junction, and catch."
+msgstr "іскри сиплються з увімкненого силового вузла й розпалюють вогонь."
+
+#: ../../script/engine.js:171 ../../script/engine.js:576
+msgid "speed"
+msgstr "швидкість"
+
+#: ../../script/events/executioner.js:900
+msgid "step inside, and the machine whirs. muscle and bone reknit. good as new."
+msgstr "крок усередину — машина гуде, м’язи й кістки зростаються. як нові."
+
+#: ../../script/events/executioner.js:838
+msgid "still, some things can be found."
+msgstr "утім, дещо ще можна знайти."
+
+#: ../../script/fabricator.js:64
+msgid "stim"
+msgstr "стим"
+
+#: ../../script/events/executioner.js:2020
+msgid "strange."
+msgstr "дивно."
+
+#: ../../script/world.js:118
+msgid "stun"
+msgstr "оглушити"
+
+#: ../../script/path.js:109
+msgid "supplies"
+msgstr "припаси"
+
+#: ../../script/events/executioner.js:2019
+msgid "surgical tools are scattered on the floor, near what appears the be the remains of a fire."
+msgstr "хірургічні інструменти розкидані на підлозі біля того, що схоже на залишки вогнища."
+
+#: ../../script/events/executioner.js:543
+msgid "take device and leave"
+msgstr "забрати пристрій і піти"
+
+#: ../../script/events/executioner.js:2050
+msgid "the air in this room has a metallic tinge. floor is covered in dark powder."
+msgstr "повітря в цій кімнаті має металевий присмак. підлога вкрита темним порошком."
+
+#: ../../script/events/executioner.js:1949
+msgid "the air is cooler here. low cabinets ring the room, doors dusted with frost."
+msgstr "тут прохолодніше. уздовж стін стоять низькі шафи, їхні дверцята вкриті інеєм."
+
+#: ../../script/events/executioner.js:1667
+msgid "the automated patient transport system now sits motionless."
+msgstr "автоматична система транспортування пацієнтів тепер нерухома."
+
+#: ../../script/fabricator.js:11
+msgid "the blade hums, charged particles sparking and fizzing."
+msgstr "клинок гуде, заряджені частинки іскрять і шиплять."
+
+#: ../../script/events/executioner.js:1082
+msgid "the blast throws the door inwards."
+msgstr "вибух вибиває двері всередину."
+
+#: ../../script/events/executioner.js:1431
+msgid "the cells are all empty."
+msgstr "усі камери порожні."
+
+#: ../../script/events/executioner.js:2258
+msgid "the command deck is empty, save for a squat figure sitting motionless in the centre of the room."
+msgstr "командна палуба порожня, лише в центрі кімнати нерухомо сидить приземкувата постать."
+
+#: ../../script/events/executioner.js:1187
+msgid "the corridor is eerily silent."
+msgstr "у коридорі моторошно тихо."
+
+#: ../../script/events/executioner.js:558
+msgid "the corridor leads to a bank of elevators, which appear to be functional."
+msgstr "коридор веде до ряду ліфтів, які, схоже, працюють."
+
+#: ../../script/events/executioner.js:1491
+msgid "the corridor opens onto a vast training complex, obstacles and features blackened by real combat."
+msgstr "коридор виходить у величезний тренувальний комплекс; перешкоди й споруди почорніли від справжнього бою."
+
+#: ../../script/events/executioner.js:1415
+msgid "the corridor passes through a security checkpoint. the defences are blown apart, ragged edges scorched by laser fire."
+msgstr "коридор проходить через пропускний пункт. оборону рознесено, рвані краї обпалено лазерним вогнем."
+
+#: ../../script/events/executioner.js:2138
+msgid "the creature's tortured breathing ceases."
+msgstr "стражденне дихання істоти стихає."
+
+#: ../../script/events/executioner.js:2327
+msgid "the crystal pulses brightly, then goes dark. the assailant shimmers as its shape becomes less defined."
+msgstr "кристал яскраво пульсує, а потім гасне. нападник мерехтить, його обриси розпливаються."
+
+#: ../../script/events/executioner.js:733
+msgid "the destruction is uniform and precise."
+msgstr "руйнування рівномірні й точні."
+
+#: ../../script/events/executioner.js:1061
+msgid "the door to the left is sealed and refuses to open."
+msgstr "двері ліворуч заблоковані й не відчиняються."
+
+#: ../../script/fabricator.js:126
+msgid "the familiar hum of wanderer machinery coming to life. finally, real tools."
+msgstr "знайоме гудіння механізмів мандрівників, що оживають. нарешті справжні інструменти."
+
+#: ../../script/events/executioner.js:789
+msgid "the flames fill the corridor."
+msgstr "полум’я заповнює коридор."
+
+#: ../../script/events/executioner.js:1447
+msgid "the guards died at their posts, shot through with superheated plasma."
+msgstr "вартові загинули на постах, прошиті перегрітою плазмою."
+
+#: ../../script/events/executioner.js:127
+msgid "the hatches are all sealed, but the hull is blown out just above the dirt, providing an entrance."
+msgstr "усі люки заблоковані, але корпус пробито над самою землею — там можна ввійти."
+
+#: ../../script/events/executioner.js:2287
+msgid "the immortal wanderer attacks."
+msgstr "безсмертний мандрівник атакує."
+
+#: ../../script/events/executioner.js:143
+msgid "the interior of the ship is cold and dark. what little light there is only accentuates its harsh angles."
+msgstr "усередині корабля холодно й темно. крихти світла лише підкреслюють його різкі обриси."
+
+#: ../../script/events/executioner.js:1527
+msgid "the machine attacks, blades whirling."
+msgstr "машина атакує, розмахуючи лезами."
+
+#: ../../script/events/executioner.js:930
+msgid "the machines here look unfinished, abandoned by their creator. wires and other scrap are scattered about the work benches."
+msgstr "машини тут здаються незавершеними, покинутими творцем. на верстаках розкидано дроти та інші уламки."
+
+#: ../../script/events/executioner.js:300
+msgid "the military has set up a small camp just inside the ship."
+msgstr "військові облаштували невеликий табір одразу всередині корабля."
+
+#: ../../script/events/executioner.js:1341
+msgid "the next door leads to a ransacked planning room."
+msgstr "наступні двері ведуть до пограбованої планувальної кімнати."
+
+#: ../../script/events/executioner.js:1806
+msgid "the noise draws attention."
+msgstr "шум привертає увагу."
+
+#: ../../script/events/executioner.js:413
+msgid "the partially devoured remains of several wanderers are piled before a dark corridor."
+msgstr "перед темним коридором лежать частково обгризені рештки кількох мандрівників."
+
+#: ../../script/events/executioner.js:2160
+msgid "the path to the command bridge is wide, walls adorned with decorative shields."
+msgstr "шлях до командного містка широкий, стіни прикрашені декоративними щитами."
+
+#: ../../script/fabricator.js:76
+msgid "the peak of wanderer weapons technology, sleek and deadly."
+msgstr "вершина збройних технологій мандрівників — витончена й смертоносна."
+
+#: ../../script/events/executioner.js:123
+msgid "the remains of a huge ship are embedded in the earth."
+msgstr "рештки величезного корабля вгрузли в землю."
+
+#: ../../script/events/executioner.js:125
+msgid "the remains of a massive battleship lie here, like a silent sealed city."
+msgstr "тут лежать рештки велетенського лінкора, мов тихе запечатане місто."
+
+#: ../../script/events/executioner.js:1565
+msgid "the ruins of the sparring machine clatter to the ground."
+msgstr "рештки тренувальної машини з гуркотом падають на підлогу."
+
+#: ../../script/events/room.js:265
+msgid "The Shady Builder"
+msgstr "Підозрілий будівничий"
+
+#: ../../script/events/room.js:302 ../../script/events/room.js:304
+msgid "the shady builder builds a hut"
+msgstr "підозрілий будівничий зводить хатину"
+
+#: ../../script/events/room.js:290 ../../script/events/room.js:292
+msgid "the shady builder has made off with your wood"
+msgstr "підозрілий будівничий утік із вашою деревиною"
+
+#: ../../script/events/encounters.js:127
+msgid "the two creatures are dead"
+msgstr "обидві істоти мертві"
+
+#: ../../script/events/executioner.js:380
+msgid "the walls are scorched and melted."
+msgstr "стіни обпалені й оплавлені."
+
+#: ../../script/events/executioner.js:144
+msgid "the walls hum faintly."
+msgstr "стіни ледь гудуть."
+
+#: ../../script/events/executioner.js:226
+msgid "the webs part, and a grotesque insect lurches forward."
+msgstr "павутиння розступається, і вперед суне потворна комаха."
+
+#: ../../script/fabricator.js:29
+msgid "the workhorse of the wanderer fleet."
+msgstr "робоча конячка флоту мандрівників."
+
+#: ../../script/events/executioner.js:1448
+msgid "their weapons lie on the floor beside them."
+msgstr "їхня зброя лежить поруч на підлозі."
+
+#: ../../script/events/executioner.js:2328
+msgid "then it is gone."
+msgstr "а потім воно зникає."
+
+#: ../../script/events/executioner.js:1620
+msgid "there was no fighting here."
+msgstr "тут не було бою."
+
+#: ../../script/events/executioner.js:1715
+msgid "they take no notice of the intrusion."
+msgstr "вони не зважають на вторгнення."
+
+#: ../../script/events/executioner.js:159
+msgid "thick, sticky webbing covers the walls of the corridor."
+msgstr "стіни коридору вкриває густа липка павутина."
+
+#: ../../script/events/executioner.js:1318
+msgid "this one looks interesting."
+msgstr "це виглядає цікаво."
+
+#: ../../script/events/executioner.js:946
+msgid "this one looks useful."
+msgstr "це виглядає корисно."
+
+#: ../../script/events/executioner.js:1759
+msgid "this ward has been converted to a makeshift strategy room, maps scrawled hastily on any flat surface."
+msgstr "це відділення перетворили на імпровізовану стратегічну кімнату; карти нашвидкуруч накреслено на всіх пласких поверхнях."
+
+#: ../../script/events/executioner.js:1083
+msgid "through the bulkhead is a large room, walls lined with weapon racks. fighting seems to have passed it by."
+msgstr "за перебіркою — велика кімната зі стінами, заставленими стійками для зброї. схоже, бої оминули її."
+
+#: ../../script/events/executioner.js:2329
+msgid "time to get out of here."
+msgstr "час забиратися звідси."
+
+#: ../../script/events/executioner.js:5
+msgid "tripped a motion sensor."
+msgstr "спрацював датчик руху."
+
+#: ../../script/events/executioner.js:303
+msgid "two bedrolls are wedged into a corner."
+msgstr "у кутку затиснуто два спальники."
+
+#: ../../script/events/encounters.js:126
+msgid "two-headed creature"
+msgstr "двоголова істота"
+
+#: ../../script/events/executioner.js:651
+msgid "unruly welder"
+msgstr "некерований зварювальник"
+
+#: ../../script/events/executioner.js:1856
+msgid "unstable automaton"
+msgstr "нестабільний автомат"
+
+#: ../../script/events/executioner.js:981
+msgid "unstable prototype"
+msgstr "нестабільний прототип"
+
+#: ../../script/events.js:334
+msgid "use hypo"
+msgstr "використати гіпо"
+
+#: ../../script/events/executioner.js:881 ../../script/events/executioner.js:1496
+msgid "use machine"
+msgstr "скористатися машиною"
+
+#: ../../script/path.js:240
+msgid "use with rifle"
+msgstr "використати з рушницею"
+
+#: ../../script/space.js:501
+msgid "wait"
+msgstr "чекати"
+
+#: ../../script/events/executioner.js:2274
+msgid "wanderer form, but not quite flesh. not quite metal either. a crystal set into its chest pulses with light."
+msgstr "постать мандрівника, але не зовсім із плоті й не зовсім із металу. кристал у грудях пульсує світлом."
+
+#: ../../script/fabricator.js:39
+msgid "wanderer soldiers succeed by subverting the enemy's rage."
+msgstr "воїни мандрівників перемагають, обертаючи лють ворога проти нього."
+
+#: ../../script/fabricator.js:20
+msgid "water out, water in. waste not, want not."
+msgstr "вода виходить, вода повертається. не марнуй — не матимеш нестачі."
+
+#: ../../script/events/executioner.js:1730
+msgid "weapons are strewn about the medical dispatch bay. must have been used as a muster point."
+msgstr "у медичному диспетчерському відсіку розкидано зброю. мабуть, тут був пункт збору."
+
+#: ../../script/events/executioner.js:822
+msgid "wires run overhead, corroded and useless."
+msgstr "над головою тягнуться проіржавілі й непридатні дроти."
+
+#: ../../script/localization.js ../../script/room.js
+msgid "watchtower"
+msgstr "сторожова вежа"
+
+#: ../../script/localization.js ../../script/outside.js
+msgid "guard"
+msgstr "вартові"
+
+#: ../../script/room.js
+msgid "builder says a watchtower could warn the village before beasts arrive"
+msgstr "будівельниця каже, що сторожова вежа попередить поселення про наближення звірів"
+
+#: ../../script/room.js
+msgid "the watchtower rises above the settlement"
+msgstr "сторожова вежа здіймається над поселенням"
+
+#: ../../script/room.js
+msgid "the watchtower cannot be improved further"
+msgstr "сторожову вежу більше не можна покращити"
+
+#: ../../script/localization.js ../../script/room.js
+msgid "well"
+msgstr "криниця"
+
+#: ../../script/room.js
+msgid "builder says a well could help keep fires from spreading"
+msgstr "будівельниця каже, що криниця допоможе стримувати поширення пожеж"
+
+#: ../../script/room.js
+msgid "cool water waits beneath the settlement"
+msgstr "прохолодна вода чекає під поселенням"
+
+#: ../../script/room.js
+msgid "the well cannot be improved further"
+msgstr "криницю більше не можна покращити"
+
+#: ../../script/room.js
+msgid "stoke automatically"
+msgstr "Підкидувати автоматично"
+
+#: ../../script/room.js
+msgid "automatic fire tending enabled"
+msgstr "автопідтримку вогню ввімкнено"
+
+#: ../../script/room.js
+msgid "automatic fire tending disabled"
+msgstr "автопідтримку вогню вимкнено"
+
+#: ../../script/room.js
+msgid "automatic fire tending needs wood"
+msgstr "для автопідтримки вогню бракує дерева"
+
 
 #~ msgid "Export"
 #~ msgstr "Експорт"
