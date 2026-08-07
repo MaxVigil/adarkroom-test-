@@ -13,7 +13,7 @@ div#population {
 	top: -13px;
 	right: 10px;
 	background-color: white;
-	font-weight: 600;
+	font-weight: 700;
 }
 
 .noHuts #population {
@@ -27,7 +27,7 @@ div#village:before {
 	left: 8px;
 	top: -15px;
 	padding: 0 3px;
-	font-weight: 600;
+	font-weight: 700;
 	line-height: 1.2;
 	pointer-events: none;
 }

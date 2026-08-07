@@ -8,7 +8,7 @@ div#buildBtns:before, div#craftBtns:before, div#buyBtns:before {
 	content: attr(data-legend);
 	display: block;
 	margin-bottom: 7px;
-	font-weight: 600;
+	font-weight: 700;
 	line-height: 1.2;
 }
 
@@ -57,7 +57,7 @@ div#stores:before, div#weapons:before {
 	left: 8px;
 	top: -15px;
 	padding: 0 3px;
-	font-weight: 600;
+	font-weight: 700;
 	line-height: 1.2;
 	pointer-events: none;
 }

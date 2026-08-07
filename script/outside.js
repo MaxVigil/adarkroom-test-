@@ -454,15 +454,15 @@ var Outside = {
 			}
 		}
 		/// TRANSLATORS : pop is short for population.
-		population.text(_('pop ') + $SM.get('game.population') + '/' + this.getMaxPopulation());
+		population.text(EntityDescriptions.capitalize(_('pop ')) + $SM.get('game.population') + '/' + this.getMaxPopulation());
 		
 		var hasPeeps;
 		if($SM.get('game.buildings["hut"]', true) === 0) {
 			hasPeeps = false;
-			village.attr('data-legend', _('forest'));
+			village.attr('data-legend', EntityDescriptions.name('forest'));
 		} else {
 			hasPeeps = true;
-			village.attr('data-legend', _('village'));
+			village.attr('data-legend', EntityDescriptions.name('village'));
 		}
 		
 		if(needsAppend && village.children().length > 1) {
