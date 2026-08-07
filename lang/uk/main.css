@@ -1,16 +1,11 @@
 .button {
-	width: auto !important;
+	width: 115px !important;
 	min-width: 115px;
 	max-width: 100%;
 }
 
-#outsidePanel .button {
-	width: auto !important;
-	min-width: 115px;
-}
-
 .eventPanel .button {
-	width: auto !important;
+	width: 122px !important;
 	min-width: 122px;
 }
 

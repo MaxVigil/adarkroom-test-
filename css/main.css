@@ -658,6 +658,35 @@ body.noMask .eventPanel .button {
 	color: white;
 }
 
+.eventPanel.speedMenuPanel #description {
+	min-height: 72px;
+}
+
+.eventPanel.speedMenuPanel #exitButtons {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 8px;
+	width: 100%;
+}
+
+.eventPanel.speedMenuPanel #exitButtons > .button {
+	float: none;
+	box-sizing: border-box;
+	width: 100% !important;
+	min-width: 0;
+	max-width: 100%;
+	min-height: 42px;
+	margin: 0;
+	padding: 8px 12px;
+	line-height: 1.2;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+.eventPanel.speedMenuPanel #exitButtons > .clear {
+	display: none;
+}
+
 .eventTitle {
 	display: inline-block;
 	font-weight: bold;

@@ -4,19 +4,26 @@ div#village {
 	right: 0px;
 	border: 1px solid black;
 	cursor: default;
-	padding: 12px 10px 7px;
-	width: 230px;
+	padding: 42px 10px 7px;
+	width: 200px;
 }
 
 div#population {
 	position: absolute;
-	top: -15px;
-	right: 8px;
-	background-color: white;
-	padding: 0 3px;
+	top: 10px;
+	left: 10px;
+	right: 10px;
+	background-color: transparent;
+	border-bottom: 1px solid currentColor;
+	padding: 0 0 7px;
 	font-weight: 700;
 	line-height: 1.2;
+	text-align: right;
 	white-space: nowrap;
+}
+
+div#village div#population {
+	background-color: transparent;
 }
 
 .noHuts #population {
@@ -40,6 +47,21 @@ div#workers {
 	top: -4px;
 	left: 160px;
 	width: 150px;
+}
+
+div#outsidePanel > div.button.actionButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 140px !important;
+	min-width: 140px;
+	max-width: 140px;
+	min-height: 44px;
+	padding: 7px 10px;
+	line-height: 1.2;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 .workerRow > .row_val {

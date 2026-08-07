@@ -629,6 +629,8 @@
             }
           }
         }
+      }, {
+        className: 'speedMenuPanel'
       });
     },
 

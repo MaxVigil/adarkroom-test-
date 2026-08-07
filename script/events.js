@@ -1411,6 +1411,9 @@ var Events = {
 		Button.saveCooldown = false;
 		Events.eventStack.unshift(event);
 		event.eventPanel = $('<div>').attr('id', 'event').addClass('eventPanel').css('opacity', '0');
+		if(options != null && options.className != null) {
+			Events.eventPanel().addClass(options.className);
+		}
 		if(options != null && options.width != null) {
 			Events.eventPanel().css('width', options.width);
 		}
