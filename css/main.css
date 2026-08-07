@@ -658,24 +658,20 @@ body.noMask .eventPanel .button {
 	color: white;
 }
 
-.eventPanel.speedMenuPanel #description {
-	min-height: 72px;
-}
-
-.eventPanel.speedMenuPanel #exitButtons {
+.eventPanel #exitButtons {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr);
-	gap: 8px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 10px 12px;
 	width: 100%;
 }
 
-.eventPanel.speedMenuPanel #exitButtons > .button {
+.eventPanel #exitButtons > .button {
 	float: none;
 	box-sizing: border-box;
 	width: 100% !important;
 	min-width: 0;
 	max-width: 100%;
-	min-height: 42px;
+	min-height: 44px;
 	margin: 0;
 	padding: 8px 12px;
 	line-height: 1.2;
@@ -683,8 +679,29 @@ body.noMask .eventPanel .button {
 	overflow-wrap: anywhere;
 }
 
-.eventPanel.speedMenuPanel #exitButtons > .clear {
+.eventPanel #exitButtons.singleChoice {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.eventPanel #exitButtons.singleChoice > .button {
+	padding-right: 16px;
+	padding-left: 16px;
+}
+
+.eventPanel #exitButtons.oddChoices > .button.lastChoice {
+	grid-column: 1 / -1;
+}
+
+.eventPanel #exitButtons > .clear {
 	display: none;
+}
+
+.eventPanel.speedMenuPanel #description {
+	min-height: 72px;
+}
+
+.eventPanel.speedMenuPanel #exitButtons {
+	grid-template-columns: minmax(0, 1fr);
 }
 
 .eventTitle {

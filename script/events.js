@@ -1177,6 +1177,12 @@ var Events = {
 			btnsList.push(b);
 		}
 
+		btns.toggleClass('singleChoice', btnsList.length === 1);
+		btns.toggleClass('oddChoices', btnsList.length > 1 && btnsList.length % 2 === 1);
+		if(btnsList.length > 0) {
+			btnsList[btnsList.length - 1].addClass('lastChoice');
+		}
+
 		Events.updateButtons();
 		return (btnsList.length == 1) ? btnsList[0] : false;
 	},
