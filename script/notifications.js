@@ -60,7 +60,15 @@ var Notifications = {
 		
 	},
 	
+	sentenceCase: function(text) {
+		if(text == null) return text;
+		return String(text).replace(/(^|[.!?]\s+|\n\s*)(["'“‘(\[]*)([a-zа-яіїєґ])/g, function(match, prefix, opening, letter) {
+			return prefix + opening + letter.toLocaleUpperCase();
+		});
+	},
+	
 	printMessage: function(t) {
+		t = Notifications.sentenceCase(t);
 		var text = $('<div>').addClass('notification').css('opacity', '0').text(t).prependTo('div#notifications');
 		text.animate({opacity: 1}, 500, 'linear', function() {
 			// Do this every time we add a new message, this way we never have a large backlog to iterate through. Keeps things faster.
