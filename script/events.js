@@ -290,6 +290,7 @@ var Events = {
 			text: _('eat meat'),
 			cooldown: cooldown,
 			click: Events.eatMeat,
+			entity: 'cured meat',
 			cost: { 'cured meat': 1 }
 		});
 
@@ -310,6 +311,7 @@ var Events = {
 			text: _('use meds'),
 			cooldown: cooldown,
 			click: Events.useMeds,
+			entity: 'medicine',
 			cost: { 'medicine': 1 }
 		});
 
@@ -330,6 +332,7 @@ var Events = {
 			text: _('use hypo'),
 			cooldown: cooldown,
 			click: Events.useHypo,
+			entity: 'hypo',
 			cost: { 'hypo': 1 }
 		});
 
@@ -345,7 +348,8 @@ var Events = {
 			id: 'shld',
 			text: _('shield'),
 			cooldown: Events._SHIELD_COOLDOWN,
-			click: Events.useShield
+			click: Events.useShield,
+			entity: 'kinetic armour'
 		});
 		return btn;
 	},
@@ -354,7 +358,8 @@ var Events = {
 		id: 'use-stim',
 		text: _('boost'),
 		cooldown: Events._STIM_COOLDOWN,
-		click: Events.useStim
+		click: Events.useStim,
+		entity: 'stim'
 	}),
 
 	createAttackButton: function(weaponName) {
@@ -371,6 +376,7 @@ var Events = {
 			cooldown: cd,
 			click: Events.useWeapon,
 			boosted: () => $('#wanderer').data('status') === 'boost',
+			entity: weaponName,
 			cost: weapon.cost
 		});
 		if(typeof weapon.damage == 'number' && weapon.damage > 0) {
