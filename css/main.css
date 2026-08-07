@@ -192,11 +192,15 @@ div#outerSlider > div {
 
 div#locationSlider {
 	position: absolute;
+	display: flex;
+	align-items: flex-start;
+	flex-wrap: nowrap;
 }
 
 div.location {
 	position: relative;
-	float: left;
+	float: none;
+	flex: 0 0 700px;
 	width: 700px;
 }
 
