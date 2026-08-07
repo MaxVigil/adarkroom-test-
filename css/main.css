@@ -385,10 +385,12 @@ div.button div.tooltip {
 }
 
 div.tooltip.entityTooltip,
-div.button div.tooltip.entityTooltip {
+div.button div.tooltip.entityTooltip,
+div.workerRow div.tooltip.entityTooltip,
+div.storeRow div.tooltip.entityTooltip {
 	box-sizing: border-box;
-	width: 240px;
-	max-width: 260px;
+	width: 280px;
+	max-width: calc(100vw - 16px);
 	line-height: 1.35;
 	white-space: normal;
 }
@@ -397,7 +399,9 @@ div.tooltip .tooltipDescription {
 	margin-bottom: 5px;
 	padding-bottom: 5px;
 	border-bottom: 1px solid #bbb;
-	font-size: 11px;
+	font-size: 13px;
+	line-height: 1.45;
+	overflow-wrap: anywhere;
 }
 
 .hasEntityDescription {
