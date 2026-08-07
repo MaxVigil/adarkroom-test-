@@ -128,6 +128,14 @@ var Path = {
 		if($SM.get('stores["l armour"]', true) > 0) return { key: 'l armour', name: _("leather") };
 		return null;
 	},
+
+	getCurrentPack: function() {
+		if($SM.get('stores["cargo drone"]', true) > 0) return { key: 'cargo drone', name: _('cargo drone') };
+		if($SM.get('stores.convoy', true) > 0) return { key: 'convoy', name: _('convoy') };
+		if($SM.get('stores.wagon', true) > 0) return { key: 'wagon', name: _('wagon') };
+		if($SM.get('stores.rucksack', true) > 0) return { key: 'rucksack', name: _('rucksack') };
+		return null;
+	},
 	
 	getCapacity: function() {
 		if($SM.get('stores["cargo drone"]', true) > 0) {
@@ -207,6 +215,9 @@ var Path = {
 		} else {
 			aRow.remove();
 		}
+		if(armourKey) {
+			EntityDescriptions.attach(aRow, armourKey, 'bottom right');
+		}
 		
 		// Add the water row
 		var wRow = $('#waterRow');
@@ -218,6 +229,7 @@ var Path = {
 		} else {
 			$('.row_val', wRow).text(World.getMaxWater());
 		}
+		EntityDescriptions.attach(wRow, 'water', 'bottom right');
 		
 		var space = Path.getFreeSpace();
 		var currentBagCapacity = 0;
@@ -327,6 +339,8 @@ var Path = {
 		
 		var numAvailable = $SM.get('stores["'+key+'"]', true);
 		var tt = $('<div>').addClass('tooltip bottom right').appendTo(row);
+		EntityDescriptions.addToTooltip(tt, key);
+		row.addClass('hasEntityDescription');
 
 		if(store.type == 'weapon') {
 			$('<div>').addClass('row_key').text(_('damage')).appendTo(tt);
