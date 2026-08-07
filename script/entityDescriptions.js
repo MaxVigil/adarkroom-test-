@@ -70,6 +70,11 @@ var EntityDescriptions = {
     "en": "Proper tools let the builder make finer, deadlier things.",
     "uk": "Справжні інструменти дозволяють будівничій створювати тонші й смертоносніші речі."
   },
+  "watchtower": {
+    "type": "Building",
+    "en": "Each assigned guard cuts the chance of a beast attack by 25%. The tower has 1–4 guard posts as it is upgraded.",
+    "uk": "Кожен призначений вартовий зменшує ймовірність нападу звірів на 25%. Після покращень вежа має від 1 до 4 місць для вартових."
+  },
   "alien alloy": {
     "type": "Resource",
     "en": "Rare metal used in batches of 1–2 by the fabricator; each ship upgrade costs 1 alloy.",
@@ -339,6 +344,11 @@ var EntityDescriptions = {
     "type": "Role",
     "en": "Each armourer turns 1 steel and 1 sulphur into 1 bullet every 10 seconds.",
     "uk": "Кожен зброяр перетворює 1 сталь та 1 сірку на 1 кулю кожні 10 секунд."
+  },
+  "guard": {
+    "type": "Role",
+    "en": "Each assigned guard cuts the chance of a beast attack by 25%; guard capacity equals the watchtower's level.",
+    "uk": "Кожен призначений вартовий зменшує ймовірність нападу звірів на 25%; кількість місць дорівнює рівню Сторожової вежі."
   }
 },
 

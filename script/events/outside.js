@@ -229,6 +229,9 @@ Events.Outside = [
 		isAvailable: function() {
 			return Engine.activeModule == Outside && $SM.get('game.population', true) > 0;
 		},
+		triggerChance: function() {
+			return Outside.getBeastAttackChanceMultiplier();
+		},
 		scenes: {
 			'start': {
 				text: [

@@ -1350,7 +1350,12 @@ var Events = {
 				return;
 			} else {
 				var r = Math.floor(Math.random()*(possibleEvents.length));
-				Events.startEvent(possibleEvents[r]);
+				var selectedEvent = possibleEvents[r];
+				var triggerChance = typeof selectedEvent.triggerChance == 'function' ? selectedEvent.triggerChance() : 1;
+				triggerChance = Math.max(0, Math.min(1, triggerChance));
+				if(triggerChance >= 1 || Math.random() < triggerChance) {
+					Events.startEvent(selectedEvent);
+				}
 			}
 		}
 

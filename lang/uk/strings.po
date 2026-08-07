@@ -4380,6 +4380,26 @@ msgstr "у медичному диспетчерському відсіку ро
 msgid "wires run overhead, corroded and useless."
 msgstr "над головою тягнуться проіржавілі й непридатні дроти."
 
+#: ../../script/localization.js ../../script/room.js
+msgid "watchtower"
+msgstr "сторожова вежа"
+
+#: ../../script/localization.js ../../script/outside.js
+msgid "guard"
+msgstr "вартові"
+
+#: ../../script/room.js
+msgid "builder says a watchtower could warn the village before beasts arrive"
+msgstr "будівельниця каже, що сторожова вежа попередить поселення про наближення звірів"
+
+#: ../../script/room.js
+msgid "the watchtower rises above the settlement"
+msgstr "сторожова вежа здіймається над поселенням"
+
+#: ../../script/room.js
+msgid "the watchtower cannot be improved further"
+msgstr "сторожову вежу більше не можна покращити"
+
 
 #~ msgid "Export"
 #~ msgstr "Експорт"

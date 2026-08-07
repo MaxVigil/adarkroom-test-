@@ -39,6 +39,8 @@
 		_('compass'),
 		_('laser rifle'),
 		_('gatherer'),
+		_('guard'),
+		_('watchtower'),
 		_('cloth'),
 		_('scales'),
 		_('cured meat'),

@@ -92,6 +92,11 @@ var Outside = {
 				'sulphur': -1,
 				'bullets': 1
 			}
+		},
+		'guard': {
+			name: _('guard'),
+			delay: 10,
+			stores: {}
 		}
 	},
 	TrapDrops: [
@@ -320,13 +325,14 @@ var Outside = {
 			$('div#workers_row_gatherer > div.row_val > span', workers).text(numGatherers);
 		}
 		
-		if(numGatherers === 0) {
-			$('.upBtn', '#workers').addClass('disabled');
-			$('.upManyBtn', '#workers').addClass('disabled');
-		} else {
-			$('.upBtn', '#workers').removeClass('disabled');
-			$('.upManyBtn', '#workers').removeClass('disabled');
-		}
+		workers.children('.workerRow').each(function() {
+			var row = $(this);
+			var worker = row.attr('key');
+			if(worker == 'gatherer') return;
+			var workerCount = $SM.get('game.workers["' + worker + '"]', true);
+			var canIncrease = numGatherers > 0 && workerCount < Outside.getWorkerCapacity(worker);
+			$('.upBtn, .upManyBtn', row).toggleClass('disabled', !canIncrease);
+		});
 		
 		
 		if(needsAppend && workers.children().length > 0) {
@@ -340,6 +346,23 @@ var Outside = {
 			num -= $SM.get('game.workers["'+k+'"]');
 		}
 		return num;
+	},
+
+	getWorkerCapacity: function(worker) {
+		if(worker == 'guard') {
+			return Math.max(0, Math.min(4, $SM.get('game.buildings["watchtower"]', true)));
+		}
+		return Infinity;
+	},
+
+	getBeastAttackReduction: function() {
+		var assignedGuards = $SM.get('game.workers["guard"]', true);
+		var activeGuards = Math.min(assignedGuards, Outside.getWorkerCapacity('guard'));
+		return Math.min(1, Math.max(0, activeGuards * 0.25));
+	},
+
+	getBeastAttackChanceMultiplier: function() {
+		return 1 - Outside.getBeastAttackReduction();
 	},
 	
 	makeWorkerRow: function(key, num) {
@@ -380,8 +403,9 @@ var Outside = {
 	
 	increaseWorker: function(btn) {
 		var worker = $(this).closest('.workerRow').attr('key');
-		if(Outside.getNumGatherers() > 0) {
-			var increaseAmt = Math.min(Outside.getNumGatherers(), btn.data);
+		var remainingCapacity = Outside.getWorkerCapacity(worker) - $SM.get('game.workers["'+worker+'"]', true);
+		if(Outside.getNumGatherers() > 0 && remainingCapacity > 0) {
+			var increaseAmt = Math.min(Outside.getNumGatherers(), btn.data, remainingCapacity);
 			Engine.log('increasing ' + worker + ' by ' + increaseAmt);
 			$SM.add('game.workers["'+worker+'"]', increaseAmt);
 		}
@@ -490,7 +514,8 @@ var Outside = {
 			'coal mine': ['coal miner'],
 			'sulphur mine': ['sulphur miner'],
 			'steelworks': ['steelworker'],
-			'armoury' : ['armourer']
+			'armoury' : ['armourer'],
+			'watchtower': ['guard']
 		};
 		
 		var jobs = jobMap[name];
@@ -669,6 +694,9 @@ var Outside = {
 			Outside.updateVillage();
 			Outside.updateWorkersView();
 			Outside.updateVillageIncome();
+		} else if(e.stateName.indexOf('game.buildings["watchtower"]') === 0) {
+			Outside.updateVillage();
+			Outside.updateWorkersView();
 		}
 	}
 };

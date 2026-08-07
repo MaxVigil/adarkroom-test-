@@ -165,6 +165,26 @@ var Room = {
 			},
 			audio: AudioLibrary.BUILD_ARMOURY
 		},
+		'watchtower': {
+			name: _('watchtower'),
+			button: null,
+			maximum: 4,
+			availableMsg: _('builder says a watchtower could warn the village before beasts arrive'),
+			buildMsg: _('the watchtower rises above the settlement'),
+			maxMsg: _('the watchtower cannot be improved further'),
+			type: 'building',
+			cost: function () {
+				var level = $SM.get('game.buildings["watchtower"]', true);
+				var levelCosts = [
+					{ wood: 100, fur: 50 },
+					{ wood: 200, fur: 100, leather: 50 },
+					{ wood: 400, fur: 200, leather: 100, iron: 50 },
+					{ wood: 600, fur: 300, leather: 150, iron: 75, steel: 50 }
+				];
+				return levelCosts[Math.min(level, levelCosts.length - 1)];
+			},
+			audio: AudioLibrary.BUILD_HUT
+		},
 		'torch': {
 			name: _('torch'),
 			button: null,
