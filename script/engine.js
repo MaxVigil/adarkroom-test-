@@ -79,6 +79,9 @@
       doubleTime: false // backwards compatibility for extensions
     },
 
+    _timers: {},
+    _nextTimerId: 1,
+
     init: function(options) {
       this.options = $.extend(
         this.options,
@@ -564,9 +567,17 @@
       speed = parseInt(speed, 10);
       if(speed < 1 || speed > 4) speed = 1;
 
+      var previousSpeed = Engine.getGameSpeed();
       Engine.options.gameSpeed = speed;
       Engine.options.doubleTime = speed > 1;
       $('.hyper').text(_('speed') + ' x' + speed + '.');
+
+      if(previousSpeed !== speed) {
+        Engine.rescheduleTimers();
+        if(typeof Button !== 'undefined' && Button.rescaleCooldowns) {
+          Button.rescaleCooldowns(speed);
+        }
+      }
 
       if(!noSave) {
         $SM.set('config.gameSpeed', speed, true);
@@ -856,26 +867,100 @@
       }
     },
 
-    setInterval: function(callback, interval, skipDouble){
-      var gameSpeed = Engine.getGameSpeed();
-      if(gameSpeed > 1 && !skipDouble) {
-        Engine.log('Game speed x' + gameSpeed + ', shortening interval');
-        interval /= gameSpeed;
+    _scheduleTimer: function(timer) {
+      var speed = timer.skipSpeed ? 1 : Engine.getGameSpeed();
+      var delay = Math.max(0, timer.remaining / speed);
+
+      timer.speed = speed;
+      timer.startedAt = Date.now();
+
+      if(timer.type === 'interval') {
+        timer.nativeId = window.setInterval(function() {
+          timer.callback.call(window);
+        }, delay);
+      } else {
+        timer.nativeId = window.setTimeout(function() {
+          timer.active = false;
+          delete Engine._timers[timer.id];
+          timer.callback.call(window);
+        }, delay);
       }
 
-      return setInterval(callback, interval);
-
+      return timer;
     },
 
-    setTimeout: function(callback, timeout, skipDouble){
-      var gameSpeed = Engine.getGameSpeed();
-      if(gameSpeed > 1 && !skipDouble) {
-        Engine.log('Game speed x' + gameSpeed + ', shortening timeout');
-        timeout /= gameSpeed;
+    _createTimer: function(type, callback, delay, skipSpeed) {
+      var timer = {
+        engineTimer: true,
+        id: Engine._nextTimerId++,
+        type: type,
+        callback: callback,
+        remaining: Math.max(0, delay),
+        skipSpeed: Boolean(skipSpeed),
+        active: true,
+        nativeId: null,
+        speed: 1,
+        startedAt: Date.now()
+      };
+
+      Engine._timers[timer.id] = timer;
+      return Engine._scheduleTimer(timer);
+    },
+
+    _clearTimer: function(timer, type) {
+      if(timer && timer.engineTimer) {
+        if(!timer.active) return;
+
+        timer.active = false;
+        delete Engine._timers[timer.id];
+        if(timer.type === 'interval') {
+          window.clearInterval(timer.nativeId);
+        } else {
+          window.clearTimeout(timer.nativeId);
+        }
+        return;
       }
 
-      return setTimeout(callback, timeout);
+      if(type === 'interval') {
+        window.clearInterval(timer);
+      } else {
+        window.clearTimeout(timer);
+      }
+    },
 
+    clearInterval: function(timer) {
+      Engine._clearTimer(timer, 'interval');
+    },
+
+    clearTimeout: function(timer) {
+      Engine._clearTimer(timer, 'timeout');
+    },
+
+    rescheduleTimers: function() {
+      var now = Date.now();
+
+      Object.keys(Engine._timers).forEach(function(id) {
+        var timer = Engine._timers[id];
+        if(!timer || !timer.active || timer.skipSpeed) return;
+
+        if(timer.type === 'interval') {
+          window.clearInterval(timer.nativeId);
+        } else {
+          var elapsed = Math.max(0, now - timer.startedAt);
+          timer.remaining = Math.max(0, timer.remaining - (elapsed * timer.speed));
+          window.clearTimeout(timer.nativeId);
+        }
+
+        Engine._scheduleTimer(timer);
+      });
+    },
+
+    setInterval: function(callback, interval, skipDouble) {
+      return Engine._createTimer('interval', callback, interval, skipDouble);
+    },
+
+    setTimeout: function(callback, timeout, skipDouble) {
+      return Engine._createTimer('timeout', callback, timeout, skipDouble);
     }
   };
 
