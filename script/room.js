@@ -1129,6 +1129,38 @@ var Room = {
 		return false;
 	},
 
+	getButtonAvailability: function(item, cost, maxed, isTrade) {
+		if(maxed) {
+			if(item.maximum > 1) {
+				return { state: 'complete', label: EntityDescriptions.ui('maximumReached', item.maximum) };
+			}
+			if(isTrade) {
+				return { state: 'complete', label: EntityDescriptions.ui('purchased') };
+			}
+			return {
+				state: 'complete',
+				label: EntityDescriptions.ui(item.type === 'building' ? 'built' : 'crafted')
+			};
+		}
+
+		if(!isTrade && $SM.get('game.temperature.value') <= Room.TempEnum.Cold.value) {
+			return {
+				state: 'blocked',
+				label: EntityDescriptions.ui('unavailable'),
+				reason: EntityDescriptions.ui('tooCold')
+			};
+		}
+
+		if(!Button.canAfford(cost)) {
+			return { state: 'blocked', label: EntityDescriptions.ui('missingResources') };
+		}
+
+		return {
+			state: 'ready',
+			label: EntityDescriptions.ui(isTrade ? 'canBuy' : (item.type === 'building' ? 'canBuild' : 'canCraft'))
+		};
+	},
+
 	updateBuildButtons: function () {
 		var buildSection = $('#buildBtns');
 		var needsAppend = false;
@@ -1153,13 +1185,16 @@ var Room = {
 
 		for (var k in Room.Craftables) {
 			craftable = Room.Craftables[k];
-			var max = $SM.num(k, craftable) + 1 > craftable.maximum;
-			if (craftable.button == null) {
+			var current = $SM.num(k, craftable) || 0;
+			var max = typeof craftable.maximum === 'number' && current >= craftable.maximum;
+			var cost = craftable.cost();
+			var craftButtonExisted = craftable.button != null;
+			if (!craftButtonExisted) {
 				if (Room.craftUnlocked(k)) {
 					var loc = Room.needsWorkshop(craftable.type) ? craftSection : buildSection;
 					craftable.button = new Button.Button({
 						id: 'build_' + k.replace(/ /g, '-'),
-						cost: craftable.cost(),
+						cost: cost,
 						text: EntityDescriptions.name(k),
 						click: Room.build,
 						entity: k,
@@ -1167,35 +1202,39 @@ var Room = {
 						ttPos: loc.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', k).appendTo(loc).animate({ opacity: 1 }, 300, 'linear');
 				}
-			} else {
-				// refresh the tooltip
-				var costTooltip = $('.tooltip', craftable.button);
-				costTooltip.empty();
-				EntityDescriptions.addToTooltip(costTooltip, k);
-				var cost = craftable.cost();
-				for (var c in cost) {
-					$("<div>").addClass('row_key').text(EntityDescriptions.name(c)).appendTo(costTooltip);
-					$("<div>").addClass('row_val').text(cost[c]).appendTo(costTooltip);
-				}
-				if (max && !craftable.button.hasClass('disabled')) {
+			}
+			if (craftable.button != null) {
+				if (max && craftButtonExisted && !craftable.button.hasClass('state-complete')) {
 					Notifications.notify(Room, craftable.maxMsg);
 				}
-			}
-			if (max) {
-				Button.setDisabled(craftable.button, true);
-			} else {
-				Button.setDisabled(craftable.button, false);
+				var craftAvailability = Room.getButtonAvailability(craftable, cost, max, false);
+				Button.setState(
+					craftable.button,
+					craftAvailability.state,
+					(craftAvailability.state === 'complete' ? '✓ ' : '') + craftAvailability.label
+				);
+				Button.updateCostTooltip(craftable.button, {
+					entity: k,
+					cost: cost,
+					state: craftAvailability.state,
+					status: craftAvailability.label,
+					reason: craftAvailability.reason,
+					hideCost: max
+				});
 			}
 		}
 
 		for (var g in Room.TradeGoods) {
 			good = Room.TradeGoods[g];
-			var goodsMax = $SM.num(g, good) + 1 > good.maximum;
-			if (good.button == null) {
+			var goodsCurrent = $SM.num(g, good) || 0;
+			var goodsMax = typeof good.maximum === 'number' && goodsCurrent >= good.maximum;
+			var goodCost = good.cost();
+			var buyButtonExisted = good.button != null;
+			if (!buyButtonExisted) {
 				if (Room.buyUnlocked(g)) {
 					good.button = new Button.Button({
 						id: 'build_' + g,
-						cost: good.cost(),
+						cost: goodCost,
 						text: EntityDescriptions.name(g),
 						click: Room.buy,
 						entity: g,
@@ -1203,24 +1242,25 @@ var Room = {
 						ttPos: buySection.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', g).appendTo(buySection).animate({ opacity: 1 }, 300, 'linear');
 				}
-			} else {
-				// refresh the tooltip
-				var goodsCostTooltip = $('.tooltip', good.button);
-				goodsCostTooltip.empty();
-				EntityDescriptions.addToTooltip(goodsCostTooltip, g);
-				var goodCost = good.cost();
-				for (var gc in goodCost) {
-					$("<div>").addClass('row_key').text(EntityDescriptions.name(gc)).appendTo(goodsCostTooltip);
-					$("<div>").addClass('row_val').text(goodCost[gc]).appendTo(goodsCostTooltip);
-				}
-				if (goodsMax && !good.button.hasClass('disabled')) {
+			}
+			if (good.button != null) {
+				if (goodsMax && buyButtonExisted && !good.button.hasClass('state-complete')) {
 					Notifications.notify(Room, good.maxMsg);
 				}
-			}
-			if (goodsMax) {
-				Button.setDisabled(good.button, true);
-			} else {
-				Button.setDisabled(good.button, false);
+				var buyAvailability = Room.getButtonAvailability(good, goodCost, goodsMax, true);
+				Button.setState(
+					good.button,
+					buyAvailability.state,
+					(buyAvailability.state === 'complete' ? '✓ ' : '') + buyAvailability.label
+				);
+				Button.updateCostTooltip(good.button, {
+					entity: g,
+					cost: goodCost,
+					state: buyAvailability.state,
+					status: buyAvailability.label,
+					reason: buyAvailability.reason,
+					hideCost: goodsMax
+				});
 			}
 		}
 
@@ -1230,7 +1270,7 @@ var Room = {
 		if (cNeedsAppend && craftSection.children().length > 0) {
 			craftSection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
 		}
-		if (bNeedsAppend && buildSection.children().length > 0) {
+		if (bNeedsAppend && buySection.children().length > 0) {
 			buySection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
 		}
 	},
@@ -1249,7 +1289,7 @@ var Room = {
 		} else if (e.category == 'income') {
 			Room.updateStoresView();
 			Room.updateIncomeView();
-		} else if (e.stateName.indexOf('game.buildings') === 0) {
+		} else if (e.stateName.indexOf('game.buildings') === 0 || e.stateName === 'game.temperature.value') {
 			Room.updateBuildButtons();
 		}
 	},

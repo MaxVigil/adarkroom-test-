@@ -285,6 +285,54 @@ div.button.disabled, div.button.disabled:hover {
 	text-decoration: none;
 }
 
+div.button.statefulButton {
+	min-height: 38px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	line-height: 1.1;
+}
+
+div.button.statefulButton:focus {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
+
+div.button .buttonState {
+	display: block;
+	margin-top: 3px;
+	font-size: 11px;
+	font-weight: 600;
+	line-height: 1.1;
+	text-decoration: none;
+	white-space: normal;
+}
+
+div.button.state-ready,
+div.button.state-ready:hover {
+	border-style: solid;
+	box-shadow: inset 0 0 0 1px currentColor;
+	color: #111;
+	cursor: pointer;
+}
+
+div.button.state-blocked,
+div.button.state-blocked:hover {
+	border-color: #666;
+	border-style: dashed;
+	box-shadow: none;
+	color: #666;
+	cursor: help;
+}
+
+div.button.state-complete,
+div.button.state-complete:hover {
+	border-color: #777;
+	border-style: solid;
+	box-shadow: none;
+	color: #555;
+	cursor: help;
+}
+
 div.button div.cooldown {
 	position: absolute;
 	top: 0px;
@@ -413,8 +461,8 @@ div.storeRow div.tooltip.entityTooltip {
 	white-space: normal;
 }
 
-div.tooltip.entityTooltipFloating {
-	pointer-events: none;
+div.tooltip.entityTooltipFloating:hover {
+	display: block !important;
 }
 
 div.tooltip .tooltipDescription {
@@ -424,6 +472,61 @@ div.tooltip .tooltipDescription {
 	font-size: 13px;
 	line-height: 1.45;
 	overflow-wrap: anywhere;
+}
+
+div.button div.tooltip.costTooltip {
+	width: 340px !important;
+	padding: 8px 10px;
+}
+
+div.tooltip .tooltipStatus {
+	margin-bottom: 4px;
+	font-weight: 700;
+}
+
+div.tooltip .tooltipReason {
+	margin-bottom: 6px;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+div.tooltip .tooltipCostTitle {
+	margin-top: 6px;
+	padding-top: 6px;
+	border-top: 1px solid #bbb;
+	font-weight: 700;
+}
+
+div.tooltip .costRow {
+	display: grid;
+	grid-template-columns: minmax(70px, 0.8fr) minmax(120px, 1.35fr) auto;
+	gap: 6px;
+	align-items: baseline;
+	margin-top: 4px;
+	font-size: 13px;
+	line-height: 1.35;
+}
+
+div.tooltip .costResource {
+	font-weight: 600;
+}
+
+div.tooltip .costAmounts {
+	white-space: nowrap;
+}
+
+div.tooltip .costResult {
+	text-align: right;
+	white-space: nowrap;
+}
+
+div.tooltip .costRow.sufficient .costResult {
+	color: #356b35;
+}
+
+div.tooltip .costRow.missing .costResult {
+	color: #923d2d;
+	font-weight: 700;
 }
 
 .hasEntityDescription {

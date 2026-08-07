@@ -342,8 +342,36 @@ var EntityDescriptions = {
   }
 },
 
+  uiStrings: {
+    cost: { en: 'Cost', uk: 'Вартість' },
+    status: { en: 'Status', uk: 'Статус' },
+    reason: { en: 'Reason', uk: 'Причина' },
+    haveNeed: { en: 'have {0} / need {1}', uk: 'є {0} / треба {1}' },
+    missingCount: { en: 'missing {0}', uk: 'бракує {0}' },
+    enough: { en: 'enough', uk: 'достатньо' },
+    built: { en: 'Built', uk: 'Побудовано' },
+    crafted: { en: 'Crafted', uk: 'Створено' },
+    purchased: { en: 'Purchased', uk: 'Придбано' },
+    maximumReached: { en: 'Maximum: {0}', uk: 'Максимум: {0}' },
+    canBuild: { en: 'Can build', uk: 'Можна побудувати' },
+    canCraft: { en: 'Can craft', uk: 'Можна створити' },
+    canBuy: { en: 'Can buy', uk: 'Можна придбати' },
+    missingResources: { en: 'Missing resources', uk: 'Бракує ресурсів' },
+    unavailable: { en: 'Unavailable', uk: 'Недоступно' },
+    tooCold: { en: 'The room is too cold.', uk: 'У кімнаті надто холодно.' }
+  },
+
   language: function() {
     return typeof lang !== 'undefined' && lang === 'uk' ? 'uk' : 'en';
+  },
+
+  ui: function(key) {
+    var entry = EntityDescriptions.uiStrings[key];
+    var text = entry ? entry[EntityDescriptions.language()] : key;
+    var values = Array.prototype.slice.call(arguments, 1);
+    return text.replace(/\{(\d+)\}/g, function(match, index) {
+      return typeof values[index] !== 'undefined' ? values[index] : match;
+    });
   },
 
   get: function(key) {
@@ -397,13 +425,18 @@ var EntityDescriptions = {
 
   positionTooltip: function(element) {
     var sourceTooltip = element.children('div.entityTooltip').first();
-    if(sourceTooltip.length === 0 || !element.is(':hover')) return;
+    if(sourceTooltip.length === 0 || (!element.is(':hover') && !element.is(':focus'))) return;
 
+    EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
     sourceTooltip.css('visibility', 'hidden');
     var tooltip = sourceTooltip.clone()
       .addClass('entityTooltipFloating')
-      .appendTo('body');
+      .appendTo('body')
+      .on('mouseenter.entityDescriptions', EntityDescriptions.cancelTooltipHide)
+      .on('mouseleave.entityDescriptions', function() {
+        EntityDescriptions.scheduleTooltipHide(element);
+      });
 
     var targetRect = element[0].getBoundingClientRect();
     var viewportPadding = 8;
@@ -443,10 +476,29 @@ var EntityDescriptions = {
     });
   },
 
+  cancelTooltipHide: function() {
+    if(EntityDescriptions._tooltipHideTimer) {
+      window.clearTimeout(EntityDescriptions._tooltipHideTimer);
+      EntityDescriptions._tooltipHideTimer = null;
+    }
+  },
+
+  scheduleTooltipHide: function(element) {
+    EntityDescriptions.cancelTooltipHide();
+    EntityDescriptions._tooltipHideTimer = window.setTimeout(function() {
+      var floating = $('body > div.entityTooltipFloating');
+      if(element.is(':hover') || element.is(':focus') || floating.is(':hover')) return;
+      EntityDescriptions.resetTooltipPosition(element);
+    }, 120);
+  },
+
   resetTooltipPosition: function(element) {
+    EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
     element.children('div.entityTooltip').first().css('visibility', '');
   },
+
+  _tooltipHideTimer: null,
 
   init: function() {
     $(document)
@@ -458,13 +510,24 @@ var EntityDescriptions = {
         });
       })
       .on('mouseleave.entityDescriptions', '.hasEntityDescription', function() {
-        EntityDescriptions.resetTooltipPosition($(this));
+        EntityDescriptions.scheduleTooltipHide($(this));
+      })
+      .on('focusin.entityDescriptions', '.hasEntityDescription', function() {
+        EntityDescriptions.positionTooltip($(this));
+      })
+      .on('focusout.entityDescriptions', '.hasEntityDescription', function() {
+        EntityDescriptions.scheduleTooltipHide($(this));
+      })
+      .on('keydown.entityDescriptions', '.hasEntityDescription', function(e) {
+        if(e.key === 'Escape' || e.keyCode === 27) {
+          EntityDescriptions.resetTooltipPosition($(this));
+        }
       });
 
     $(window)
       .off('resize.entityDescriptions')
       .on('resize.entityDescriptions', function() {
-        $('.hasEntityDescription:hover').each(function() {
+        $('.hasEntityDescription:hover, .hasEntityDescription:focus').each(function() {
           EntityDescriptions.positionTooltip($(this));
         });
       });

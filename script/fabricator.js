@@ -146,13 +146,16 @@ const Fabricator = {
     }
 
     for (const [ key, value ] of Object.entries(Fabricator.Craftables)) {
-      const max = $SM.num(key, value) + 1 > value.maximum;
-      if (!value.button) {
+      const current = $SM.num(key, value) || 0;
+      const max = typeof value.maximum === 'number' && current >= value.maximum;
+      const cost = value.cost();
+      const buttonExisted = Boolean(value.button);
+      if (!buttonExisted) {
         if (Fabricator.canFabricate(key)) {
           const name = EntityDescriptions.capitalize(_(value.name)) + ((value.quantity ?? 1) > 1 ? ` (x${value.quantity})` : '');
           value.button = new Button.Button({
             id: 'fabricate_' + key,
-            cost: value.cost(),
+            cost,
             text: name,
             click: Fabricator.fabricate,
             entity: key,
@@ -160,24 +163,23 @@ const Fabricator = {
             ttPos: section.children().length > 10 ? 'top right' : 'bottom right'
           }).css('opacity', 0).attr('fabricateThing', key).appendTo(section).animate({ opacity: 1 }, 300, 'linear');
         }
-      } else {
-        // refresh the tooltip
-        const costTooltip = $('.tooltip', value.button);
-        costTooltip.empty();
-        EntityDescriptions.addToTooltip(costTooltip, key);
-        const cost = value.cost();
-        for (const [ resource, num ] of Object.entries(cost)) {
-          $("<div>").addClass('row_key').text(EntityDescriptions.name(resource)).appendTo(costTooltip);
-          $("<div>").addClass('row_val').text(num).appendTo(costTooltip);
-        }
-        if (max && value.maxMsg && !value.button.hasClass('disabled')) {
+      }
+      if (value.button) {
+        if (max && buttonExisted && value.maxMsg && !value.button.hasClass('state-complete')) {
           Notifications.notify(Fabricator, value.maxMsg);
         }
-      }
-      if (max) {
-        Button.setDisabled(value.button, true);
-      } else {
-        Button.setDisabled(value.button, false);
+        const state = max ? 'complete' : (Button.canAfford(cost) ? 'ready' : 'blocked');
+        const status = max
+          ? EntityDescriptions.ui(value.maximum > 1 ? 'maximumReached' : 'crafted', value.maximum)
+          : EntityDescriptions.ui(state === 'ready' ? 'canCraft' : 'missingResources');
+        Button.setState(value.button, state, (state === 'complete' ? '✓ ' : '') + status);
+        Button.updateCostTooltip(value.button, {
+          entity: key,
+          cost,
+          state,
+          status,
+          hideCost: max
+        });
       }
     }
 

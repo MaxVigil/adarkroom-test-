@@ -32,6 +32,35 @@ div.tooltip {
 	box-shadow: -1px 3px 2px #111;
 }
 
+div.button.state-ready,
+div.button.state-ready:hover {
+	color: #EEE;
+}
+
+div.button.state-blocked,
+div.button.state-blocked:hover {
+	border-color: #888;
+	color: #B8B8B8;
+}
+
+div.button.state-complete,
+div.button.state-complete:hover {
+	border-color: #777;
+	color: #D0D0D0;
+}
+
+div.tooltip .tooltipCostTitle {
+	border-top-color: #555;
+}
+
+div.tooltip .costRow.sufficient .costResult {
+	color: #ACD3A5;
+}
+
+div.tooltip .costRow.missing .costResult {
+	color: #F0B58D;
+}
+
 div#population {
 	background-color: #272823;
 }
