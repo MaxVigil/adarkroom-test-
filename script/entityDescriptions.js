@@ -462,16 +462,11 @@ var EntityDescriptions = {
     var sourceTooltip = element.children('div.entityTooltip').first();
     if(sourceTooltip.length === 0 || (!element.is(':hover') && !element.is(':focus'))) return;
 
-    EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
     var tooltip = sourceTooltip.clone()
       .removeClass('tooltipSourceHidden')
       .addClass('entityTooltipFloating')
-      .appendTo('body')
-      .on('mouseenter.entityDescriptions', EntityDescriptions.cancelTooltipHide)
-      .on('mouseleave.entityDescriptions', function() {
-        EntityDescriptions.scheduleTooltipHide(element);
-      });
+      .appendTo('body');
 
     var targetRect = element[0].getBoundingClientRect();
     var viewportPadding = 8;
@@ -516,29 +511,10 @@ var EntityDescriptions = {
     });
   },
 
-  cancelTooltipHide: function() {
-    if(EntityDescriptions._tooltipHideTimer) {
-      window.clearTimeout(EntityDescriptions._tooltipHideTimer);
-      EntityDescriptions._tooltipHideTimer = null;
-    }
-  },
-
-  scheduleTooltipHide: function(element) {
-    EntityDescriptions.cancelTooltipHide();
-    EntityDescriptions._tooltipHideTimer = window.setTimeout(function() {
-      var floating = $('body > div.entityTooltipFloating');
-      if(element.is(':hover') || element.is(':focus') || floating.is(':hover')) return;
-      EntityDescriptions.resetTooltipPosition(element);
-    }, 120);
-  },
-
   resetTooltipPosition: function(element) {
-    EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
     element.children('div.entityTooltip').first().removeClass('tooltipSourceHidden').css('visibility', '');
   },
-
-  _tooltipHideTimer: null,
 
   init: function() {
     $(document)
@@ -550,13 +526,13 @@ var EntityDescriptions = {
         });
       })
       .on('mouseleave.entityDescriptions', '.hasEntityDescription', function() {
-        EntityDescriptions.scheduleTooltipHide($(this));
+        EntityDescriptions.resetTooltipPosition($(this));
       })
       .on('focusin.entityDescriptions', '.hasEntityDescription', function() {
         EntityDescriptions.positionTooltip($(this));
       })
       .on('focusout.entityDescriptions', '.hasEntityDescription', function() {
-        EntityDescriptions.scheduleTooltipHide($(this));
+        EntityDescriptions.resetTooltipPosition($(this));
       })
       .on('keydown.entityDescriptions', '.hasEntityDescription', function(e) {
         if(e.key === 'Escape' || e.keyCode === 27) {

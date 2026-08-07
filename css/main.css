@@ -467,8 +467,8 @@ div.storeRow div.tooltip.entityTooltip {
 	white-space: normal;
 }
 
-div.tooltip.entityTooltipFloating:hover {
-	display: block !important;
+div.tooltip.entityTooltipFloating {
+	pointer-events: none;
 }
 
 div.tooltip.tooltipSourceHidden {
