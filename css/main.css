@@ -1,4 +1,12 @@
 /* Fonts */
+@font-face {
+	font-family: "Commissioner";
+	src: url("../fonts/Commissioner-Variable.ttf") format("truetype");
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+}
+
 body, .tooltip, select.menuBtn, textarea, input, button {
 	font-family: "Commissioner", Arial, sans-serif;
 	font-size: 16px;
