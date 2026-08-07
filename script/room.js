@@ -531,6 +531,7 @@ var Room = {
 		new Button.Button({
 			id: 'lightButton',
 			text: _('light fire'),
+			action: true,
 			click: Room.lightFire,
 			cooldown: Room._STOKE_COOLDOWN,
 			width: '80px',
@@ -541,6 +542,7 @@ var Room = {
 		new Button.Button({
 			id: 'stokeButton',
 			text: _("stoke fire"),
+			action: true,
 			click: Room.stokeFire,
 			cooldown: Room._STOKE_COOLDOWN,
 			width: '80px',
@@ -801,7 +803,7 @@ var Room = {
 		if (stores.length === 0) {
 			stores = $('<div>').attr({
 				'id': 'stores',
-				'data-legend': _('stores')
+				'data-legend': EntityDescriptions.name('stores')
 			}).css('opacity', 0);
 			needsAppend = true;
 		}
@@ -820,7 +822,7 @@ var Room = {
 		if (weapons.length === 0) {
 			weapons = $('<div>').attr({
 				'id': 'weapons',
-				'data-legend': _('weapons')
+				'data-legend': EntityDescriptions.name('weapons')
 			}).css('opacity', 0);
 			wNeedsAppend = true;
 		}
