@@ -41,6 +41,27 @@ div#roomPanel > div.button.actionButton {
 	overflow-wrap: anywhere;
 }
 
+div#autoStokeButton.button {
+	position: absolute;
+	top: 0;
+	left: 242px;
+	width: 224px !important;
+	min-width: 224px;
+	max-width: 224px;
+}
+
+div#autoStokeButton.button.enabled {
+	box-shadow: inset 0 0 0 1px currentColor;
+}
+
+div#autoStokeButton.button .autoStokeLabel:before {
+	content: '○ ';
+}
+
+div#autoStokeButton.button.enabled .autoStokeLabel:before {
+	content: '● ';
+}
+
 div#buildBtns > div.button,
 div#craftBtns > div.button,
 div#buyBtns > div.button {
@@ -103,12 +124,21 @@ div#weapons {
 
 @media (max-width: 760px) {
 	div#roomActions {
+		top: 130px;
 		grid-template-columns: minmax(0, 1fr);
 		width: 230px;
 		max-width: 230px;
 	}
 
 	div#roomPanel > div.button.actionButton {
+		max-width: calc(100vw - 24px);
+	}
+
+	div#autoStokeButton.button {
+		top: 58px;
+		left: 0;
+		width: 230px !important;
+		min-width: 230px;
 		max-width: calc(100vw - 24px);
 	}
 }

@@ -185,6 +185,26 @@ var Room = {
 			},
 			audio: AudioLibrary.BUILD_HUT
 		},
+		'well': {
+			name: _('well'),
+			button: null,
+			maximum: 4,
+			availableMsg: _('builder says a well could help keep fires from spreading'),
+			buildMsg: _('cool water waits beneath the settlement'),
+			maxMsg: _('the well cannot be improved further'),
+			type: 'building',
+			cost: function () {
+				var level = $SM.get('game.buildings["well"]', true);
+				var levelCosts = [
+					{ wood: 150, fur: 25 },
+					{ wood: 250, fur: 50, leather: 10 },
+					{ wood: 400, fur: 75, leather: 25, iron: 15 },
+					{ wood: 600, fur: 100, leather: 50, iron: 30, steel: 15 }
+				];
+				return levelCosts[Math.min(level, levelCosts.length - 1)];
+			},
+			audio: AudioLibrary.BUILD_HUT
+		},
 		'torch': {
 			name: _('torch'),
 			button: null,
@@ -569,6 +589,24 @@ var Room = {
 			cost: { 'wood': 1 }
 		}).appendTo('div#roomPanel');
 
+		new Button.Button({
+			id: 'autoStokeButton',
+			text: _('auto fire: off'),
+			action: true,
+			click: Room.toggleAutoStoke,
+			entity: 'auto fire',
+			width: '80px'
+		})
+			.addClass('autoStokeToggle')
+			.attr({ role: 'switch', tabindex: 0 })
+			.on('keydown.autoStoke', function (e) {
+				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) {
+					e.preventDefault();
+					$(this).trigger('click');
+				}
+			})
+			.appendTo('div#roomPanel');
+
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
 
@@ -576,6 +614,8 @@ var Room = {
 		$.Dispatch('stateUpdate').subscribe(Room.handleStateUpdates);
 
 		Room.updateButton();
+		Room.ensureAutoStokeState();
+		Room.updateAutoStokeButton();
 		Room.updateStoresView();
 		Room.updateIncomeView();
 		Room.updateBuildButtons();
@@ -691,6 +731,59 @@ var Room = {
 			light.removeClass('free');
 			stoke.removeClass('free');
 		}
+		Room.updateAutoStokeButton();
+	},
+
+	isAutoStokeUnlocked: function () {
+		return $SM.get('game.builder.level', true) >= 4;
+	},
+
+	ensureAutoStokeState: function () {
+		if (Room.isAutoStokeUnlocked() && typeof $SM.get('game.autoStoke') == 'undefined') {
+			// Preserve the original automatic builder behaviour for existing saves,
+			// while making it visible and optional from now on.
+			$SM.set('game.autoStoke', true);
+		}
+	},
+
+	isAutoStokeEnabled: function () {
+		return Room.isAutoStokeUnlocked() && $SM.get('game.autoStoke') === true;
+	},
+
+	toggleAutoStoke: function () {
+		if (!Room.isAutoStokeUnlocked()) return;
+		var enabled = !Room.isAutoStokeEnabled();
+		$SM.set('game.autoStoke', enabled);
+		Notifications.notify(
+			Room,
+			enabled ? _('automatic fire tending enabled') : _('automatic fire tending disabled')
+		);
+		Room.updateAutoStokeButton();
+	},
+
+	updateAutoStokeButton: function () {
+		var button = $('#autoStokeButton.button');
+		if (button.length === 0) return;
+
+		if (!Room.isAutoStokeUnlocked()) {
+			button.hide();
+			return;
+		}
+
+		Room.ensureAutoStokeState();
+		var enabled = Room.isAutoStokeEnabled();
+		button.show().attr({
+			'aria-checked': enabled ? 'true' : 'false',
+			'aria-label': enabled ? _('auto fire: on') : _('auto fire: off')
+		});
+		button.toggleClass('enabled', enabled);
+
+		var label = button.children('.autoStokeLabel');
+		if (label.length === 0) {
+			button.contents().filter(function () { return this.nodeType === 3; }).remove();
+			label = $('<span>').addClass('autoStokeLabel').prependTo(button);
+		}
+		label.text(enabled ? _('auto fire: on') : _('auto fire: off'));
 	},
 
 	_fireTimer: null,
@@ -749,11 +842,16 @@ var Room = {
 
 	coolFire: function () {
 		var wood = $SM.get('stores.wood');
-		if ($SM.get('game.fire.value') <= Room.FireEnum.Flickering.value &&
-			$SM.get('game.builder.level') > 3 && wood > 0) {
+		var fireValue = $SM.get('game.fire.value');
+		var autoStokeNeeded = Room.isAutoStokeEnabled() &&
+			fireValue > Room.FireEnum.Dead.value &&
+			fireValue <= Room.FireEnum.Flickering.value;
+		if (autoStokeNeeded && wood > 0) {
 			Notifications.notify(Room, _("builder stokes the fire"), true);
 			$SM.set('stores.wood', wood - 1);
 			$SM.set('game.fire', Room.FireEnum.fromInt($SM.get('game.fire.value') + 1));
+		} else if (autoStokeNeeded && wood <= 0) {
+			Notifications.notify(Room, _('automatic fire tending needs wood'), true);
 		}
 		if ($SM.get('game.fire.value') > 0) {
 			$SM.set('game.fire', Room.FireEnum.fromInt($SM.get('game.fire.value') - 1));
@@ -1213,7 +1311,10 @@ var Room = {
 			var current = $SM.num(k, craftable) || 0;
 			var max = typeof craftable.maximum === 'number' && current >= craftable.maximum;
 			var cost = craftable.cost();
-			var craftButtonExisted = craftable.button != null;
+			var craftButtonExisted = craftable.button != null && craftable.button.length > 0 && $.contains(document, craftable.button[0]);
+			if (craftable.button != null && !craftButtonExisted) {
+				craftable.button = null;
+			}
 			if (!craftButtonExisted) {
 				if (Room.craftUnlocked(k)) {
 					var loc = Room.needsWorkshop(craftable.type) ? craftSection : buildSection;
@@ -1254,7 +1355,10 @@ var Room = {
 			var goodsCurrent = $SM.num(g, good) || 0;
 			var goodsMax = typeof good.maximum === 'number' && goodsCurrent >= good.maximum;
 			var goodCost = good.cost();
-			var buyButtonExisted = good.button != null;
+			var buyButtonExisted = good.button != null && good.button.length > 0 && $.contains(document, good.button[0]);
+			if (good.button != null && !buyButtonExisted) {
+				good.button = null;
+			}
 			if (!buyButtonExisted) {
 				if (Room.buyUnlocked(g)) {
 					good.button = new Button.Button({
@@ -1316,6 +1420,9 @@ var Room = {
 			Room.updateIncomeView();
 		} else if (e.stateName.indexOf('game.buildings') === 0 || e.stateName === 'game.temperature.value') {
 			Room.updateBuildButtons();
+		} else if (e.stateName === 'game.builder.level' || e.stateName === 'game.autoStoke') {
+			Room.ensureAutoStokeState();
+			Room.updateAutoStokeButton();
 		}
 	},
 

@@ -75,6 +75,16 @@ var EntityDescriptions = {
     "en": "Each assigned guard cuts the chance of a beast attack by 25%. The tower has 1–4 guard posts as it is upgraded.",
     "uk": "Кожен призначений вартовий зменшує ймовірність нападу звірів на 25%. Після покращень вежа має від 1 до 4 місць для вартових."
   },
+  "well": {
+    "type": "Building",
+    "en": "Each level cuts the chance of a settlement fire by 25%. Four levels prevent these fires completely; no workers are needed.",
+    "uk": "Кожен рівень зменшує ймовірність пожежі в поселенні на 25%. Чотири рівні повністю запобігають таким пожежам; працівники не потрібні."
+  },
+  "auto fire": {
+    "type": "Control",
+    "en": "When enabled, the builder spends 1 wood every 5 in-game minutes to keep a flickering or smoldering fire from cooling. A dead fire must still be lit manually.",
+    "uk": "Коли ввімкнено, будівельниця витрачає 1 дерево кожні 5 внутрішньоігрових хвилин, щоб мерехтливий або тліючий вогонь не згасав. Згаслий вогонь усе ще треба розпалити вручну."
+  },
   "alien alloy": {
     "type": "Resource",
     "en": "Rare metal used in batches of 1–2 by the fabricator; each ship upgrade costs 1 alloy.",

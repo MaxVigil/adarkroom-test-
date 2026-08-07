@@ -41,6 +41,7 @@
 		_('gatherer'),
 		_('guard'),
 		_('watchtower'),
+		_('well'),
 		_('cloth'),
 		_('scales'),
 		_('cured meat'),

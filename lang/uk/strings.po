@@ -4400,6 +4400,42 @@ msgstr "сторожова вежа здіймається над поселен
 msgid "the watchtower cannot be improved further"
 msgstr "сторожову вежу більше не можна покращити"
 
+#: ../../script/localization.js ../../script/room.js
+msgid "well"
+msgstr "криниця"
+
+#: ../../script/room.js
+msgid "builder says a well could help keep fires from spreading"
+msgstr "будівельниця каже, що криниця допоможе стримувати поширення пожеж"
+
+#: ../../script/room.js
+msgid "cool water waits beneath the settlement"
+msgstr "прохолодна вода чекає під поселенням"
+
+#: ../../script/room.js
+msgid "the well cannot be improved further"
+msgstr "криницю більше не можна покращити"
+
+#: ../../script/room.js
+msgid "auto fire: on"
+msgstr "автопідтримка: увімк."
+
+#: ../../script/room.js
+msgid "auto fire: off"
+msgstr "автопідтримка: вимк."
+
+#: ../../script/room.js
+msgid "automatic fire tending enabled"
+msgstr "автопідтримку вогню ввімкнено"
+
+#: ../../script/room.js
+msgid "automatic fire tending disabled"
+msgstr "автопідтримку вогню вимкнено"
+
+#: ../../script/room.js
+msgid "automatic fire tending needs wood"
+msgstr "для автопідтримки вогню бракує дерева"
+
 
 #~ msgid "Export"
 #~ msgstr "Експорт"

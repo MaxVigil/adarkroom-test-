@@ -364,6 +364,15 @@ var Outside = {
 	getBeastAttackChanceMultiplier: function() {
 		return 1 - Outside.getBeastAttackReduction();
 	},
+
+	getHutFireReduction: function() {
+		var wellLevel = Math.max(0, Math.min(4, $SM.get('game.buildings["well"]', true)));
+		return wellLevel * 0.25;
+	},
+
+	getHutFireChanceMultiplier: function() {
+		return 1 - Outside.getHutFireReduction();
+	},
 	
 	makeWorkerRow: function(key, num) {
 		var name = Outside._INCOME[key].name;
