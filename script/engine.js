@@ -75,7 +75,8 @@
       debug: false,
       log: false,
       dropbox: false,
-      doubleTime: false
+      gameSpeed: 1,
+      doubleTime: false // backwards compatibility for extensions
     },
 
     init: function(options) {
@@ -162,8 +163,8 @@
 
       $('<span>')
         .addClass('hyper menuBtn')
-        .text(_('hyper.'))
-        .click(Engine.confirmHyperMode)
+        .text(_('speed') + ' x1.')
+        .click(Engine.showSpeedMenu)
         .appendTo(menu);
 
       $('<span>')
@@ -238,9 +239,11 @@
         Engine.turnLightsOff();
       }
 
-      if($SM.get('config.hyperMode', true)){
-        Engine.triggerHyperMode();
+      var savedGameSpeed = $SM.get('config.gameSpeed', true);
+      if(!savedGameSpeed && $SM.get('config.hyperMode', true)) {
+        savedGameSpeed = 2;
       }
+      Engine.setGameSpeed(savedGameSpeed || 1, true);
 
       Engine.toggleVolume(Boolean($SM.get('config.soundOn')));
       if(!AudioEngine.isAudioContextRunning()){
@@ -552,40 +555,62 @@
       }
     },
 
-    confirmHyperMode: function(){
-      if (!Engine.options.doubleTime) {
-        Events.startEvent({
-          title: _('Go Hyper?'),
-          scenes: {
-            start: {
-              text: [_('turning hyper mode speeds up the game to x2 speed. do you want to do that?')],
-              buttons: {
-                'yes': {
-                  text: _('yes'),
-                  nextScene: 'end',
-                  onChoose: Engine.triggerHyperMode
-                },
-                'no': {
-                  text: _('no'),
-                  nextScene: 'end'
-                }
-              }
-            }
-          }
-        });
-      } else {
-        Engine.triggerHyperMode();
+    getGameSpeed: function() {
+      var speed = parseInt(Engine.options.gameSpeed, 10);
+      return speed >= 1 && speed <= 4 ? speed : 1;
+    },
+
+    setGameSpeed: function(speed, noSave) {
+      speed = parseInt(speed, 10);
+      if(speed < 1 || speed > 4) speed = 1;
+
+      Engine.options.gameSpeed = speed;
+      Engine.options.doubleTime = speed > 1;
+      $('.hyper').text(_('speed') + ' x' + speed + '.');
+
+      if(!noSave) {
+        $SM.set('config.gameSpeed', speed, true);
+        // Keep the old boolean setting updated for backwards compatibility.
+        $SM.set('config.hyperMode', speed > 1, false);
       }
     },
 
-    triggerHyperMode: function() {
-      Engine.options.doubleTime = !Engine.options.doubleTime;
-      if(Engine.options.doubleTime)
-        $('.hyper').text(_('classic.'));
-      else
-        $('.hyper').text(_('hyper.'));
-
-      $SM.set('config.hyperMode', Engine.options.doubleTime, false);
+    showSpeedMenu: function() {
+      var currentSpeed = Engine.getGameSpeed();
+      Events.startEvent({
+        title: _('Game Speed'),
+        scenes: {
+          start: {
+            text: [_('current speed:') + ' x' + currentSpeed],
+            buttons: {
+              'classic': {
+                text: _('classic') + ' (x1)',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(1); }
+              },
+              'x2': {
+                text: 'x2',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(2); }
+              },
+              'x3': {
+                text: 'x3',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(3); }
+              },
+              'x4': {
+                text: 'x4',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(4); }
+              },
+              'cancel': {
+                text: _('cancel'),
+                nextScene: 'end'
+              }
+            }
+          }
+        }
+      });
     },
 
     // Gets a guid
@@ -832,9 +857,10 @@
     },
 
     setInterval: function(callback, interval, skipDouble){
-      if( Engine.options.doubleTime && !skipDouble ){
-        Engine.log('Double time, cutting interval in half');
-        interval /= 2;
+      var gameSpeed = Engine.getGameSpeed();
+      if(gameSpeed > 1 && !skipDouble) {
+        Engine.log('Game speed x' + gameSpeed + ', shortening interval');
+        interval /= gameSpeed;
       }
 
       return setInterval(callback, interval);
@@ -842,10 +868,10 @@
     },
 
     setTimeout: function(callback, timeout, skipDouble){
-
-      if( Engine.options.doubleTime && !skipDouble ){
-        Engine.log('Double time, cutting timeout in half');
-        timeout /= 2;
+      var gameSpeed = Engine.getGameSpeed();
+      if(gameSpeed > 1 && !skipDouble) {
+        Engine.log('Game speed x' + gameSpeed + ', shortening timeout');
+        timeout /= gameSpeed;
       }
 
       return setTimeout(callback, timeout);
