@@ -70,6 +70,8 @@
       }
     },
 
+    GAME_SPEEDS: [1, 2, 3, 4, 20],
+
     options: {
       state: null,
       debug: false,
@@ -561,12 +563,12 @@
 
     getGameSpeed: function() {
       var speed = parseInt(Engine.options.gameSpeed, 10);
-      return speed >= 1 && speed <= 4 ? speed : 1;
+      return Engine.GAME_SPEEDS.indexOf(speed) >= 0 ? speed : 1;
     },
 
     setGameSpeed: function(speed, noSave) {
       speed = parseInt(speed, 10);
-      if(speed < 1 || speed > 4) speed = 1;
+      if(Engine.GAME_SPEEDS.indexOf(speed) < 0) speed = 1;
 
       var previousSpeed = Engine.getGameSpeed();
       Engine.options.gameSpeed = speed;
@@ -614,6 +616,11 @@
                 text: 'x4',
                 nextScene: 'end',
                 onChoose: function() { Engine.setGameSpeed(4); }
+              },
+              'x20': {
+                text: 'x20 (dev)',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(20); }
               },
               'cancel': {
                 text: _('cancel'),
