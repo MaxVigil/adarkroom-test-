@@ -26,6 +26,9 @@ div#storesContainer {
 	position: absolute;
 	top: 0px;
 	right: 0px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding-right: 2px;
 }
 
 div#stores:before, div#weapons:before {
