@@ -826,6 +826,10 @@ var Room = {
 		}
 		for (var k in $SM.get('stores')) {
 
+			if (EntityDescriptions.getType(k) === 'Role') {
+				continue;
+			}
+
 			if (k.indexOf('blueprint') > 0) {
 				// don't show blueprints
 				continue;
@@ -869,7 +873,7 @@ var Room = {
 				$SM.set('stores["' + k + '"]', 0);
 			}
 
-			var lk = _(k);
+			var lk = EntityDescriptions.name(k);
 
 			// thieves?
 			if (typeof $SM.get('game.thieves') == 'undefined' && num > 5000 && $SM.get('features.location.world')) {
@@ -929,6 +933,8 @@ var Room = {
 			Outside.updateVillage();
 		}
 
+		Engine.fitStoresView();
+
 		if ($SM.get('stores.compass') && !Room.pathDiscovery) {
 			Room.pathDiscovery = true;
 			Path.openPath();
@@ -952,7 +958,7 @@ var Room = {
 				for (var store in income.stores) {
 					if (store == storeName && income.stores[store] !== 0) {
 						hasIncome = true;
-						$('<div>').addClass('row_key').text(_(incomeSource)).appendTo(tt);
+						$('<div>').addClass('row_key').text(EntityDescriptions.name(incomeSource)).appendTo(tt);
 						$('<div>')
 							.addClass('row_val')
 							.text(Engine.getIncomeMsg(income.stores[store], income.delay))
@@ -1152,7 +1158,7 @@ var Room = {
 					craftable.button = new Button.Button({
 						id: 'build_' + k.replace(/ /g, '-'),
 						cost: craftable.cost(),
-						text: _(k),
+						text: EntityDescriptions.name(k),
 						click: Room.build,
 						entity: k,
 						width: '80px',
@@ -1166,7 +1172,7 @@ var Room = {
 				EntityDescriptions.addToTooltip(costTooltip, k);
 				var cost = craftable.cost();
 				for (var c in cost) {
-					$("<div>").addClass('row_key').text(_(c)).appendTo(costTooltip);
+					$("<div>").addClass('row_key').text(EntityDescriptions.name(c)).appendTo(costTooltip);
 					$("<div>").addClass('row_val').text(cost[c]).appendTo(costTooltip);
 				}
 				if (max && !craftable.button.hasClass('disabled')) {
@@ -1188,7 +1194,7 @@ var Room = {
 					good.button = new Button.Button({
 						id: 'build_' + g,
 						cost: good.cost(),
-						text: _(g),
+						text: EntityDescriptions.name(g),
 						click: Room.buy,
 						entity: g,
 						width: '80px',
@@ -1202,7 +1208,7 @@ var Room = {
 				EntityDescriptions.addToTooltip(goodsCostTooltip, g);
 				var goodCost = good.cost();
 				for (var gc in goodCost) {
-					$("<div>").addClass('row_key').text(_(gc)).appendTo(goodsCostTooltip);
+					$("<div>").addClass('row_key').text(EntityDescriptions.name(gc)).appendTo(goodsCostTooltip);
 					$("<div>").addClass('row_val').text(goodCost[gc]).appendTo(goodsCostTooltip);
 				}
 				if (goodsMax && !good.button.hasClass('disabled')) {
