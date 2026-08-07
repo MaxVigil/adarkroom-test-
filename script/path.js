@@ -108,7 +108,7 @@ var Path = {
 			'supplies': _('supplies'),
 			'other': _('other')
 		};
-		return names[category];
+		return EntityDescriptions.capitalize(names[category]);
 	},
 
 	createInventoryCategory: function(category) {
@@ -122,18 +122,18 @@ var Path = {
 	},
 
 	getCurrentArmour: function() {
-		if($SM.get('stores["kinetic armour"]', true) > 0) return { key: 'kinetic armour', name: _("kinetic") };
-		if($SM.get('stores["s armour"]', true) > 0) return { key: 's armour', name: _("steel") };
-		if($SM.get('stores["i armour"]', true) > 0) return { key: 'i armour', name: _("iron") };
-		if($SM.get('stores["l armour"]', true) > 0) return { key: 'l armour', name: _("leather") };
+		if($SM.get('stores["kinetic armour"]', true) > 0) return { key: 'kinetic armour', name: EntityDescriptions.name("kinetic") };
+		if($SM.get('stores["s armour"]', true) > 0) return { key: 's armour', name: EntityDescriptions.name("steel") };
+		if($SM.get('stores["i armour"]', true) > 0) return { key: 'i armour', name: EntityDescriptions.name("iron") };
+		if($SM.get('stores["l armour"]', true) > 0) return { key: 'l armour', name: EntityDescriptions.name("leather") };
 		return null;
 	},
 
 	getCurrentPack: function() {
-		if($SM.get('stores["cargo drone"]', true) > 0) return { key: 'cargo drone', name: _('cargo drone') };
-		if($SM.get('stores.convoy', true) > 0) return { key: 'convoy', name: _('convoy') };
-		if($SM.get('stores.wagon', true) > 0) return { key: 'wagon', name: _('wagon') };
-		if($SM.get('stores.rucksack', true) > 0) return { key: 'rucksack', name: _('rucksack') };
+		if($SM.get('stores["cargo drone"]', true) > 0) return { key: 'cargo drone', name: EntityDescriptions.name('cargo drone') };
+		if($SM.get('stores.convoy', true) > 0) return { key: 'convoy', name: EntityDescriptions.name('convoy') };
+		if($SM.get('stores.wagon', true) > 0) return { key: 'wagon', name: EntityDescriptions.name('wagon') };
+		if($SM.get('stores.rucksack', true) > 0) return { key: 'rucksack', name: EntityDescriptions.name('rucksack') };
 		return null;
 	},
 	
@@ -178,7 +178,7 @@ var Path = {
 				var r = $('#' + id);
 				if($SM.get('character.perks["'+k+'"]') && r.length === 0) {
 					r = $('<div>').attr('id', id).addClass('perkRow').appendTo(perks);
-					$('<div>').addClass('row_key').text(_(k)).appendTo(r);
+					$('<div>').addClass('row_key').text(EntityDescriptions.name(k)).appendTo(r);
 					$('<div>').addClass('tooltip bottom right').text(Engine.Perks[k].desc).appendTo(r);
 				}
 			}
@@ -206,7 +206,7 @@ var Path = {
 		var aRow = $('#armourRow');
 		if(armourKey && aRow.length === 0) {
 			aRow = $('<div>').attr('id', 'armourRow').addClass('outfitRow').attr('data-item', armourKey);
-			$('<div>').addClass('row_key').text(_('armour')).appendTo(aRow);
+			$('<div>').addClass('row_key').text(EntityDescriptions.name('armour')).appendTo(aRow);
 			$('<div>').addClass('row_val').text(currentArmour.name).appendTo(aRow);
 			$('<div>').addClass('clear').appendTo(aRow);
 		} else if(armourKey) {
@@ -223,7 +223,7 @@ var Path = {
 		var wRow = $('#waterRow');
 		if(wRow.length === 0) {
 			wRow = $('<div>').attr('id', 'waterRow').addClass('outfitRow').attr('data-item', 'water');
-			$('<div>').addClass('row_key').text(_('water')).appendTo(wRow);
+			$('<div>').addClass('row_key').text(EntityDescriptions.name('water')).appendTo(wRow);
 			$('<div>').addClass('row_val').text(World.getMaxWater()).appendTo(wRow);
 			$('<div>').addClass('clear').appendTo(wRow);
 		} else {
@@ -325,9 +325,9 @@ var Path = {
 	},
 	
 	createOutfittingRow: function(key, num, store) {
-		if(!store.name) store.name = _(key);
+		if(!store.name) store.name = EntityDescriptions.name(key);
 		var row = $('<div>').attr('id', 'outfit_row_' + key.replace(' ', '-')).addClass('outfitRow').attr({'key': key, 'data-item': key});
-		$('<div>').addClass('row_key').text(store.name).appendTo(row);
+		$('<div>').addClass('row_key').text(EntityDescriptions.capitalize(store.name)).appendTo(row);
 		var val = $('<div>').addClass('row_val').appendTo(row);
 		
 		$('<span>').text(num).appendTo(val);
@@ -343,15 +343,15 @@ var Path = {
 		row.addClass('hasEntityDescription');
 
 		if(store.type == 'weapon') {
-			$('<div>').addClass('row_key').text(_('damage')).appendTo(tt);
+			$('<div>').addClass('row_key').text(EntityDescriptions.name('damage')).appendTo(tt);
 			$('<div>').addClass('row_val').text(World.getDamage(key)).appendTo(tt);
 		} else if(store.type == 'tool' && store.desc != "undefined") {
 			$('<div>').addClass('row_key').text(store.desc).appendTo(tt);
 		}
 
-		$('<div>').addClass('row_key').text(_('weight')).appendTo(tt);
+		$('<div>').addClass('row_key').text(EntityDescriptions.name('weight')).appendTo(tt);
 		$('<div>').addClass('row_val').text(Path.getWeight(key)).appendTo(tt);
-		$('<div>').addClass('row_key').text(_('available')).appendTo(tt);
+		$('<div>').addClass('row_key').text(EntityDescriptions.name('available')).appendTo(tt);
 		$('<div>').addClass('row_val').addClass('numAvailable').text(numAvailable).appendTo(tt);
 		
 		return row;
