@@ -1,6 +1,6 @@
 /* Fonts */
-body, .tooltip, select.menuBtn {
-	font-family: "Times New Roman", Times, serif;
+body, .tooltip, select.menuBtn, textarea, input, button {
+	font-family: "Commissioner", Arial, sans-serif;
 	font-size: 16px;
 	font-weight: normal;
 	line-height: normal;
