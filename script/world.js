@@ -306,17 +306,19 @@ var World = {
         for(var i = 0; i < categoryItems.length; i++) {
           var item = World.createItemDiv(categoryItems[i].key, categoryItems[i].num);
           if(categoryItems[i].label) item.text(categoryItems[i].label);
+          EntityDescriptions.attach(item, categoryItems[i].key, 'bottom right');
           item.appendTo($('.inventoryCategoryItems', section));
         }
       }
     }
 
     // Update label
-    var t = _('pockets');
-    if($SM.get('stores.rucksack', true) > 0) {
-      t = _('rucksack');
+    var pack = Path.getCurrentPack();
+    var t = pack ? pack.name : _('pockets');
+    var backpackTitle = $('#backpackTitle').text(t);
+    if(pack) {
+      EntityDescriptions.attach(backpackTitle, pack.key, 'bottom right');
     }
-    $('#backpackTitle').text(t);
 
     // Update bagspace
     $('#backpackSpace').text(_('free {0}/{1}', Math.floor(Path.getCapacity() - total) , Path.getCapacity()));
