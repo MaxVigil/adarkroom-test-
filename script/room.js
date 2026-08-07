@@ -711,8 +711,8 @@ var Room = {
 	},
 
 	updateButton: function () {
-		var light = $('#lightButton.button');
-		var stoke = $('#stokeButton.button');
+		var light = $('#lightButton.button', Room.panel);
+		var stoke = $('#stokeButton.button', Room.panel);
 		var fireIsDead = $SM.get('game.fire.value') == Room.FireEnum.Dead.value;
 		var autoStokeEnabled = Room.isAutoStokeEnabled();
 		if (fireIsDead) {
@@ -723,7 +723,11 @@ var Room = {
 			}
 		} else {
 			light.hide();
-			stoke.toggle(!autoStokeEnabled);
+			if (autoStokeEnabled) {
+				stoke.hide();
+			} else {
+				stoke.show();
+			}
 			if (light.hasClass('disabled')) {
 				Button.cooldown(stoke);
 			}
@@ -767,8 +771,8 @@ var Room = {
 	},
 
 	updateAutoStokeControl: function () {
-		var control = $('#autoStokeControl');
-		var toggle = $('#autoStokeToggle');
+		var control = $('#autoStokeControl', Room.panel);
+		var toggle = $('#autoStokeToggle', Room.panel);
 		if (control.length === 0 || toggle.length === 0) return;
 
 		if (!Room.isAutoStokeUnlocked()) {
@@ -778,7 +782,11 @@ var Room = {
 
 		Room.ensureAutoStokeState();
 		var enabled = Room.isAutoStokeEnabled();
-		control.show().toggleClass('enabled', enabled);
+		var replacesManualAction = enabled && $SM.get('game.fire.value') > Room.FireEnum.Dead.value;
+		control
+			.show()
+			.toggleClass('enabled', enabled)
+			.toggleClass('replacesManualAction', replacesManualAction);
 		toggle.attr({
 			'aria-checked': enabled ? 'true' : 'false',
 			'aria-label': _('stoke automatically') + ': ' + (enabled ? 'on' : 'off')

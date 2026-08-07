@@ -63,6 +63,11 @@ div#autoStokeControl .autoStokeText {
 	text-transform: none;
 }
 
+div#autoStokeControl.replacesManualAction {
+	left: 0;
+	width: 230px;
+}
+
 button#autoStokeToggle.autoStokeSwitch {
 	flex: 0 0 42px;
 	box-sizing: border-box;
@@ -166,5 +171,9 @@ div#weapons {
 		left: 0;
 		width: 230px;
 		max-width: calc(100vw - 24px);
+	}
+
+	div#autoStokeControl.replacesManualAction {
+		top: 0;
 	}
 }
