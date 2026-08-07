@@ -5,15 +5,18 @@ div#village {
 	border: 1px solid black;
 	cursor: default;
 	padding: 12px 10px 7px;
-	width: 200px;
+	width: 230px;
 }
 
 div#population {
 	position: absolute;
-	top: -13px;
-	right: 10px;
+	top: -15px;
+	right: 8px;
 	background-color: white;
+	padding: 0 3px;
 	font-weight: 700;
+	line-height: 1.2;
+	white-space: nowrap;
 }
 
 .noHuts #population {

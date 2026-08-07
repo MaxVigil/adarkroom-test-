@@ -358,7 +358,8 @@ var EntityDescriptions = {
     canBuy: { en: 'Can buy', uk: 'Можна придбати' },
     missingResources: { en: 'Missing resources', uk: 'Бракує ресурсів' },
     unavailable: { en: 'Unavailable', uk: 'Недоступно' },
-    tooCold: { en: 'The room is too cold.', uk: 'У кімнаті надто холодно.' }
+    tooCold: { en: 'The room is too cold.', uk: 'У кімнаті надто холодно.' },
+    population: { en: 'Population:', uk: 'Населення:' }
   },
 
   language: function() {
@@ -429,8 +430,8 @@ var EntityDescriptions = {
 
     EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
-    sourceTooltip.css('visibility', 'hidden');
     var tooltip = sourceTooltip.clone()
+      .removeClass('tooltipSourceHidden')
       .addClass('entityTooltipFloating')
       .appendTo('body')
       .on('mouseenter.entityDescriptions', EntityDescriptions.cancelTooltipHide)
@@ -451,8 +452,13 @@ var EntityDescriptions = {
       right: 'auto',
       bottom: 'auto',
       maxHeight: maxHeight + 'px',
+      overflowX: 'hidden',
       overflowY: 'auto'
     });
+
+    // Removing the in-panel source from layout prevents it from enlarging a
+    // scrollable store or inventory container while the portal is visible.
+    sourceTooltip.addClass('tooltipSourceHidden').css('visibility', '');
 
     var width = tooltip.outerWidth();
     var height = Math.min(tooltip.outerHeight(), maxHeight);
@@ -495,7 +501,7 @@ var EntityDescriptions = {
   resetTooltipPosition: function(element) {
     EntityDescriptions.cancelTooltipHide();
     $('body > div.entityTooltipFloating').remove();
-    element.children('div.entityTooltip').first().css('visibility', '');
+    element.children('div.entityTooltip').first().removeClass('tooltipSourceHidden').css('visibility', '');
   },
 
   _tooltipHideTimer: null,

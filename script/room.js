@@ -1162,6 +1162,11 @@ var Room = {
 	},
 
 	updateBuildButtons: function () {
+		var actions = $('#roomActions');
+		if(actions.length === 0) {
+			actions = $('<div>').attr('id', 'roomActions').appendTo('div#roomPanel');
+		}
+
 		var buildSection = $('#buildBtns');
 		var needsAppend = false;
 		if (buildSection.length === 0) {
@@ -1265,13 +1270,13 @@ var Room = {
 		}
 
 		if (needsAppend && buildSection.children().length > 0) {
-			buildSection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+			buildSection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
 		if (cNeedsAppend && craftSection.children().length > 0) {
-			craftSection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+			craftSection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
 		if (bNeedsAppend && buySection.children().length > 0) {
-			buySection.appendTo('div#roomPanel').animate({ opacity: 1 }, 300, 'linear');
+			buySection.appendTo(actions).animate({ opacity: 1 }, 300, 'linear');
 		}
 	},
 

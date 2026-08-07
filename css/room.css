@@ -1,7 +1,21 @@
-div#buildBtns {
+div#roomActions {
 	position: absolute;
 	top: 72px;
-	left: 0px;
+	left: 0;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 12px;
+	align-items: start;
+	width: 466px;
+	max-width: calc(100% - 234px);
+	box-sizing: border-box;
+}
+
+div#buildBtns,
+div#craftBtns,
+div#buyBtns {
+	position: static;
+	min-width: 0;
 }
 
 div#buildBtns:before, div#craftBtns:before, div#buyBtns:before {
@@ -12,31 +26,32 @@ div#buildBtns:before, div#craftBtns:before, div#buyBtns:before {
 	line-height: 1.2;
 }
 
-div#craftBtns {
-	position: absolute;
-	top: 72px;
-	left: 160px;
-}
-
-div#buyBtns {
-	position: absolute;
-	top: 72px;
-	left: 320px;
-}
-
 div#roomPanel > div.button.actionButton {
 	box-sizing: border-box;
-	width: 230px !important;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: auto !important;
+	min-width: 230px;
+	max-width: 466px;
 	min-height: 42px;
-	padding: 8px 12px;
+	padding: 8px 16px;
 	line-height: 1.25;
-	white-space: nowrap;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 div#buildBtns > div.button,
 div#craftBtns > div.button,
 div#buyBtns > div.button {
+	box-sizing: border-box;
+	width: 100% !important;
+	max-width: 100%;
+	min-width: 0;
+	padding: 7px 9px;
 	margin-bottom: 8px;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 div#storesContainer {
@@ -48,6 +63,7 @@ div#storesContainer {
 	padding-top: 17px;
 	padding-right: 2px;
 	box-sizing: border-box;
+	overscroll-behavior: contain;
 }
 
 div#stores:before, div#weapons:before {
@@ -83,4 +99,16 @@ div#weapons {
 	cursor: default;
 	padding: 12px 10px 7px;
 	width: 200px;
+}
+
+@media (max-width: 760px) {
+	div#roomActions {
+		grid-template-columns: minmax(0, 1fr);
+		width: 230px;
+		max-width: 230px;
+	}
+
+	div#roomPanel > div.button.actionButton {
+		max-width: calc(100vw - 24px);
+	}
 }

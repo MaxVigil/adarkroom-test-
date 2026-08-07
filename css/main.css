@@ -249,10 +249,12 @@ div#notifyGradient {
 /* Button */
 
 div.button {
+	box-sizing: border-box;
 	position: relative;
 	text-align: center;
 	border: 1px solid black;
 	width: 100px;
+	min-width: 100px;
 	margin-bottom: 5px;
 	padding: 5px 10px;
 	cursor: pointer;
@@ -465,6 +467,10 @@ div.tooltip.entityTooltipFloating:hover {
 	display: block !important;
 }
 
+div.tooltip.tooltipSourceHidden {
+	display: none !important;
+}
+
 div.tooltip .tooltipDescription {
 	margin-bottom: 5px;
 	padding-bottom: 5px;
@@ -474,9 +480,12 @@ div.tooltip .tooltipDescription {
 	overflow-wrap: anywhere;
 }
 
+div.tooltip.costTooltip,
 div.button div.tooltip.costTooltip {
-	width: 340px !important;
+	width: 360px !important;
+	max-width: calc(100vw - 16px);
 	padding: 8px 10px;
+	overflow-x: hidden;
 }
 
 div.tooltip .tooltipStatus {
@@ -499,8 +508,9 @@ div.tooltip .tooltipCostTitle {
 
 div.tooltip .costRow {
 	display: grid;
-	grid-template-columns: minmax(70px, 0.8fr) minmax(120px, 1.35fr) auto;
-	gap: 6px;
+	grid-template-columns: minmax(76px, 0.8fr) minmax(0, 1.4fr);
+	column-gap: 8px;
+	row-gap: 2px;
 	align-items: baseline;
 	margin-top: 4px;
 	font-size: 13px;
@@ -512,12 +522,16 @@ div.tooltip .costResource {
 }
 
 div.tooltip .costAmounts {
-	white-space: nowrap;
+	min-width: 0;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 div.tooltip .costResult {
-	text-align: right;
-	white-space: nowrap;
+	grid-column: 2;
+	text-align: left;
+	white-space: normal;
+	overflow-wrap: anywhere;
 }
 
 div.tooltip .costRow.sufficient .costResult {
