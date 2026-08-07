@@ -207,6 +207,7 @@
       // Register keypress handlers
       $('body').off('keydown').keydown(Engine.keyDown);
       $('body').off('keyup').keyup(Engine.keyUp);
+      $(window).off('resize.storesView').on('resize.storesView', Engine.fitStoresView);
 
       // Register swipe handlers
       swipeElement = $('#outerSlider');
@@ -675,28 +676,36 @@
      * either hasn't been filled in or is null) using transition_diff to sync with
      * the animation in Engine.travelTo().
      */
+    fitStoresView: function() {
+      var stores = $('#storesContainer');
+      if(stores.length === 0 || !stores.is(':visible')) return;
+
+      var rect = stores[0].getBoundingClientRect();
+      var availableHeight = Math.max(80, window.innerHeight - Math.max(rect.top, 0) - 12);
+      stores.css({
+        'max-height': availableHeight + 'px',
+        'overflow-y': 'auto',
+        'overflow-x': 'hidden'
+      });
+    },
+
     moveStoresView: function(top_container, transition_diff) {
       var stores = $('#storesContainer');
 
       // If we don't have a storesContainer yet, leave.
-      if(typeof(stores) === 'undefined') return;
+      if(stores.length === 0) return;
 
       if(typeof(transition_diff) === 'undefined') transition_diff = 1;
 
-      if(top_container === null) {
-        stores.animate({top: '0px'}, {queue: false, duration: 300 * transition_diff});
-      }
-      else if(!top_container.length) {
-        stores.animate({top: '0px'}, {queue: false, duration: 300 * transition_diff});
-      }
-      else {
-        stores.animate({
-          top: top_container.height() + 26 + 'px'
-        }, {
-          queue: false,
-          duration: 300 * transition_diff
-        });
-      }
+      var top = top_container && top_container.length ? top_container.outerHeight(true) + 26 : 0;
+      stores.animate({
+        top: top + 'px'
+      }, {
+        queue: false,
+        duration: 300 * transition_diff,
+        complete: Engine.fitStoresView
+      });
+      Engine.fitStoresView();
     },
 
     log: function(msg) {
