@@ -3436,14 +3436,6 @@ msgstr "тренувальний автомат, досі справний і в
 msgid "a strange device sits on the floor. looks important."
 msgstr "на підлозі лежить дивний пристрій. схоже, важливий."
 
-#: ../../script/events/marketing.js:17
-msgid "a strange thrumming, pounding and crashing. and then gone."
-msgstr "дивне гудіння, удари й гуркіт. а потім — тиша."
-
-#: ../../script/events/marketing.js:14
-msgid "a strange thrumming, pounding and crashing. visions of people and places, of a huge machine and twisting curves."
-msgstr "дивне гудіння, удари й гуркіт. видіння людей і місць, величезної машини та звивистих ліній."
-
 #: ../../script/events/encounters.js:118
 msgid "A Two-Headed Creature"
 msgstr "Двоголова істота"
@@ -3744,10 +3736,6 @@ msgstr "далі коридор розгалужується."
 msgid "Game Speed"
 msgstr "Швидкість гри"
 
-#: ../../script/events/marketing.js:21
-msgid "give in"
-msgstr "піддатися"
-
 #: ../../script/fabricator.js:82
 msgid "glow stone"
 msgstr "світлокамінь"
@@ -3775,10 +3763,6 @@ msgstr "безсмертний мандрівник"
 #: ../../script/events/executioner.js:2259
 msgid "in a flash, the figure is standing."
 msgstr "за мить постать уже стоїть."
-
-#: ../../script/events/marketing.js:15
-msgid "inviting. it would be so easy to give in, completely."
-msgstr "вабить. так легко було б піддатися — цілковито."
 
 #: ../../script/space.js:555
 msgid "iOS."
@@ -3931,10 +3915,6 @@ msgstr "за пропускним пунктом видно ряди камер 
 #: ../../script/events/executioner.js:1619
 msgid "past the checkpoint, the corridor is undamaged save for sporadic graffiti."
 msgstr "за пропускним пунктом коридор неушкоджений, якщо не зважати на поодинокі графіті."
-
-#: ../../script/events/marketing.js:9
-msgid "Penrose"
-msgstr "Penrose"
 
 #: ../../script/engine.js:1004
 msgid "perhaps silence is safer?"

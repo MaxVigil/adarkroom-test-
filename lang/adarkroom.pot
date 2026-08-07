@@ -1753,29 +1753,7 @@ msgstr ""
 msgid "shares what he knows about sneaking before he goes."
 msgstr ""
 
-#: script/events/marketing.js:9
-msgid "Penrose"
-msgstr ""
-
-#: script/events/marketing.js:14
-msgid ""
-"a strange thrumming, pounding and crashing. visions of people and places,"
-" of a huge machine and twisting curves."
-msgstr ""
-
-#: script/events/marketing.js:15
-msgid "inviting. it would be so easy to give in, completely."
-msgstr ""
-
-#: script/events/marketing.js:17
-msgid "a strange thrumming, pounding and crashing. and then gone."
-msgstr ""
-
-#: script/events/marketing.js:21
-msgid "give in"
-msgstr ""
-
-#: script/events/marketing.js:28 script/events/outside.js:116
+#: script/events/outside.js:116
 msgid "ignore it"
 msgstr ""
 
@@ -3384,4 +3362,3 @@ msgstr ""
 #: script/events/setpieces.js:3571
 msgid "ripe for the picking."
 msgstr ""
-
