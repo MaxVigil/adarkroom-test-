@@ -2953,7 +2953,7 @@ msgstr "розпалити вогонь"
 
 #: ../../script/room.js:508
 msgid "stoke fire"
-msgstr "підкинути"
+msgstr "підкинути дровиняку"
 
 #: ../../script/room.js:545 ../../script/room.js:555 ../../script/room.js:703
 #: ../../script/room.js:707
