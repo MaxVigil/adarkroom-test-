@@ -416,8 +416,22 @@ var EntityDescriptions = {
     return value ? value.charAt(0).toLocaleUpperCase() + value.slice(1) : value;
   },
 
+  levelledBuildings: {
+    watchtower: true,
+    well: true
+  },
+
+  isLevelledBuilding: function(key) {
+    return EntityDescriptions.levelledBuildings[key] === true;
+  },
+
   name: function(key) {
     return EntityDescriptions.capitalize(_(key));
+  },
+
+  nameWithLevel: function(key, level) {
+    var name = EntityDescriptions.name(key);
+    return EntityDescriptions.isLevelledBuilding(key) && level > 0 ? name + ' ' + level : name;
   },
 
   addToTooltip: function(tooltip, key) {

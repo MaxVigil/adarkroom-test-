@@ -1287,6 +1287,28 @@ var Room = {
 		};
 	},
 
+	getCraftableButtonName: function(thing, craftable, current) {
+		if (!EntityDescriptions.isLevelledBuilding(thing)) {
+			return EntityDescriptions.name(thing);
+		}
+
+		var maximum = Number(craftable.maximum) || 1;
+		var nextLevel = Math.max(1, Math.min(maximum, (Number(current) || 0) + 1));
+		return EntityDescriptions.nameWithLevel(thing, nextLevel);
+	},
+
+	setButtonName: function(button, name) {
+		if (!button || button.length === 0) return;
+		var textNode = button.contents().filter(function() {
+			return this.nodeType === 3;
+		}).first();
+		if (textNode.length > 0) {
+			textNode[0].nodeValue = name;
+		} else {
+			button.prepend(document.createTextNode(name));
+		}
+	},
+
 	updateBuildButtons: function () {
 		var actions = $('#roomActions');
 		if(actions.length === 0) {
@@ -1319,6 +1341,7 @@ var Room = {
 			var current = $SM.num(k, craftable) || 0;
 			var max = typeof craftable.maximum === 'number' && current >= craftable.maximum;
 			var cost = craftable.cost();
+			var craftableButtonName = Room.getCraftableButtonName(k, craftable, current);
 			var craftButtonExisted = craftable.button != null && craftable.button.length > 0 && $.contains(document, craftable.button[0]);
 			if (craftable.button != null && !craftButtonExisted) {
 				craftable.button = null;
@@ -1329,7 +1352,7 @@ var Room = {
 					craftable.button = new Button.Button({
 						id: 'build_' + k.replace(/ /g, '-'),
 						cost: cost,
-						text: EntityDescriptions.name(k),
+						text: craftableButtonName,
 						click: Room.build,
 						entity: k,
 						width: '80px',
@@ -1338,6 +1361,7 @@ var Room = {
 				}
 			}
 			if (craftable.button != null) {
+				Room.setButtonName(craftable.button, craftableButtonName);
 				if (max && craftButtonExisted && !craftable.button.hasClass('state-complete')) {
 					Notifications.notify(Room, craftable.maxMsg);
 				}

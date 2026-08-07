@@ -431,12 +431,14 @@ var Outside = {
 	
 	updateVillageRow: function(name, num, village) {
 		var id = 'building_row_' + name.replace(' ', '-');
-		var lname = EntityDescriptions.name(name);
+		var showsLevelInName = EntityDescriptions.isLevelledBuilding(name) && num > 0;
+		var lname = showsLevelInName ? EntityDescriptions.nameWithLevel(name, num) : EntityDescriptions.name(name);
+		var displayedValue = showsLevelInName ? '' : num;
 		var row = $('div#' + id, village);
 		if(row.length === 0 && num > 0) {
 			row = $('<div>').attr('id', id).addClass('storeRow');
 			$('<div>').addClass('row_key').text(lname).appendTo(row);
-			$('<div>').addClass('row_val').text(num).appendTo(row);
+			$('<div>').addClass('row_val').text(displayedValue).appendTo(row);
 			$('<div>').addClass('clear').appendTo(row);
 			EntityDescriptions.attach(row, name, 'bottom right');
 			var curPrev = null;
@@ -455,7 +457,8 @@ var Outside = {
 				row.insertAfter('#' + curPrev);
 			}
 		} else if(num > 0) {
-			$('div#' + row.attr('id') + ' > div.row_val', village).text(num);
+			$('div#' + row.attr('id') + ' > div.row_key', village).text(lname);
+			$('div#' + row.attr('id') + ' > div.row_val', village).text(displayedValue);
 		} else if(num === 0) {
 			row.remove();
 		}
@@ -703,9 +706,11 @@ var Outside = {
 			Outside.updateVillage();
 			Outside.updateWorkersView();
 			Outside.updateVillageIncome();
-		} else if(e.stateName.indexOf('game.buildings["watchtower"]') === 0) {
+		} else if(e.stateName.indexOf('game.buildings') === 0) {
 			Outside.updateVillage();
-			Outside.updateWorkersView();
+			if(e.stateName.indexOf('game.buildings["watchtower"]') === 0) {
+				Outside.updateWorkersView();
+			}
 		}
 	}
 };
