@@ -86,7 +86,7 @@ var Events = {
 		Events.won = false;
 		var desc = $('#description', Events.eventPanel());
 
-		$('<div>').text(scene.notification).appendTo(desc);
+		$('<div>').text(Notifications.sentenceCase(scene.notification)).appendTo(desc);
 
 		// Draw pause button
 		/* Disable for now, because it doesn't work and looks weird
@@ -288,6 +288,7 @@ var Events = {
 		var btn = new Button.Button({
 			id: 'eat',
 			text: _('eat meat'),
+			action: true,
 			cooldown: cooldown,
 			click: Events.eatMeat,
 			entity: 'cured meat',
@@ -309,6 +310,7 @@ var Events = {
 		var btn = new Button.Button({
 			id: 'meds',
 			text: _('use meds'),
+			action: true,
 			cooldown: cooldown,
 			click: Events.useMeds,
 			entity: 'medicine',
@@ -330,6 +332,7 @@ var Events = {
 		var btn = new Button.Button({
 			id: 'hypo',
 			text: _('use hypo'),
+			action: true,
 			cooldown: cooldown,
 			click: Events.useHypo,
 			entity: 'hypo',
@@ -347,6 +350,7 @@ var Events = {
 		var btn = new Button.Button({
 			id: 'shld',
 			text: _('shield'),
+			action: true,
 			cooldown: Events._SHIELD_COOLDOWN,
 			click: Events.useShield,
 			entity: 'kinetic armour'
@@ -357,6 +361,7 @@ var Events = {
 	createStimButton: () => new Button.Button({
 		id: 'use-stim',
 		text: _('boost'),
+		action: true,
 		cooldown: Events._STIM_COOLDOWN,
 		click: Events.useStim,
 		entity: 'stim'
@@ -373,6 +378,7 @@ var Events = {
 		var btn = new Button.Button({
 			id: 'attack_' + weaponName.replace(/ /g, '-'),
 			text: weapon.verb,
+			action: true,
 			cooldown: cd,
 			click: Events.useWeapon,
 			boosted: () => $('#wanderer').data('status') === 'boost',
@@ -799,7 +805,7 @@ var Events = {
 					var btns = $('#buttons', Events.eventPanel());
 					desc.empty();
 					btns.empty();
-					$('<div>').text(scene.deathMessage).appendTo(desc);
+					$('<div>').text(Notifications.sentenceCase(scene.deathMessage)).appendTo(desc);
 
 					var takeETbtn = Events.drawLoot(scene.loot);
 
@@ -818,7 +824,8 @@ var Events = {
 									Events.endEvent();
 								}
 							},
-							text: _('leave')
+							text: _('leave'),
+							action: true
 						});
 						Button.cooldown(leaveBtn.appendTo(exitBtns));
 
@@ -917,6 +924,7 @@ var Events = {
 		var takeall = new Button.Button({
 			id: 'all_take_' + id,
 			text: _('take') + ' ',
+			action: true,
 			click: Events.takeAll
 		}).addClass('lootTakeAll').appendTo(lootRow);
 		$('<span>').insertBefore(takeall.children('.cooldown'));
@@ -942,6 +950,7 @@ var Events = {
 			takeET = new Button.Button({
 				id: 'loot_takeEverything',
 				text: '',
+				action: true,
 				cooldown: Events._LEAVE_COOLDOWN,
 				click: Events.takeEverything
 			}).appendTo(takeETrow);
@@ -1114,7 +1123,7 @@ var Events = {
 		var desc = $('#description', Events.eventPanel());
 		var leaveBtn = false;
 		for(var i in scene.text) {
-			$('<div>').text(scene.text[i]).appendTo(desc);
+			$('<div>').text(Notifications.sentenceCase(scene.text[i])).appendTo(desc);
 		}
 
 		if(scene.textarea != null) {
@@ -1154,6 +1163,7 @@ var Events = {
 			var b = new Button.Button({
 				id,
 				text: info.text,
+				action: true,
 				cost,
 				click: Events.buttonClick,
 				cooldown: info.cooldown
