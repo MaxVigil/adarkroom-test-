@@ -62,6 +62,7 @@ var Path = {
 		new Button.Button({
 			id: 'embarkButton',
 			text: _("embark"),
+			action: true,
 			click: Path.embark,
 			width: '80px',
 			cooldown: World.DEATH_COOLDOWN
