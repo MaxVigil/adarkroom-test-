@@ -285,7 +285,7 @@ var World = {
     var total = 0;
     var inventory = [];
     var currentArmour = Path.getCurrentArmour();
-    if(currentArmour) inventory.push({ key: currentArmour.key, num: null, label: _('armour') + ':' + currentArmour.name });
+    if(currentArmour) inventory.push({ key: currentArmour.key, num: null, label: EntityDescriptions.name('armour') + ': ' + currentArmour.name });
     if(World.water > 0) inventory.push({ key: 'water', num: World.water });
     for(var k in Path.outfit) {
       var num = Path.outfit[k];
@@ -345,7 +345,7 @@ var World = {
   createItemDiv: function(name, num) {
     var div = $('<div>').attr('id', 'supply_' + name.replace(' ', '-'))
       .addClass('supplyItem')
-      .text(_('{0}:{1}',_(name), num));
+      .text(_('{0}:{1}', EntityDescriptions.name(name), num));
 
     return div;
   },
