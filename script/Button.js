@@ -114,6 +114,26 @@ var Button = {
 		}
 	},
 
+	rescaleCooldowns: function(speed) {
+		$('.button').each(function() {
+			var btn = $(this);
+			if(!btn.data('onCooldown')) return;
+
+			var remaining = $SM.get('cooldown.' + btn.attr('id'), true);
+			if(typeof remaining !== 'number' || remaining <= 0) return;
+
+			var cooldown = $('div.cooldown', btn);
+			cooldown.stop(true, false).animate(
+				{width: '0%'},
+				(remaining * 1000) / speed,
+				'linear',
+				function() {
+					Button.clearCooldown(btn, true);
+				}
+			);
+		});
+	},
+
 	clearCooldown: function(btn, cooldownEnded) {
 		var ended = cooldownEnded || false;
 		if(!ended){
@@ -121,7 +141,7 @@ var Button = {
 		}
 		btn.data('onCooldown', false);
 		if(btn.data('countdown')){
-			window.clearInterval(btn.data('countdown'));
+			Engine.clearInterval(btn.data('countdown'));
 			$SM.remove('cooldown.'+ btn.attr('id'));
 			btn.removeData('countdown');
 		}
