@@ -155,6 +155,7 @@ const Fabricator = {
             cost: value.cost(),
             text: name,
             click: Fabricator.fabricate,
+            entity: key,
             width: '150px',
             ttPos: section.children().length > 10 ? 'top right' : 'bottom right'
           }).css('opacity', 0).attr('fabricateThing', key).appendTo(section).animate({ opacity: 1 }, 300, 'linear');
@@ -163,6 +164,7 @@ const Fabricator = {
         // refresh the tooltip
         const costTooltip = $('.tooltip', value.button);
         costTooltip.empty();
+        EntityDescriptions.addToTooltip(costTooltip, key);
         const cost = value.cost();
         for (const [ resource, num ] of Object.entries(cost)) {
           $("<div>").addClass('row_key').text(_(resource)).appendTo(costTooltip);
