@@ -4,6 +4,7 @@
 var Room = {
 	// times in (minutes * seconds * milliseconds)
 	_FIRE_COOL_DELAY: 5 * 60 * 1000, // time after a stoke before the fire cools
+	_AUTO_STOKE_UI_VERSION: 2,
 	_ROOM_WARM_DELAY: 30 * 1000, // time between room temperature updates
 	_BUILDER_STATE_DELAY: 0.5 * 60 * 1000, // time between builder state updates
 	_STOKE_COOLDOWN: 10, // cooldown to stoke the fire
@@ -589,23 +590,25 @@ var Room = {
 			cost: { 'wood': 1 }
 		}).appendTo('div#roomPanel');
 
-		new Button.Button({
-			id: 'autoStokeButton',
-			text: _('auto fire: off'),
-			action: true,
-			click: Room.toggleAutoStoke,
-			entity: 'auto fire',
-			width: '80px'
-		})
-			.addClass('autoStokeToggle')
-			.attr({ role: 'switch', tabindex: 0 })
-			.on('keydown.autoStoke', function (e) {
-				if (e.key === 'Enter' || e.key === ' ' || e.keyCode === 13 || e.keyCode === 32) {
-					e.preventDefault();
-					$(this).trigger('click');
-				}
-			})
+		var autoStokeControl = $('<div>')
+			.attr('id', 'autoStokeControl')
 			.appendTo('div#roomPanel');
+		$('<span>')
+			.addClass('autoStokeText')
+			.text(_('stoke automatically'))
+			.appendTo(autoStokeControl);
+		$('<button>')
+			.attr({
+				id: 'autoStokeToggle',
+				type: 'button',
+				role: 'switch',
+				'aria-checked': 'false'
+			})
+			.addClass('autoStokeSwitch')
+			.text('off')
+			.on('click.autoStoke', Room.toggleAutoStoke)
+			.appendTo(autoStokeControl);
+		EntityDescriptions.attach(autoStokeControl, 'auto fire', 'bottom right');
 
 		// Create the stores container
 		$('<div>').attr('id', 'storesContainer').prependTo('div#roomPanel');
@@ -615,7 +618,7 @@ var Room = {
 
 		Room.updateButton();
 		Room.ensureAutoStokeState();
-		Room.updateAutoStokeButton();
+		Room.updateAutoStokeControl();
 		Room.updateStoresView();
 		Room.updateIncomeView();
 		Room.updateBuildButtons();
@@ -710,15 +713,17 @@ var Room = {
 	updateButton: function () {
 		var light = $('#lightButton.button');
 		var stoke = $('#stokeButton.button');
-		if ($SM.get('game.fire.value') == Room.FireEnum.Dead.value && stoke.css('display') != 'none') {
+		var fireIsDead = $SM.get('game.fire.value') == Room.FireEnum.Dead.value;
+		var autoStokeEnabled = Room.isAutoStokeEnabled();
+		if (fireIsDead) {
 			stoke.hide();
 			light.show();
 			if (stoke.hasClass('disabled')) {
 				Button.cooldown(light);
 			}
-		} else if (light.css('display') != 'none') {
-			stoke.show();
+		} else {
 			light.hide();
+			stoke.toggle(!autoStokeEnabled);
 			if (light.hasClass('disabled')) {
 				Button.cooldown(stoke);
 			}
@@ -731,7 +736,7 @@ var Room = {
 			light.removeClass('free');
 			stoke.removeClass('free');
 		}
-		Room.updateAutoStokeButton();
+		Room.updateAutoStokeControl();
 	},
 
 	isAutoStokeUnlocked: function () {
@@ -739,10 +744,10 @@ var Room = {
 	},
 
 	ensureAutoStokeState: function () {
-		if (Room.isAutoStokeUnlocked() && typeof $SM.get('game.autoStoke') == 'undefined') {
-			// Preserve the original automatic builder behaviour for existing saves,
-			// while making it visible and optional from now on.
-			$SM.set('game.autoStoke', true);
+		if (Room.isAutoStokeUnlocked() && $SM.get('game.autoStokeUiVersion', true) !== Room._AUTO_STOKE_UI_VERSION) {
+			// The explicit switch starts off the first time this UI version appears.
+			$SM.set('game.autoStokeUiVersion', Room._AUTO_STOKE_UI_VERSION);
+			$SM.set('game.autoStoke', false);
 		}
 	},
 
@@ -758,32 +763,27 @@ var Room = {
 			Room,
 			enabled ? _('automatic fire tending enabled') : _('automatic fire tending disabled')
 		);
-		Room.updateAutoStokeButton();
+		Room.updateButton();
 	},
 
-	updateAutoStokeButton: function () {
-		var button = $('#autoStokeButton.button');
-		if (button.length === 0) return;
+	updateAutoStokeControl: function () {
+		var control = $('#autoStokeControl');
+		var toggle = $('#autoStokeToggle');
+		if (control.length === 0 || toggle.length === 0) return;
 
 		if (!Room.isAutoStokeUnlocked()) {
-			button.hide();
+			control.hide();
 			return;
 		}
 
 		Room.ensureAutoStokeState();
 		var enabled = Room.isAutoStokeEnabled();
-		button.show().attr({
+		control.show().toggleClass('enabled', enabled);
+		toggle.attr({
 			'aria-checked': enabled ? 'true' : 'false',
-			'aria-label': enabled ? _('auto fire: on') : _('auto fire: off')
+			'aria-label': _('stoke automatically') + ': ' + (enabled ? 'on' : 'off')
 		});
-		button.toggleClass('enabled', enabled);
-
-		var label = button.children('.autoStokeLabel');
-		if (label.length === 0) {
-			button.contents().filter(function () { return this.nodeType === 3; }).remove();
-			label = $('<span>').addClass('autoStokeLabel').prependTo(button);
-		}
-		label.text(enabled ? _('auto fire: on') : _('auto fire: off'));
+		toggle.toggleClass('enabled', enabled).text(enabled ? 'on' : 'off');
 	},
 
 	_fireTimer: null,
@@ -1422,7 +1422,7 @@ var Room = {
 			Room.updateBuildButtons();
 		} else if (e.stateName === 'game.builder.level' || e.stateName === 'game.autoStoke') {
 			Room.ensureAutoStokeState();
-			Room.updateAutoStokeButton();
+			Room.updateButton();
 		}
 	},
 

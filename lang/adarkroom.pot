@@ -1145,6 +1145,10 @@ msgstr ""
 msgid "stoke fire"
 msgstr ""
 
+#: script/room.js
+msgid "stoke automatically"
+msgstr ""
+
 #: script/room.js:580 script/room.js:590 script/room.js:747 script/room.js:751
 msgid "the room is {0}"
 msgstr ""

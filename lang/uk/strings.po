@@ -4397,12 +4397,8 @@ msgid "the well cannot be improved further"
 msgstr "криницю більше не можна покращити"
 
 #: ../../script/room.js
-msgid "auto fire: on"
-msgstr "автопідтримка: увімк."
-
-#: ../../script/room.js
-msgid "auto fire: off"
-msgstr "автопідтримка: вимк."
+msgid "stoke automatically"
+msgstr "Підкидувати автоматично"
 
 #: ../../script/room.js
 msgid "automatic fire tending enabled"
