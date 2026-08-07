@@ -166,6 +166,7 @@ var Outside = {
 		new Button.Button({
 			id: 'gatherButton',
 			text: _("gather wood"),
+			action: true,
 			click: Outside.gatherWood,
 			entity: 'wood',
 			cooldown: Outside._GATHER_DELAY,
@@ -548,6 +549,7 @@ var Outside = {
 				new Button.Button({
 					id: 'trapsButton',
 					text: _("check traps"),
+					action: true,
 					click: Outside.checkTraps,
 					cooldown: Outside._TRAPS_DELAY,
 					width: '80px'
