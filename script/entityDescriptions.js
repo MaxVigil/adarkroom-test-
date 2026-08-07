@@ -289,6 +289,56 @@ var EntityDescriptions = {
     "type": "Weapon",
     "en": "A strong melee blade: 6 damage every 2 seconds; weight 5.",
     "uk": "Міцний клинок ближнього бою: 6 шкоди кожні 2 секунди; вага — 5."
+  },
+  "gatherer": {
+    "type": "Role",
+    "en": "Each gatherer produces 1 wood every 10 seconds.",
+    "uk": "Кожен збирач виробляє 1 деревину кожні 10 секунд."
+  },
+  "hunter": {
+    "type": "Role",
+    "en": "Each hunter produces 0.5 meat and 0.5 fur every 10 seconds.",
+    "uk": "Кожен мисливець виробляє 0,5 м’яса та 0,5 хутра кожні 10 секунд."
+  },
+  "trapper": {
+    "type": "Role",
+    "en": "Each trapper turns 1 meat into 1 bait every 10 seconds.",
+    "uk": "Кожен ловець перетворює 1 м’ясо на 1 приманку кожні 10 секунд."
+  },
+  "tanner": {
+    "type": "Role",
+    "en": "Each tanner turns 5 fur into 1 leather every 10 seconds.",
+    "uk": "Кожен кожум’яка перетворює 5 хутра на 1 шкіру кожні 10 секунд."
+  },
+  "charcutier": {
+    "type": "Role",
+    "en": "Each charcutier turns 5 meat and 5 wood into 1 cured meat every 10 seconds.",
+    "uk": "Кожен коптяр перетворює 5 м’яса та 5 деревини на 1 в’ялене м’ясо кожні 10 секунд."
+  },
+  "iron miner": {
+    "type": "Role",
+    "en": "Each iron miner turns 1 cured meat into 1 iron every 10 seconds.",
+    "uk": "Кожен залізний шахтар перетворює 1 в’ялене м’ясо на 1 залізо кожні 10 секунд."
+  },
+  "coal miner": {
+    "type": "Role",
+    "en": "Each coal miner turns 1 cured meat into 1 coal every 10 seconds.",
+    "uk": "Кожен вугільний шахтар перетворює 1 в’ялене м’ясо на 1 вугілля кожні 10 секунд."
+  },
+  "sulphur miner": {
+    "type": "Role",
+    "en": "Each sulphur miner turns 1 cured meat into 1 sulphur every 10 seconds.",
+    "uk": "Кожен сірчаний шахтар перетворює 1 в’ялене м’ясо на 1 сірку кожні 10 секунд."
+  },
+  "steelworker": {
+    "type": "Role",
+    "en": "Each steelworker turns 1 iron and 1 coal into 1 steel every 10 seconds.",
+    "uk": "Кожен сталевар перетворює 1 залізо та 1 вугілля на 1 сталь кожні 10 секунд."
+  },
+  "armourer": {
+    "type": "Role",
+    "en": "Each armourer turns 1 steel and 1 sulphur into 1 bullet every 10 seconds.",
+    "uk": "Кожен зброяр перетворює 1 сталь та 1 сірку на 1 кулю кожні 10 секунд."
   }
 },
 
@@ -310,6 +360,15 @@ var EntityDescriptions = {
     return Object.keys(EntityDescriptions.data).filter(function(key) {
       return !type || EntityDescriptions.data[key].type === type;
     });
+  },
+
+  capitalize: function(value) {
+    value = value == null ? '' : String(value);
+    return value ? value.charAt(0).toLocaleUpperCase() + value.slice(1) : value;
+  },
+
+  name: function(key) {
+    return EntityDescriptions.capitalize(_(key));
   },
 
   addToTooltip: function(tooltip, key) {
@@ -334,5 +393,87 @@ var EntityDescriptions = {
     }
     EntityDescriptions.addToTooltip(tooltip, key);
     return element;
+  },
+
+  positionTooltip: function(element) {
+    var tooltip = element.children('div.entityTooltip').first();
+    if(tooltip.length === 0 || !element.is(':hover')) return;
+
+    var targetRect = element[0].getBoundingClientRect();
+    var viewportPadding = 8;
+    var maxHeight = Math.max(120, window.innerHeight - (viewportPadding * 2));
+
+    tooltip.css({
+      position: 'fixed',
+      visibility: 'hidden',
+      display: 'block',
+      top: '0px',
+      left: '0px',
+      right: 'auto',
+      bottom: 'auto',
+      maxHeight: maxHeight + 'px',
+      overflowY: 'auto'
+    });
+
+    var width = tooltip.outerWidth();
+    var height = Math.min(tooltip.outerHeight(), maxHeight);
+    var left = targetRect.left;
+    var top = targetRect.bottom + 6;
+
+    if(left + width > window.innerWidth - viewportPadding) {
+      left = window.innerWidth - width - viewportPadding;
+    }
+    if(top + height > window.innerHeight - viewportPadding) {
+      top = targetRect.top - height - 6;
+    }
+
+    left = Math.max(viewportPadding, left);
+    top = Math.max(viewportPadding, Math.min(top, window.innerHeight - height - viewportPadding));
+
+    tooltip.css({
+      top: top + 'px',
+      left: left + 'px',
+      visibility: 'visible'
+    });
+  },
+
+  resetTooltipPosition: function(element) {
+    element.children('div.entityTooltip').first().css({
+      position: '',
+      visibility: '',
+      display: '',
+      top: '',
+      left: '',
+      right: '',
+      bottom: '',
+      maxHeight: '',
+      overflowY: ''
+    });
+  },
+
+  init: function() {
+    $(document)
+      .off('.entityDescriptions')
+      .on('mouseenter.entityDescriptions', '.hasEntityDescription', function() {
+        var element = $(this);
+        window.requestAnimationFrame(function() {
+          EntityDescriptions.positionTooltip(element);
+        });
+      })
+      .on('mouseleave.entityDescriptions', '.hasEntityDescription', function() {
+        EntityDescriptions.resetTooltipPosition($(this));
+      });
+
+    $(window)
+      .off('resize.entityDescriptions')
+      .on('resize.entityDescriptions', function() {
+        $('.hasEntityDescription:hover').each(function() {
+          EntityDescriptions.positionTooltip($(this));
+        });
+      });
   }
 };
+
+$(function() {
+  EntityDescriptions.init();
+});
