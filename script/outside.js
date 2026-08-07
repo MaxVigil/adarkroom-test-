@@ -167,6 +167,7 @@ var Outside = {
 			id: 'gatherButton',
 			text: _("gather wood"),
 			click: Outside.gatherWood,
+			entity: 'wood',
 			cooldown: Outside._GATHER_DELAY,
 			width: '80px'
 		}).appendTo('div#outsidePanel');
@@ -400,6 +401,7 @@ var Outside = {
 			$('<div>').addClass('row_key').text(lname).appendTo(row);
 			$('<div>').addClass('row_val').text(num).appendTo(row);
 			$('<div>').addClass('clear').appendTo(row);
+			EntityDescriptions.attach(row, name, 'bottom right');
 			var curPrev = null;
 			village.children().each(function(i) {
 				var child = $(this);
