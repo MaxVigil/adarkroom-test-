@@ -96,6 +96,18 @@ div.supplyItem {
 	border: 1px solid #EEE;
 }
 
+div.inventoryCategory {
+	border-color: #555;
+}
+
+div.inventoryCategoryTitle {
+	color: #aaa;
+}
+
+span.inventoryCategoryIcon {
+	color: #c19a63;
+}
+
 #backpackTitle {
 	background-color: #272823;
 }

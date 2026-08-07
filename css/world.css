@@ -30,10 +30,10 @@
 
 #bagspace-world {
 	border: 1px solid black;
-	height: 62px;
+	min-height: 62px;
 	margin-bottom: 5px;
 	margin-top: 13px;
-	overflow: hidden;
+	overflow: visible;
 }
 
 #bagspace-world > div {
@@ -71,4 +71,20 @@ div.supplyItem {
 	margin: 0px 5px 6px 0px;
 	padding: 0 5px;
 	cursor: default;
+}
+
+#bagspace-world .inventoryCategory {
+	display: inline-block;
+	vertical-align: top;
+	margin: 0 12px 4px 0;
+	padding: 0;
+	border: 0;
+}
+
+#bagspace-world .inventoryCategoryTitle {
+	margin-bottom: 3px;
+}
+
+#bagspace-world .inventoryCategoryItems {
+	white-space: nowrap;
 }

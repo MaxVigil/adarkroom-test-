@@ -282,35 +282,32 @@ var World = {
       Path.outfit = {};
     }
 
-    // Add water
-    var water = $('div#supply_water');
-    if(World.water > 0 && water.length === 0) {
-      water = World.createItemDiv('water', World.water);
-      water.prependTo(supplies);
-    } else if(World.water > 0) {
-      $('div#supply_water', supplies).text(_('water:{0}' , World.water));
-    } else {
-      water.remove();
-    }
-
     var total = 0;
+    var inventory = [];
+    var currentArmour = Path.getCurrentArmour();
+    if(currentArmour) inventory.push({ key: currentArmour.key, num: null, label: _('armour') + ':' + currentArmour.name });
+    if(World.water > 0) inventory.push({ key: 'water', num: World.water });
     for(var k in Path.outfit) {
-      var item = $('div#supply_' + k.replace(' ', '-'), supplies);
       var num = Path.outfit[k];
       total += num * Path.getWeight(k);
-      if(num > 0 && item.length === 0) {
-        item = World.createItemDiv(k, num);
-        if(k == 'cured meat' && World.water > 0) {
-          item.insertAfter(water);
-        } else if(k == 'cured meat') {
-          item.prependTo(supplies);
-        } else {
-          item.appendTo(supplies);
+      if(num > 0) inventory.push({ key: k, num: num });
+    }
+
+    supplies.empty();
+    for(var c = 0; c < Path.InventoryCategories.length; c++) {
+      var category = Path.InventoryCategories[c];
+      var categoryItems = inventory.filter(function(item) {
+        return Path.getInventoryCategory(item.key) == category;
+      }).sort(function(a, b) {
+        return Path.getInventoryRank(b.key, category) - Path.getInventoryRank(a.key, category);
+      });
+      if(categoryItems.length > 0) {
+        var section = Path.createInventoryCategory(category).addClass('worldInventoryCategory').appendTo(supplies);
+        for(var i = 0; i < categoryItems.length; i++) {
+          var item = World.createItemDiv(categoryItems[i].key, categoryItems[i].num);
+          if(categoryItems[i].label) item.text(categoryItems[i].label);
+          item.appendTo($('.inventoryCategoryItems', section));
         }
-      } else if(num > 0) {
-        $('div#' + item.attr('id'), supplies).text(_(k) + ':' + num);
-      } else {
-        item.remove();
       }
     }
 

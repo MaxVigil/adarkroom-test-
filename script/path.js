@@ -13,6 +13,25 @@ var Path = {
     'plasma rifle': 5,
 		'bolas': 0.5,
 	},
+
+	// Inventory presentation is shared by the outfitting and world screens. Item
+	// arrays run from the earliest unlock to the latest so stronger, later finds
+	// can be displayed first without changing the underlying store data.
+	InventoryCategories: ['armour', 'weapons', 'ammunition', 'supplies', 'other'],
+	InventoryProgression: {
+		'armour': ['l armour', 'i armour', 's armour', 'kinetic armour'],
+		'weapons': ['bone spear', 'iron sword', 'steel sword', 'rifle', 'bayonet', 'bolas', 'grenade', 'laser rifle', 'energy blade', 'disruptor', 'plasma rifle'],
+		'ammunition': ['bullets', 'energy cell'],
+		'supplies': ['water', 'cured meat', 'medicine', 'hypo', 'stim'],
+		'other': ['torch', 'charm', 'alien alloy', 'glowstone']
+	},
+	InventoryIcons: {
+		'armour': '\u25c7',
+		'weapons': '\u2020',
+		'ammunition': '\u00b7',
+		'supplies': '+',
+		'other': '\u2026'
+	},
 		
 	name: 'Path',
 	options: {}, // Nuthin'
@@ -67,6 +86,47 @@ var Path = {
 		if(typeof w != 'number') w = 1;
 		
 		return w;
+	},
+
+	getInventoryCategory: function(thing, store) {
+		for(var category in Path.InventoryProgression) {
+			if(Path.InventoryProgression[category].indexOf(thing) >= 0) return category;
+		}
+		// Any future combat consumable marked as a weapon belongs with weapons.
+		return store && store.type == 'weapon' ? 'weapons' : 'other';
+	},
+
+	getInventoryRank: function(thing, category) {
+		return Path.InventoryProgression[category].indexOf(thing);
+	},
+
+	getInventoryCategoryName: function(category) {
+		var names = {
+			'armour': _('armour'),
+			'weapons': _('weapons'),
+			'ammunition': _('ammunition'),
+			'supplies': _('supplies'),
+			'other': _('other')
+		};
+		return names[category];
+	},
+
+	createInventoryCategory: function(category) {
+		var section = $('<div>').addClass('inventoryCategory').attr('data-category', category);
+		$('<div>').addClass('inventoryCategoryTitle')
+			.append($('<span>').addClass('inventoryCategoryIcon').attr('aria-hidden', 'true').text(Path.InventoryIcons[category]))
+			.append(document.createTextNode(Path.getInventoryCategoryName(category)))
+			.appendTo(section);
+		$('<div>').addClass('inventoryCategoryItems').appendTo(section);
+		return section;
+	},
+
+	getCurrentArmour: function() {
+		if($SM.get('stores["kinetic armour"]', true) > 0) return { key: 'kinetic armour', name: _("kinetic") };
+		if($SM.get('stores["s armour"]', true) > 0) return { key: 's armour', name: _("steel") };
+		if($SM.get('stores["i armour"]', true) > 0) return { key: 'i armour', name: _("iron") };
+		if($SM.get('stores["l armour"]', true) > 0) return { key: 'l armour', name: _("leather") };
+		return null;
 	},
 	
 	getCapacity: function() {
@@ -133,29 +193,25 @@ var Path = {
 		}
 		
 		// Add the armour row
-		var armour = _("none");
-    if($SM.get('stores["kinetic armour"]', true) > 0)
-			armour = _("kinetic");
-		else if($SM.get('stores["s armour"]', true) > 0)
-			armour = _("steel");
-		else if($SM.get('stores["i armour"]', true) > 0)
-			armour = _("iron");
-		else if($SM.get('stores["l armour"]', true) > 0)
-			armour = _("leather");
+		var currentArmour = Path.getCurrentArmour();
+		var armourKey = currentArmour && currentArmour.key;
 		var aRow = $('#armourRow');
-		if(aRow.length === 0) {
-			aRow = $('<div>').attr('id', 'armourRow').addClass('outfitRow').prependTo(outfit);
+		if(armourKey && aRow.length === 0) {
+			aRow = $('<div>').attr('id', 'armourRow').addClass('outfitRow').attr('data-item', armourKey);
 			$('<div>').addClass('row_key').text(_('armour')).appendTo(aRow);
-			$('<div>').addClass('row_val').text(armour).appendTo(aRow);
+			$('<div>').addClass('row_val').text(currentArmour.name).appendTo(aRow);
 			$('<div>').addClass('clear').appendTo(aRow);
+		} else if(armourKey) {
+			aRow.attr('data-item', armourKey);
+			$('.row_val', aRow).text(currentArmour.name);
 		} else {
-			$('.row_val', aRow).text(armour);
+			aRow.remove();
 		}
 		
 		// Add the water row
 		var wRow = $('#waterRow');
 		if(wRow.length === 0) {
-			wRow = $('<div>').attr('id', 'waterRow').addClass('outfitRow').insertAfter(aRow);
+			wRow = $('<div>').attr('id', 'waterRow').addClass('outfitRow').attr('data-item', 'water');
 			$('<div>').addClass('row_key').text(_('water')).appendTo(wRow);
 			$('<div>').addClass('row_val').text(World.getMaxWater()).appendTo(wRow);
 			$('<div>').addClass('clear').appendTo(wRow);
@@ -180,7 +236,6 @@ var Path = {
 		}, Room.Craftables, Fabricator.Craftables);
 		
 		for(var k in carryable) {
-			var lk = _(k);
 			var store = carryable[k];
 			var have = $SM.get('stores["'+k+'"]');
 			var num = Path.outfit[k];
@@ -194,23 +249,7 @@ var Path = {
 			if((store.type == 'tool' || store.type == 'weapon') && have > 0) {
 				currentBagCapacity += num * Path.getWeight(k);
 				if(row.length === 0) {
-					row = Path.createOutfittingRow(k, num, store, store.name);
-					
-					var curPrev = null;
-					outfit.children().each(function(i) {
-						var child = $(this);
-						if(child.attr('id').indexOf('outfit_row_') === 0) {
-							var cName = child.children('.row_key').text();
-							if(cName < lk) {
-								curPrev = child.attr('id');
-							}
-						}
-					});
-					if(curPrev == null) {
-						row.insertAfter(wRow);
-					} else {
-						row.insertAfter(outfit.find('#' + curPrev));
-					}
+					row = Path.createOutfittingRow(k, num, store, store.name).appendTo(outfit);
 				} else {
 					$('div#' + row.attr('id') + ' > div.row_val > span', outfit).text(num);
 					$('div#' + row.attr('id') + ' .tooltip .numAvailable', outfit).text(have - num);
@@ -234,6 +273,29 @@ var Path = {
 			}
 		}
 
+		// Rebuild only the lightweight presentation wrappers. Existing rows keep
+		// their handlers and tooltips while being grouped and progression-sorted.
+		var rows = $('.outfitRow', outfit).detach().get();
+		$('.inventoryCategory', outfit).remove();
+		rows.sort(function(a, b) {
+			var aKey = $(a).attr('data-item') || $(a).attr('key');
+			var bKey = $(b).attr('data-item') || $(b).attr('key');
+			var aCategory = Path.getInventoryCategory(aKey);
+			var bCategory = Path.getInventoryCategory(bKey);
+			var categoryDiff = Path.InventoryCategories.indexOf(aCategory) - Path.InventoryCategories.indexOf(bCategory);
+			if(categoryDiff !== 0) return categoryDiff;
+			return Path.getInventoryRank(bKey, bCategory) - Path.getInventoryRank(aKey, aCategory);
+		});
+		for(var c = 0; c < Path.InventoryCategories.length; c++) {
+			var category = Path.InventoryCategories[c];
+			var section = Path.createInventoryCategory(category);
+			for(var r = 0; r < rows.length; r++) {
+				var rowKey = $(rows[r]).attr('data-item') || $(rows[r]).attr('key');
+				if(Path.getInventoryCategory(rowKey) == category) $(rows[r]).appendTo($('.inventoryCategoryItems', section));
+			}
+			if($('.outfitRow', section).length > 0) section.appendTo(outfit);
+		}
+
 		Path.updateBagSpace(currentBagCapacity);
 
 	},
@@ -252,7 +314,7 @@ var Path = {
 	
 	createOutfittingRow: function(key, num, store) {
 		if(!store.name) store.name = _(key);
-		var row = $('<div>').attr('id', 'outfit_row_' + key.replace(' ', '-')).addClass('outfitRow').attr('key',key);
+		var row = $('<div>').attr('id', 'outfit_row_' + key.replace(' ', '-')).addClass('outfitRow').attr({'key': key, 'data-item': key});
 		$('<div>').addClass('row_key').text(store.name).appendTo(row);
 		var val = $('<div>').addClass('row_val').appendTo(row);
 		
