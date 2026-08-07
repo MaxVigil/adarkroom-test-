@@ -881,6 +881,7 @@ var Room = {
 				$('<div>').addClass('row_key').text(lk).appendTo(row);
 				$('<div>').addClass('row_val').text(Math.floor(num)).appendTo(row);
 				$('<div>').addClass('clear').appendTo(row);
+				EntityDescriptions.attach(row, k, 'bottom right');
 				var curPrev = null;
 				location.children().each(function (i) {
 					var child = $(this);
@@ -944,10 +945,13 @@ var Room = {
 			var ttPos = index > 10 ? 'top right' : 'bottom right';
 			var tt = $('<div>').addClass('tooltip ' + ttPos);
 			var storeName = el.attr('id').substring(4).replace('-', ' ');
+			var hasIncome = false;
+			EntityDescriptions.addToTooltip(tt, storeName);
 			for (var incomeSource in $SM.get('income')) {
 				var income = $SM.get('income["' + incomeSource + '"]');
 				for (var store in income.stores) {
 					if (store == storeName && income.stores[store] !== 0) {
+						hasIncome = true;
 						$('<div>').addClass('row_key').text(_(incomeSource)).appendTo(tt);
 						$('<div>')
 							.addClass('row_val')
@@ -961,11 +965,14 @@ var Room = {
 					}
 				}
 			}
-			if (tt.children().length > 0) {
+			if (hasIncome) {
 				var total = totalIncome[storeName].income;
 				$('<div>').addClass('total row_key').text(_('total')).appendTo(tt);
 				$('<div>').addClass('total row_val').text(Engine.getIncomeMsg(total, totalIncome[storeName].delay)).appendTo(tt);
+			}
+			if (tt.children().length > 0) {
 				tt.appendTo(el);
+				el.addClass('hasEntityDescription');
 			}
 		});
 	},
@@ -1147,6 +1154,7 @@ var Room = {
 						cost: craftable.cost(),
 						text: _(k),
 						click: Room.build,
+						entity: k,
 						width: '80px',
 						ttPos: loc.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', k).appendTo(loc).animate({ opacity: 1 }, 300, 'linear');
@@ -1155,6 +1163,7 @@ var Room = {
 				// refresh the tooltip
 				var costTooltip = $('.tooltip', craftable.button);
 				costTooltip.empty();
+				EntityDescriptions.addToTooltip(costTooltip, k);
 				var cost = craftable.cost();
 				for (var c in cost) {
 					$("<div>").addClass('row_key').text(_(c)).appendTo(costTooltip);
@@ -1181,6 +1190,7 @@ var Room = {
 						cost: good.cost(),
 						text: _(g),
 						click: Room.buy,
+						entity: g,
 						width: '80px',
 						ttPos: buySection.children().length > 10 ? 'top right' : 'bottom right'
 					}).css('opacity', 0).attr('buildThing', g).appendTo(buySection).animate({ opacity: 1 }, 300, 'linear');
@@ -1189,6 +1199,7 @@ var Room = {
 				// refresh the tooltip
 				var goodsCostTooltip = $('.tooltip', good.button);
 				goodsCostTooltip.empty();
+				EntityDescriptions.addToTooltip(goodsCostTooltip, g);
 				var goodCost = good.cost();
 				for (var gc in goodCost) {
 					$("<div>").addClass('row_key').text(_(gc)).appendTo(goodsCostTooltip);
