@@ -23,6 +23,10 @@ var Button = {
 			.data("cooldown", typeof options.cooldown == 'number' ? options.cooldown : 0)
 			.data('boosted', options.boosted ?? (() => false));
 
+		if(options.action) {
+			el.addClass('actionButton');
+		}
+
 		if(options.entity) {
 			el.attr('data-entity', options.entity).addClass('hasEntityDescription');
 		}
