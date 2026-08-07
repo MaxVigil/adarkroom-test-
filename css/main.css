@@ -384,6 +384,30 @@ div.button div.tooltip {
 	width: 100px;
 }
 
+div.tooltip.entityTooltip,
+div.button div.tooltip.entityTooltip {
+	box-sizing: border-box;
+	width: 240px;
+	max-width: 260px;
+	line-height: 1.35;
+	white-space: normal;
+}
+
+div.tooltip .tooltipDescription {
+	margin-bottom: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid #bbb;
+	font-size: 11px;
+}
+
+.hasEntityDescription {
+	cursor: help;
+}
+
+.supplyItem.hasEntityDescription {
+	position: relative;
+}
+
 /* Tooltip */
 
 div.tooltip {
@@ -422,6 +446,10 @@ div.tooltip:hover {
 
 .disabled:hover > div.tooltip, .button.free:hover > div.tooltip {
 	display: none;
+}
+
+.button.disabled.hasEntityDescription:hover > div.tooltip {
+	display: block;
 }
 
 #event .button.disabled:hover > div.tooltip {
