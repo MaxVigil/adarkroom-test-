@@ -102,8 +102,9 @@ var Button = {
 				},500));
 			}
 			var time = start;
-			if (Engine.options.doubleTime){
-				time /= 2;
+			var gameSpeed = Engine.getGameSpeed();
+			if(gameSpeed > 1) {
+				time /= gameSpeed;
 			}
 			$('div.cooldown', btn).width(left * 100 +"%").animate({width: '0%'}, time * 1000, 'linear', function() {
 				Button.clearCooldown(btn, true);
