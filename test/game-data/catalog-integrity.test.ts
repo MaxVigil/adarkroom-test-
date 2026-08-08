@@ -13,6 +13,7 @@ describe('baseline catalog integrity', () => {
       ...baseline.items, ...baseline.recipes, ...baseline.weapons,
       ...baseline.perks, ...baseline.blueprints, ...baseline.locations, ...baseline.events,
       ...baseline.scenes,
+      ...baseline.enemies, ...baseline.combatEncounters, ...baseline.lootTables,
     ].map(({ id }) => id);
     expect(new Set(ids).size).toBe(ids.length);
   });
@@ -30,11 +31,14 @@ describe('baseline catalog integrity', () => {
       locations: baseline.locations.length,
       events: baseline.events.length,
       scenes: baseline.scenes.length,
+      enemies: baseline.enemies.length,
+      combatEncounters: baseline.combatEncounters.length,
+      lootTables: baseline.lootTables.length,
     }).toEqual({
       resources: 22,
       buildings: 13,
       professions: 10,
-      items: 24,
+      items: 25,
       recipes: 38,
       weapons: 12,
       perks: 11,
@@ -42,6 +46,9 @@ describe('baseline catalog integrity', () => {
       locations: 14,
       events: 48,
       scenes: 274,
+      enemies: 47,
+      combatEncounters: 90,
+      lootTables: 146,
     });
   });
 });

@@ -31,6 +31,7 @@ export const items = [
   { id: 'item.disruptor', legacyKey: 'disruptor', sourceFile: WORLD, category: 'weapon', weight: 1 },
   { id: 'item.plasma-rifle', legacyKey: 'plasma rifle', sourceFile: PATH, category: 'weapon', weight: 5 },
   { id: 'item.glowstone', legacyKey: 'glowstone', sourceFile: FABRICATOR, category: 'tool', weight: 1 },
+  { id: 'item.fleet-beacon', legacyKey: 'fleet beacon', sourceFile: 'script/events/executioner.js', category: 'special', maximum: 1, weight: 0 },
 ] satisfies ItemDefinition[];
 
 export const recipes = [

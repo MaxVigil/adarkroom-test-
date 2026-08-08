@@ -32,6 +32,9 @@ export function validateBaseline(repositoryRoot = process.cwd()): CatalogIssue[]
     baseline.locations,
     baseline.events,
     baseline.scenes,
+    baseline.enemies,
+    baseline.combatEncounters,
+    baseline.lootTables,
   ] as const;
   const entities = collections.flat();
   const ids = new Set(entities.map(({ id }) => id));
@@ -84,6 +87,16 @@ export function validateBaseline(repositoryRoot = process.cwd()): CatalogIssue[]
     for (const sceneId of event.sceneIds) checkRef(event.id, sceneId, 'scene');
   }
   for (const scene of baseline.scenes) checkRef(scene.id, scene.eventId, 'event');
+  for (const encounter of baseline.combatEncounters) {
+    checkRef(encounter.id, encounter.eventId, 'event');
+    checkRef(encounter.id, encounter.sceneId, 'scene');
+    checkRef(encounter.id, encounter.enemyId, 'enemy');
+  }
+  for (const lootTable of baseline.lootTables) {
+    checkRef(lootTable.id, lootTable.eventId, 'event');
+    checkRef(lootTable.id, lootTable.sceneId, 'scene');
+    for (const entry of lootTable.entries) checkRef(lootTable.id, entry.targetId, 'loot target');
+  }
 
   const trapRolls = baselineSystems.traps.map(({ rollUnder }) => rollUnder);
   if (trapRolls.at(-1) !== 1 || trapRolls.some((value, index) => index > 0 && value <= trapRolls[index - 1]!)) {

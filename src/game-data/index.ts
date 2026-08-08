@@ -6,6 +6,7 @@ import { perks } from './progression.js';
 import { locations } from './world.js';
 import { events } from './events.js';
 import { scenes } from './generated/scenes.js';
+import { combatEncounters, enemies, lootTables } from './generated/combat.js';
 
 export const baseline = BaselineSchema.parse({
   version: 1,
@@ -24,6 +25,9 @@ export const baseline = BaselineSchema.parse({
     sceneIds: scenes.filter((scene) => scene.eventId === event.id).map((scene) => scene.id),
   })),
   scenes,
+  enemies,
+  combatEncounters,
+  lootTables,
 });
 
 export * from './balance.js';

@@ -14,6 +14,9 @@ const counts = {
   locations: baseline.locations.length,
   events: baseline.events.length,
   scenes: baseline.scenes.length,
+  enemies: baseline.enemies.length,
+  combatEncounters: baseline.combatEncounters.length,
+  lootTables: baseline.lootTables.length,
 };
 
 console.log('# Light Room baseline catalog report');

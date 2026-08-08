@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const StableIdSchema = z.string().regex(
-  /^(resource|building|profession|item|recipe|weapon|perk|location|event|scene|blueprint|system)\.[a-z0-9]+(?:[.-][a-z0-9]+)*$/,
+  /^(resource|building|profession|item|recipe|weapon|enemy|encounter|loot|perk|location|event|scene|blueprint|system)\.[a-z0-9]+(?:[.-][a-z0-9]+)*$/,
   'expected a namespaced, lowercase stable ID',
 );
 
@@ -112,6 +112,40 @@ export const SceneMetadataSchema = LegacyIdentitySchema.extend({
   eventId: StableIdSchema,
 });
 
+export const EnemySchema = LegacyIdentitySchema.extend({
+  id: StableIdSchema,
+});
+
+export const CombatEncounterSchema = LegacyIdentitySchema.extend({
+  id: StableIdSchema,
+  eventId: StableIdSchema,
+  sceneId: StableIdSchema,
+  enemyId: StableIdSchema,
+  damage: z.number().nonnegative(),
+  hitChance: z.number().min(0).max(1),
+  attackDelaySeconds: z.number().positive(),
+  health: z.number().positive(),
+  ranged: z.boolean().default(false),
+});
+
+const LootRollSchema = z.object({
+  min: z.number().int().nonnegative(),
+  maxExclusive: z.number().int().positive(),
+  chance: z.number().min(0).max(1),
+});
+
+export const LootEntrySchema = LootRollSchema.extend({
+  targetId: StableIdSchema,
+  bonus: LootRollSchema.optional(),
+});
+
+export const LootTableSchema = LegacyIdentitySchema.extend({
+  id: StableIdSchema,
+  eventId: StableIdSchema,
+  sceneId: StableIdSchema,
+  entries: z.array(LootEntrySchema),
+});
+
 export const BaselineSchema = z.object({
   version: z.literal(1),
   source: z.literal('A Dark Room browser repository'),
@@ -126,6 +160,9 @@ export const BaselineSchema = z.object({
   locations: z.array(LocationSchema),
   events: z.array(EventMetadataSchema),
   scenes: z.array(SceneMetadataSchema),
+  enemies: z.array(EnemySchema),
+  combatEncounters: z.array(CombatEncounterSchema),
+  lootTables: z.array(LootTableSchema),
 });
 
 export type ResourceDefinition = z.input<typeof ResourceSchema>;
@@ -139,3 +176,6 @@ export type BlueprintDefinition = z.input<typeof BlueprintSchema>;
 export type LocationDefinition = z.input<typeof LocationSchema>;
 export type EventMetadata = z.input<typeof EventMetadataSchema>;
 export type SceneMetadata = z.input<typeof SceneMetadataSchema>;
+export type EnemyDefinition = z.input<typeof EnemySchema>;
+export type CombatEncounterDefinition = z.input<typeof CombatEncounterSchema>;
+export type LootTableDefinition = z.input<typeof LootTableSchema>;
