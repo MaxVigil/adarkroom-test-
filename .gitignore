@@ -6,4 +6,6 @@
 lang/.DS_Store
 .DS_Store
 node_modules
+playwright-report
+test-results
 img/Thumbs.db

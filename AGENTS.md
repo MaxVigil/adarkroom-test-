@@ -70,10 +70,14 @@ tests.
 - Keep inherited names in `legacyKey` only for compatibility and traceability.
 - Do not mix approved Light Room additions into the inherited baseline. Add them as
   an explicit overlay after the baseline is validated.
-- When inherited event scenes change, run `node --import tsx tools/generate-event-scenes.ts`
-  and commit the regenerated scene index.
-- Run `pnpm typecheck` and `pnpm test` after catalog changes. A deliberate balance
+- When inherited event scenes change, run `pnpm catalog:generate` and commit the
+  regenerated scene and combat catalogs.
+- Run `pnpm typecheck`, `pnpm test`, and `pnpm test:browser` after changes to saves,
+  legacy runtime behavior, or critical player journeys. A deliberate balance
   change must update the relevant scenario and be documented as a Light Room change.
+- Preserve the validated save boundary in `script/save_manager.js`; imported data
+  must be validated before replacing current progress, and state paths must never be
+  evaluated as JavaScript.
 
 ## Change discipline
 
