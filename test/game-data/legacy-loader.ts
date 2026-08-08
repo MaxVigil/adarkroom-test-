@@ -4,6 +4,8 @@ import vm from 'node:vm';
 
 export interface LegacyLoadOptions {
   buildingCounts?: Record<string, number>;
+  globals?: Record<string, unknown>;
+  initialState?: Record<string, unknown>;
   storeCounts?: Record<string, number>;
   randomValues?: number[];
 }
@@ -47,7 +49,7 @@ export function loadLegacy<T>(
     Ship: blackHole,
     Space: blackHole,
     World: blackHole,
-    State: {},
+    State: options.initialState ?? {},
     document: blackHole,
     navigator: blackHole,
     localStorage: blackHole,
@@ -66,6 +68,7 @@ export function loadLegacy<T>(
     },
     $: Object.assign(() => blackHole, { extend: (...args: unknown[]) => args.at(-1) }),
     jQuery: { Callbacks: () => blackHole },
+    ...options.globals,
   });
   context.window = context;
 
