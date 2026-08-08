@@ -372,7 +372,7 @@ var StateManager = {
 	//INCOME
 	setIncome: function(source, options) {
 		var existing = $SM.get('income["'+source+'"]');
-		if(typeof existing != 'undefined') {
+		if(typeof existing != 'undefined' && typeof existing.timeLeft == 'number') {
 			options.timeLeft = existing.timeLeft;
 		}
 		$SM.set('income["'+source+'"]', options);

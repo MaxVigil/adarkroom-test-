@@ -94,6 +94,22 @@ var Outside = {
 			}
 		}
 	},
+
+	getIncomeStores: function(worker) {
+		return Outside._INCOME[worker].stores;
+	},
+
+	getWorkerCount: function(worker) {
+		var count = $SM.get('game.workers["'+worker+'"]');
+		if(typeof count != 'number') return undefined;
+		var income = Outside._INCOME[worker];
+		if(income && typeof income.maximum == 'number' && count > income.maximum) {
+			count = income.maximum;
+			$SM.set('game.workers["'+worker+'"]', count, true);
+			Engine.saveGame();
+		}
+		return count;
+	},
 	TrapDrops: [
 		{
 			rollUnder: 0.5,
@@ -275,7 +291,7 @@ var Outside = {
 		
 		for(var k in $SM.get('game.workers')) {
 			var lk = _(k);
-			var workerCount = $SM.get('game.workers["'+k+'"]');
+			var workerCount = Outside.getWorkerCount(k);
 			var row = $('div#workers_row_' + k.replace(' ', '-'), workers);
 			if(row.length === 0) {
 				row = Outside.makeWorkerRow(k, workerCount);
@@ -325,6 +341,15 @@ var Outside = {
 			$('.upBtn', '#workers').removeClass('disabled');
 			$('.upManyBtn', '#workers').removeClass('disabled');
 		}
+		for(var workerName in $SM.get('game.workers')) {
+			var workerIncome = Outside._INCOME[workerName];
+			if(workerIncome && typeof workerIncome.maximum == 'number' &&
+					$SM.get('game.workers["'+workerName+'"]', true) >= workerIncome.maximum) {
+				var cappedRow = $('div#workers_row_' + workerName.replace(' ', '-'), workers);
+				$('.upBtn', cappedRow).addClass('disabled');
+				$('.upManyBtn', cappedRow).addClass('disabled');
+			}
+		}
 		
 		
 		if(needsAppend && workers.children().length > 0) {
@@ -335,7 +360,7 @@ var Outside = {
 	getNumGatherers: function() {
 		var num = $SM.get('game.population'); 
 		for(var k in $SM.get('game.workers')) {
-			num -= $SM.get('game.workers["'+k+'"]');
+			num -= Outside.getWorkerCount(k);
 		}
 		return num;
 	},
@@ -363,10 +388,11 @@ var Outside = {
 		
 		var tooltip = $('<div>').addClass('tooltip bottom right').appendTo(row);
 		var income = Outside._INCOME[key];
-		for(var s in income.stores) {
+		var incomeStores = Outside.getIncomeStores(key);
+		for(var s in incomeStores) {
 			var r = $('<div>').addClass('storeRow');
 			$('<div>').addClass('row_key').text(_(s)).appendTo(r);
-			$('<div>').addClass('row_val').text(Engine.getIncomeMsg(income.stores[s], income.delay)).appendTo(r);
+			$('<div>').addClass('row_val').text(Engine.getIncomeMsg(incomeStores[s], income.delay)).appendTo(r);
 			r.appendTo(tooltip);
 		}
 		
@@ -376,7 +402,11 @@ var Outside = {
 	increaseWorker: function(btn) {
 		var worker = $(this).closest('.workerRow').attr('key');
 		if(Outside.getNumGatherers() > 0) {
-			var increaseAmt = Math.min(Outside.getNumGatherers(), btn.data);
+			var income = Outside._INCOME[worker];
+			var current = Outside.getWorkerCount(worker);
+			var remaining = typeof income.maximum == 'number' ? Math.max(0, income.maximum - current) : btn.data;
+			var increaseAmt = Math.min(Outside.getNumGatherers(), btn.data, remaining);
+			if(increaseAmt <= 0) return;
 			Engine.log('increasing ' + worker + ' by ' + increaseAmt);
 			$SM.add('game.workers["'+worker+'"]', increaseAmt);
 		}
@@ -384,8 +414,8 @@ var Outside = {
 	
 	decreaseWorker: function(btn) {
 		var worker = $(this).closest('.workerRow').attr('key');
-		if($SM.get('game.workers["'+worker+'"]') > 0) {
-			var decreaseAmt = Math.min($SM.get('game.workers["'+worker+'"]') || 0, btn.data);
+		if(Outside.getWorkerCount(worker) > 0) {
+			var decreaseAmt = Math.min(Outside.getWorkerCount(worker), btn.data);
 			Engine.log('decreasing ' + worker + ' by ' + decreaseAmt);
 			$SM.add('game.workers["'+worker+'"]', decreaseAmt * -1);
 		}
@@ -486,6 +516,10 @@ var Outside = {
 			'steelworks': ['steelworker'],
 			'armoury' : ['armourer']
 		};
+		var lightRoomJobs = Outside.LightRoomJobs || {};
+		for(var lightRoomBuilding in lightRoomJobs) {
+			jobMap[lightRoomBuilding] = lightRoomJobs[lightRoomBuilding];
+		}
 		
 		var jobs = jobMap[name];
 		var added = false;
@@ -506,7 +540,7 @@ var Outside = {
 	updateVillageIncome: function() {		
 		for(var worker in Outside._INCOME) {
 			var income = Outside._INCOME[worker];
-			var num = worker == 'gatherer' ? Outside.getNumGatherers() : $SM.get('game.workers["'+worker+'"]');
+			var num = worker == 'gatherer' ? Outside.getNumGatherers() : Outside.getWorkerCount(worker);
 			if(typeof num == 'number') {
 				var stores = {};
 				if(num < 0) num = 0;
@@ -514,8 +548,9 @@ var Outside = {
 				tooltip.empty();
 				var needsUpdate = false;
 				var curIncome = $SM.getIncome(worker);
-				for(var store in income.stores) {
-					stores[store] = income.stores[store] * num;
+				var incomeStores = Outside.getIncomeStores(worker);
+				for(var store in incomeStores) {
+					stores[store] = incomeStores[store] * num;
 					if(curIncome[store] != stores[store]) needsUpdate = true;
 					var row = $('<div>').addClass('storeRow');
 					$('<div>').addClass('row_key').text(_(store)).appendTo(row);
@@ -658,6 +693,9 @@ var Outside = {
 			Outside.updateVillage();
 		} else if(e.stateName.indexOf('game.workers') === 0 || e.stateName.indexOf('game.population') === 0){
 			Outside.updateVillage();
+			Outside.updateWorkersView();
+			Outside.updateVillageIncome();
+		} else if(e.stateName.indexOf('game.upgrades') === 0) {
 			Outside.updateWorkersView();
 			Outside.updateVillageIncome();
 		}

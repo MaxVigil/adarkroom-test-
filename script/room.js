@@ -1084,6 +1084,10 @@ var Room = {
 			Room.buttons[thing] = true;
 			return true;
 		}
+		if (craftable.requiresBuilding &&
+				$SM.get('game.buildings["' + craftable.requiresBuilding + '"]', true) <= 0) {
+			return false;
+		}
 		// Show buttons if we have at least 1/2 the wood, and all other components have been seen.
 		if ($SM.get('stores.wood', true) < cost['wood'] * 0.5) {
 			return false;
