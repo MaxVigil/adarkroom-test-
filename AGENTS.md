@@ -79,6 +79,20 @@ tests.
   must be validated before replacing current progress, and state paths must never be
   evaluated as JavaScript.
 
+## Light Room overlay
+
+- Treat `src/light-room/` as the canonical source for approved Light Room additions
+  and deliberate changes. Never add those entities to the inherited arrays under
+  `src/game-data/`.
+- Keep `src/light-room/content.ts` plain data. Put calculations in pure functions and
+  validate all cross-references through `validateLightRoomCatalog()`.
+- Run `pnpm catalog:generate` after overlay changes. Do not hand-edit
+  `script/generated/light_room_content.js`.
+- The playable legacy adapter in `script/light_room.js` may translate canonical data
+  into old runtime structures, but must not duplicate balance values.
+- Run `pnpm light-room:report` for economy changes and document any value that still
+  needs design approval instead of inventing a cost, recipe, or unlock rule.
+
 ## Change discipline
 
 - Make small, reviewable vertical slices.

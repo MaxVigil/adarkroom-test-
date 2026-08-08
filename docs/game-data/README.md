@@ -83,6 +83,10 @@ their professions, or the approved population extensions. Those belong in a sepa
 Light Room overlay. Tests for that overlay should state the intended difference from
 the baseline explicitly.
 
+The first overlay now lives in `src/light-room/`. Its resolved catalog composes new
+entities with this baseline without modifying inherited arrays. See
+`docs/light-room/README.md` for its rules and current coverage.
+
 When a legacy event source changes, regenerate the scene, combat, enemy, and loot
 inventories:
 
