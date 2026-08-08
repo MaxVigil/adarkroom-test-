@@ -55,6 +55,10 @@ legacy parity, event coverage, and representative scenarios. The scenarios cover
 - ship upgrades;
 - migration of representative legacy save keys.
 
+Four focused regression scenarios also protect the approved inherited-runtime fixes:
+the Executioner quadruped reward, danger-state reset, Fabricator maximums, and the
+trading-section visibility condition. See ADR 0003 for the exact behavior boundary.
+
 ## Adding Light Room content
 
 Do not edit the inherited baseline to add the Logger's Hut, Laboratory, Guest House,

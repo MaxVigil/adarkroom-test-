@@ -4,6 +4,8 @@ import vm from 'node:vm';
 
 export interface LegacyLoadOptions {
   buildingCounts?: Record<string, number>;
+  storeCounts?: Record<string, number>;
+  randomValues?: number[];
 }
 
 export function loadLegacy<T>(
@@ -22,6 +24,10 @@ export function loadLegacy<T>(
   });
 
   const buildingCounts = options.buildingCounts ?? {};
+  const storeCounts = options.storeCounts ?? {};
+  const randomValues = [...(options.randomValues ?? [])];
+  const contextMath = Object.create(Math) as Math;
+  contextMath.random = () => randomValues.shift() ?? 0.5;
   const context = vm.createContext({
     console,
     _: (value: string) => value,
@@ -49,10 +55,13 @@ export function loadLegacy<T>(
     clearTimeout: blackHole,
     setInterval: blackHole,
     clearInterval: blackHole,
+    Math: contextMath,
     $SM: {
       get(path: string): number {
-        const match = path.match(/^game\.buildings\["(.+)"\]$/);
-        return match?.[1] ? buildingCounts[match[1]] ?? 0 : 0;
+        const buildingMatch = path.match(/^game\.buildings\["(.+)"\]$/);
+        if (buildingMatch?.[1]) return buildingCounts[buildingMatch[1]] ?? 0;
+        const storeMatch = path.match(/^stores\["(.+)"\]$/);
+        return storeMatch?.[1] ? storeCounts[storeMatch[1]] ?? 0 : 0;
       },
     },
     $: Object.assign(() => blackHole, { extend: (...args: unknown[]) => args.at(-1) }),

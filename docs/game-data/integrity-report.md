@@ -10,24 +10,20 @@ The verified surface includes 22 resources, 13 buildings, 10 professions, 24 ite
 38 recipes, 12 weapons, 11 perks, 6 blueprints, 14 world locations, 48 top-level
 events, and 274 event scenes.
 
-## Deliberately preserved legacy anomalies
+## Resolved inherited anomalies
 
-The following findings belong to the inherited implementation and were not silently
-fixed during baseline extraction:
+After the baseline was frozen, the following fixes were approved and added as a
+separate, tested runtime change:
 
-1. `Enemies.Executioner.quadruped.loot` declares `alien alloy` twice. JavaScript keeps
-   the second declaration, so the catalog and parity boundary preserve the effective
-   runtime behavior.
-2. One danger-reset condition compares `World.getDistance` as a function object
-   instead of calling `World.getDistance()`. This can leave the danger indicator in an
-   unintended state.
-3. Fabricator maximum checking uses `Math.min(0, storedAmount)`, which prevents the
-   stored amount from behaving like the equivalent room crafting check.
-4. The trading-section append condition checks the build section's children. This is
-   UI logic, not economy data, and remains outside this baseline change.
+1. The Executioner quadruped grants one guaranteed `alien alloy` and has an
+   independent 20% chance of two or three additional units.
+2. The danger-reset condition correctly calls `World.getDistance()`.
+3. Fabricator maximum checks use the actual non-negative stored amount.
+4. The trading section checks its own children before being shown.
 
-Each anomaly should receive its own decision or fix with a regression test. Correcting
-one here would violate the approved “transfer without rebalance” boundary.
+These changes are recorded in ADR 0003 and covered by four focused regression tests.
+The complete suite now contains 20 passing tests. The broader max-exclusive legacy
+loot-range behavior remains unchanged.
 
 ## Remaining migration work
 
