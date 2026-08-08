@@ -217,6 +217,9 @@
       $SM.init();
       AudioEngine.init();
       Notifications.init();
+      if(Engine._saveRecovered) {
+        Notifications.printMessage(_('the latest save was damaged; a backup was restored.'));
+      }
       Events.init();
       Room.init();
 
@@ -278,19 +281,22 @@
           $('#saveNotify').css('opacity', 1).animate({opacity: 0}, 1000, 'linear');
           Engine._lastNotify = Date.now();
         }
-        localStorage.gameState = JSON.stringify(State);
+        try {
+          SaveManager.save(localStorage, State);
+        } catch(error) {
+          Engine.log('ERROR: save rejected: ' + error.message);
+        }
       }
     },
 
     loadGame: function() {
-      try {
-        var savedState = JSON.parse(localStorage.gameState);
-        if(savedState) {
-          State = savedState;
-          $SM.updateOldState();
-          Engine.log("loaded save!");
-        }
-      } catch(e) {
+      var loaded = SaveManager.load(localStorage);
+      if(loaded.state) {
+        State = loaded.state;
+        $SM.updateOldState();
+        Engine._saveRecovered = loaded.recovered;
+        Engine.log(loaded.recovered ? 'recovered backup save!' : 'loaded save!');
+      } else {
         State = {};
         $SM.set('version', Engine.VERSION);
         Engine.event('progress', 'new game');
@@ -392,9 +398,14 @@
       string64 = string64.replace(/\s/g, '');
       string64 = string64.replace(/\./g, '');
       string64 = string64.replace(/\n/g, '');
-      var decodedSave = Base64.decode(string64);
-      localStorage.gameState = decodedSave;
-      location.reload();
+      try {
+        var decodedSave = Base64.decode(string64);
+        SaveManager.importSave(localStorage, decodedSave);
+        location.reload();
+      } catch(error) {
+        Engine.log('ERROR: invalid save import: ' + error.message);
+        Notifications.notify(null, _('could not import save data'));
+      }
     },
 
     event: function(cat, act) {

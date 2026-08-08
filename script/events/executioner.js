@@ -44,12 +44,12 @@ Enemies.Executioner = {
       'alien alloy': {
         min: 1,
         max: 1,
-        chance: 1
-      },
-      'alien alloy': {
-        min: 2,
-        max: 4,
-        chance: 0.2
+        chance: 1,
+        bonus: {
+          min: 2,
+          max: 4,
+          chance: 0.2
+        }
       }
     }
   },

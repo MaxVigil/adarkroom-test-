@@ -923,8 +923,8 @@ var Events = {
 		var lootButtons = $('<div>').attr({'id': 'lootButtons', 'data-legend': _('take:')});
 		for(var k in lootList) {
 			var loot = lootList[k];
-			if(Math.random() < loot.chance) {
-				var num = Math.floor(Math.random() * (loot.max - loot.min)) + loot.min;
+			var num = Events.rollLoot(loot);
+			if(num > 0) {
 				var lootRow = Events.drawLootRow(k, num);
 				lootRow.appendTo(lootButtons);
 			}
@@ -948,6 +948,16 @@ var Events = {
 			noLoot.appendTo(lootButtons);
 		}
 		return takeET || false;
+	},
+
+	rollLoot: function(loot) {
+		var roll = function(drop) {
+			if(!drop || Math.random() >= drop.chance) {
+				return 0;
+			}
+			return Math.floor(Math.random() * (drop.max - drop.min)) + drop.min;
+		};
+		return roll(loot) + roll(loot.bonus);
 	},
 
 	setTakeAll: function(lootButtons){

@@ -8,9 +8,23 @@
   "license": "MPL-2.0",
   "scripts": {
     "start": "node dev-server.js",
-    "update_pot": "pybabel extract -F lang/babel.cfg -c \"TRANSLATORS\" script -o lang/adarkroom.pot"
+    "update_pot": "pybabel extract -F lang/babel.cfg -c \"TRANSLATORS\" script -o lang/adarkroom.pot",
+    "catalog:check": "vitest run test/game-data",
+    "catalog:report": "node --import tsx tools/catalog-report.ts",
+    "catalog:generate": "node --import tsx tools/generate-event-scenes.ts && node --import tsx tools/generate-combat-catalog.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:browser": "playwright test"
   },
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
+    "tsx": "^4.23.11",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
   }
 }

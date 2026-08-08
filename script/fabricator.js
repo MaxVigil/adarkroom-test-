@@ -214,12 +214,16 @@ const Fabricator = {
     !Fabricator.Craftables[itemKey].blueprintRequired || 
     $SM.get(`character.blueprints['${itemKey}']`),
 
+  isAtMaximum: (craftable, storedAmount) =>
+    typeof craftable.maximum === 'number' &&
+    craftable.maximum <= Math.max(0, storedAmount),
+
   fabricate: button => {
     const thing = $(button).attr('fabricateThing');
     const craftable = Fabricator.Craftables[thing];
-    const numThings = Math.min(0, $SM.get(`stores['${thing}']`, true));
+    const numThings = $SM.get(`stores['${thing}']`, true);
 
-    if (craftable.maximum <= numThings) {
+    if (Fabricator.isAtMaximum(craftable, numThings)) {
       return;
     }
 

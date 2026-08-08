@@ -1,0 +1,79 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import vm from 'node:vm';
+
+export interface LegacyLoadOptions {
+  buildingCounts?: Record<string, number>;
+  globals?: Record<string, unknown>;
+  initialState?: Record<string, unknown>;
+  storeCounts?: Record<string, number>;
+  randomValues?: number[];
+}
+
+export function loadLegacy<T>(
+  sourceFile: string,
+  expression: string,
+  options: LegacyLoadOptions = {},
+): T {
+  let blackHole: unknown;
+  const callable = () => blackHole;
+  blackHole = new Proxy(callable, {
+    get: () => blackHole,
+    apply: () => blackHole,
+    construct: () => blackHole as object,
+    ownKeys: () => [],
+    getOwnPropertyDescriptor: () => ({ configurable: true, enumerable: false }),
+  });
+
+  const buildingCounts = options.buildingCounts ?? {};
+  const storeCounts = options.storeCounts ?? {};
+  const randomValues = [...(options.randomValues ?? [])];
+  const contextMath = Object.create(Math) as Math;
+  contextMath.random = () => randomValues.shift() ?? 0.5;
+  const context = vm.createContext({
+    console,
+    _: (value: string) => value,
+    AudioLibrary: blackHole,
+    AudioEngine: blackHole,
+    Button: blackHole,
+    Header: blackHole,
+    Notifications: blackHole,
+    Engine: blackHole,
+    Events: { _LEAVE_COOLDOWN: 1, _EVENT_TIME: 1 },
+    Enemies: undefined,
+    Fabricator: blackHole,
+    Outside: blackHole,
+    Path: blackHole,
+    Prestige: blackHole,
+    Room: blackHole,
+    Ship: blackHole,
+    Space: blackHole,
+    World: blackHole,
+    State: options.initialState ?? {},
+    document: blackHole,
+    navigator: blackHole,
+    localStorage: blackHole,
+    setTimeout: blackHole,
+    clearTimeout: blackHole,
+    setInterval: blackHole,
+    clearInterval: blackHole,
+    Math: contextMath,
+    $SM: {
+      get(path: string): number {
+        const buildingMatch = path.match(/^game\.buildings\["(.+)"\]$/);
+        if (buildingMatch?.[1]) return buildingCounts[buildingMatch[1]] ?? 0;
+        const storeMatch = path.match(/^stores\["(.+)"\]$/);
+        return storeMatch?.[1] ? storeCounts[storeMatch[1]] ?? 0 : 0;
+      },
+    },
+    $: Object.assign(() => blackHole, { extend: (...args: unknown[]) => args.at(-1) }),
+    jQuery: { Callbacks: () => blackHole },
+    ...options.globals,
+  });
+  context.window = context;
+
+  const source = readFileSync(resolve(process.cwd(), sourceFile), 'utf8');
+  new vm.Script(`${source}\n;globalThis.__legacyResult = (${expression});`, { filename: sourceFile })
+    .runInContext(context);
+  return context.__legacyResult as T;
+}
