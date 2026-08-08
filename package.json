@@ -11,7 +11,8 @@
     "update_pot": "pybabel extract -F lang/babel.cfg -c \"TRANSLATORS\" script -o lang/adarkroom.pot",
     "catalog:check": "vitest run test/game-data",
     "catalog:report": "node --import tsx tools/catalog-report.ts",
-    "catalog:generate": "node --import tsx tools/generate-event-scenes.ts && node --import tsx tools/generate-combat-catalog.ts",
+    "light-room:report": "node --import tsx tools/light-room-report.ts",
+    "catalog:generate": "node --import tsx tools/generate-event-scenes.ts && node --import tsx tools/generate-combat-catalog.ts && node --import tsx tools/generate-light-room-runtime.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:browser": "playwright test"
