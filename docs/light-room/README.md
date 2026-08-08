@@ -59,6 +59,38 @@ requires a separate design decision.
 The current English and Ukrainian Logger Hut strings are implementation copy for this
 vertical slice and should receive a dedicated editorial review before release.
 
+## Hunter finds
+
+The inherited hunter profession has one deliberate Light Room patch. Every working
+hunter rolls two independent chances on each 10-second production cycle:
+
+| Find | Chance per hunter | Amount on success |
+| --- | ---: | ---: |
+| scales | 10% | 1 |
+| teeth | 10% | 1 |
+
+Both finds may succeed during the same cycle. With `n` hunters, the game performs `n`
+rolls for scales and `n` separate rolls for teeth. The normal income collector applies
+the result, so speed changes affect the cycle consistently with other professions.
+
+## Guest House functional core
+
+The Guest House is represented by stable IDs `building.guest-house` and
+`profession.guest-caretaker`. The validated domain rules already cover:
+
+- one base room and a maximum of two rooms;
+- a persistent FIFO guest queue;
+- persistence across save migration and reload;
+- the inherited Master's three lessons and the Scout's two services;
+- transferring existing settlement supplies into a reservation without creating
+  resources;
+- a parameterized caretaker effect on the next-visit delay.
+
+The building remains `pending-balance`, so it is not yet shown as a playable build
+action. Construction cost, base visit interval, queue capacity, and caretaker reserve
+rate require product approval. After approval, those values belong in the catalog;
+the legacy adapter may expose them but must not duplicate them.
+
 ## Test-build controls
 
 The current playable build offers `x1`, `x2`, `x3`, `x4`, and `x20` speeds. The
@@ -66,3 +98,7 @@ selection is saved, applies to active managed game timers, and also rescales act
 button cooldowns. Only English and Ukrainian appear in the language menu; unknown
 language values fall back to English. The inherited Penrose cross-promotion is not
 loaded or registered in the playable event pool.
+
+The footer/menu intentionally omits the inherited GitHub and “get the app” links.
+Light Room entity names are localized through the overlay catalog, including
+`Хатина лісорубів` in Ukrainian.

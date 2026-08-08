@@ -27,4 +27,24 @@ describe('Light Room catalog save migration', () => {
       upgrades: { 'upgrade.iron-axes': true },
     });
   });
+
+  it('preserves pending Guest House visits and maps its future runtime aliases', () => {
+    expect(migrateLightRoomState({
+      game: {
+        buildings: { 'guest house': 1 },
+        workers: { caretaker: 1 },
+        guestHouse: {
+          rooms: [{ visitId: 'master-1', guestId: 'guest.wandering-master' }],
+          queue: [{ visitId: 'scout-1', guestId: 'guest.scout' }],
+        },
+      },
+    })).toMatchObject({
+      buildings: { 'building.guest-house': 1 },
+      workers: { 'profession.guest-caretaker': 1 },
+      guestHouse: {
+        rooms: [{ visitId: 'master-1', guestId: 'guest.wandering-master' }],
+        queue: [{ visitId: 'scout-1', guestId: 'guest.scout' }],
+      },
+    });
+  });
 });

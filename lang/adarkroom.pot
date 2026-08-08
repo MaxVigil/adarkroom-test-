@@ -3396,3 +3396,7 @@ msgstr ""
 #: script/path.js
 msgid "kinetic"
 msgstr ""
+
+#: script/outside.js
+msgid "{0}% per worker per {1}s"
+msgstr ""

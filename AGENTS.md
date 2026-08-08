@@ -92,6 +92,10 @@ tests.
   into old runtime structures, but must not duplicate balance values.
 - Run `pnpm light-room:report` for economy changes and document any value that still
   needs design approval instead of inventing a cost, recipe, or unlock rule.
+- Model random production bonuses as catalog data and pure functions. State whether
+  probabilities are per worker or per profession tick, keep separate finds as
+  independent rolls unless the design says otherwise, and inject deterministic rolls
+  in rule tests.
 - The playable test build supports only English (`en`) and Ukrainian (`uk`). Keep
   literal player-facing strings covered by `test/game-data/localization.test.ts`.
 - Route game-progress timers through `Engine.setTimeout()` / `Engine.setInterval()`
@@ -99,6 +103,9 @@ tests.
   changing the saved speed (`x1`, `x2`, `x3`, `x4`, `x20`) affects active systems.
 - Do not load or register the inherited Penrose cross-promotion. Its source file stays
   in the frozen baseline only so inherited catalog parity remains reproducible.
+- A pending-balance entity may have validated IDs, rules, and save data, but it must
+  not be exposed as a playable purchase or event until every required tuning value is
+  approved. Reports and handoffs must distinguish functional core from playable UI.
 
 ## Change discipline
 

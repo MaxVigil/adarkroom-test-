@@ -1,4 +1,5 @@
 import { baseline } from '../game-data/index.js';
+import { guestHouseDesign } from './guest-house.js';
 import { lightRoomOverlay } from './overlay.js';
 
 export interface LightRoomCatalogIssue { code: string; message: string }
@@ -11,6 +12,7 @@ export function validateLightRoomCatalog(): LightRoomCatalogIssue[] {
     ...baseline.blueprints, ...baseline.locations, ...baseline.events, ...baseline.scenes,
     ...baseline.enemies, ...baseline.combatEncounters, ...baseline.lootTables,
     ...lightRoomOverlay.buildings, ...lightRoomOverlay.professions, ...lightRoomOverlay.upgrades,
+    guestHouseDesign.building, guestHouseDesign.caretaker, ...guestHouseDesign.guests,
   ];
   const ids = new Set<string>();
   for (const entity of allEntities) {
@@ -20,8 +22,8 @@ export function validateLightRoomCatalog(): LightRoomCatalogIssue[] {
   const check = (owner: string, target: string, role: string) => {
     if (!ids.has(target)) issues.push({ code: 'missing-reference', message: `${owner} has unknown ${role}: ${target}` });
   };
-  const checkCondition = (owner: string, condition: { kind: string; buildingId?: string; resourceId?: string; upgradeId?: string }) => {
-    const target = condition.buildingId ?? condition.resourceId ?? condition.upgradeId;
+  const checkCondition = (owner: string, condition: { kind: string; buildingId?: string; resourceId?: string; itemId?: string; upgradeId?: string }) => {
+    const target = condition.buildingId ?? condition.resourceId ?? condition.itemId ?? condition.upgradeId;
     if (target) check(owner, target, 'unlock condition');
   };
   for (const building of lightRoomOverlay.buildings) {
@@ -42,9 +44,27 @@ export function validateLightRoomCatalog(): LightRoomCatalogIssue[] {
       for (const resourceId of Object.keys(modifier.flows)) check(profession.id, resourceId, 'modified flow resource');
     }
   }
+  for (const patch of lightRoomOverlay.professionPatches) {
+    check('profession patch', patch.targetProfessionId, 'target profession');
+    const target = baseline.professions.find(({ id }) => id === patch.targetProfessionId);
+    if (target && target.intervalSeconds !== patch.intervalSeconds) {
+      issues.push({
+        code: 'interval-mismatch',
+        message: `${patch.targetProfessionId} random-find interval does not match its inherited work interval`,
+      });
+    }
+    for (const find of patch.randomFinds) check(patch.targetProfessionId, find.resourceId, 'random-find resource');
+  }
   for (const upgrade of lightRoomOverlay.upgrades) {
     check(upgrade.id, upgrade.affectsId, 'affected entity');
     checkCondition(upgrade.id, upgrade.unlockWhen);
+  }
+  checkCondition(guestHouseDesign.building.id, guestHouseDesign.building.unlockWhen);
+  for (const guest of guestHouseDesign.guests) {
+    for (const service of guest.services) {
+      for (const resourceId of Object.keys(service.cost)) check(guest.id, resourceId, 'service cost resource');
+      if (service.grants) check(guest.id, service.grants, 'service grant');
+    }
   }
   return issues;
 }

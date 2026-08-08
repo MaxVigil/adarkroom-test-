@@ -20,6 +20,8 @@ test('offers only English and Ukrainian and falls back safely from unsupported l
   expect(result.language).toBe('en');
   expect(result.available).toEqual(['en', 'uk']);
   expect(result.labels).toEqual(['language.', 'english', 'українська']);
+  await expect(page.locator('.appStore')).toHaveCount(0);
+  await expect(page.getByText('github.', { exact: true })).toHaveCount(0);
 });
 
 test('loads the complete Ukrainian interface dictionary', async ({ page }) => {
@@ -28,12 +30,15 @@ test('loads the complete Ukrainian interface dictionary', async ({ page }) => {
 
   const result = await page.evaluate(() => {
     const runtime = window as unknown as OptionsRuntimeWindow;
+    runtime.$SM.set('game.buildings["logger hut"]', 1, true);
+    runtime.Outside.init();
     return {
       language: runtime.lang,
       speedLabel: document.querySelector('.hyper')?.textContent,
       importFailure: runtime._('could not import save data'),
       recoveredSave: runtime._('the latest save was damaged; a backup was restored.'),
       kinetic: runtime._('kinetic'),
+      loggerHut: document.querySelector('#building_row_logger-hut .row_key')?.textContent,
     };
   });
 
@@ -43,6 +48,7 @@ test('loads the complete Ukrainian interface dictionary', async ({ page }) => {
     importFailure: 'не вдалося імпортувати збереження',
     recoveredSave: 'останнє збереження було пошкоджене; відновлено резервну копію.',
     kinetic: 'кінетична',
+    loggerHut: 'Хатина лісорубів',
   });
 });
 
@@ -102,7 +108,11 @@ interface OptionsRuntimeWindow {
     setTimeout(callback: () => void, delay: number): unknown;
   };
   Events: { EventPool: Array<{ title?: string }>; Marketing?: unknown };
-  $SM: { get(path: string, noFallback?: boolean): unknown };
+  Outside: { init(): void };
+  $SM: {
+    get(path: string, noFallback?: boolean): unknown;
+    set(path: string, value: unknown, noEvent?: boolean): void;
+  };
   _: (text: string) => string;
   lang: string;
   langs: Record<string, string>;

@@ -38,6 +38,13 @@
     Outside.LightRoomJobs[profession.requiresBuilding] = [profession.key];
   }
 
+  for(var patchIndex = 0; patchIndex < LightRoomData.professionPatches.length; patchIndex++) {
+    var professionPatch = LightRoomData.professionPatches[patchIndex];
+    if(Outside._INCOME[professionPatch.key]) {
+      Outside._INCOME[professionPatch.key].randomFinds = professionPatch.randomFinds;
+    }
+  }
+
   var inheritedIncomeStores = Outside.getIncomeStores;
   Outside.getIncomeStores = function(worker) {
     var income = Outside._INCOME[worker];
@@ -50,8 +57,28 @@
     return inheritedIncomeStores.call(Outside, worker);
   };
 
+  var inheritedDisplayName = Outside.getDisplayName;
+  Outside.getDisplayName = function(key) {
+    for(var i = 0; i < LightRoomData.buildings.length; i++) {
+      if(LightRoomData.buildings[i].key === key) return localize(LightRoomData.buildings[i].name);
+    }
+    return inheritedDisplayName.call(Outside, key);
+  };
+
   window.LightRoom = {
     data: LightRoomData,
-    localize: localize
+    localize: localize,
+    collectIncomeBonus: function(source) {
+      var income = Outside._INCOME[source];
+      var workers = Outside.getWorkerCount(source) || 0;
+      var bonus = {};
+      for(var worker = 0; income && income.randomFinds && worker < workers; worker++) {
+        for(var findIndex = 0; findIndex < income.randomFinds.length; findIndex++) {
+          var find = income.randomFinds[findIndex];
+          if(Math.random() < find.chance) bonus[find.store] = (bonus[find.store] || 0) + find.amount;
+        }
+      }
+      return bonus;
+    }
   };
 })();

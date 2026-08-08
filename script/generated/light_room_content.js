@@ -48,6 +48,24 @@ var LightRoomData = {
       ]
     }
   ],
+  "professionPatches": [
+    {
+      "key": "hunter",
+      "delay": 10,
+      "randomFinds": [
+        {
+          "store": "scales",
+          "chance": 0.1,
+          "amount": 1
+        },
+        {
+          "store": "teeth",
+          "chance": 0.1,
+          "amount": 1
+        }
+      ]
+    }
+  ],
   "upgrades": [
     {
       "key": "iron axes",

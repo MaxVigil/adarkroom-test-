@@ -45,6 +45,16 @@ export const lightRoomContent = {
       flows: { 'resource.wood': 8 },
     }],
   }],
+  professionPatches: [{
+    origin: 'modified',
+    decisionRef: GDD,
+    targetProfessionId: 'profession.hunter',
+    intervalSeconds: 10,
+    randomFinds: [
+      { resourceId: 'resource.scales', chance: 0.1, amount: 1 },
+      { resourceId: 'resource.teeth', chance: 0.1, amount: 1 },
+    ],
+  }],
   upgrades: [{
     id: 'upgrade.iron-axes',
     origin: 'new',

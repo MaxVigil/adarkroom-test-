@@ -9,6 +9,7 @@ export const LocalizedTextSchema = z.object({
 export const UnlockConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('has-building'), buildingId: StableIdSchema }),
   z.object({ kind: z.literal('has-resource'), resourceId: StableIdSchema }),
+  z.object({ kind: z.literal('has-item'), itemId: StableIdSchema }),
   z.object({ kind: z.literal('has-upgrade'), upgradeId: StableIdSchema }),
 ]);
 
@@ -45,6 +46,20 @@ export const LightRoomProfessionSchema = OverlayIdentitySchema.extend({
   modifiers: z.array(ProfessionModifierSchema).default([]),
 });
 
+export const RandomFindSchema = z.object({
+  resourceId: StableIdSchema,
+  chance: z.number().positive().max(1),
+  amount: z.number().int().positive().default(1),
+});
+
+export const LightRoomProfessionPatchSchema = z.object({
+  origin: z.literal('modified'),
+  decisionRef: z.string().url(),
+  targetProfessionId: StableIdSchema,
+  intervalSeconds: z.number().positive(),
+  randomFinds: z.array(RandomFindSchema).min(1),
+});
+
 export const LightRoomUpgradeSchema = OverlayIdentitySchema.extend({
   id: StableIdSchema,
   affectsId: StableIdSchema,
@@ -56,10 +71,12 @@ export const LightRoomOverlaySchema = z.object({
   version: z.literal(1),
   buildings: z.array(LightRoomBuildingSchema),
   professions: z.array(LightRoomProfessionSchema),
+  professionPatches: z.array(LightRoomProfessionPatchSchema).default([]),
   upgrades: z.array(LightRoomUpgradeSchema),
 });
 
 export type UnlockCondition = z.infer<typeof UnlockConditionSchema>;
 export type LightRoomBuilding = z.infer<typeof LightRoomBuildingSchema>;
 export type LightRoomProfession = z.infer<typeof LightRoomProfessionSchema>;
+export type LightRoomProfessionPatch = z.infer<typeof LightRoomProfessionPatchSchema>;
 export type LightRoomUpgrade = z.infer<typeof LightRoomUpgradeSchema>;

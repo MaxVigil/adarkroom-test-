@@ -414,7 +414,14 @@ var StateManager = {
 					}
 
 					if(ok){
-						$SM.addM('stores', income.stores, true);
+						var collected = Object.assign({}, income.stores);
+						if(typeof LightRoom == 'object' && typeof LightRoom.collectIncomeBonus == 'function') {
+							var bonus = LightRoom.collectIncomeBonus(source);
+							for(var bonusStore in bonus) {
+								collected[bonusStore] = (collected[bonusStore] || 0) + bonus[bonusStore];
+							}
+						}
+						$SM.addM('stores', collected, true);
 					}
 					changed = true;
 					if(typeof income.delay == 'number') {

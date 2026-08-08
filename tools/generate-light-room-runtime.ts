@@ -6,6 +6,14 @@ import { lightRoomOverlay } from '../src/light-room/overlay.js';
 const legacyKeyById = new Map(
   [...baseline.resources, ...baseline.buildings].map(({ id, legacyKey }) => [id, legacyKey]),
 );
+const professionKeyById = new Map(
+  baseline.professions.map(({ id, legacyKey }) => [id, legacyKey]),
+);
+const professionRuntimeKey = (id: string) => {
+  const key = professionKeyById.get(id);
+  if (!key) throw new Error(`No legacy profession runtime key for ${id}`);
+  return key;
+};
 
 const legacyAmounts = (amounts: Record<string, number>) => Object.fromEntries(
   Object.entries(amounts).map(([id, value]) => {
@@ -41,6 +49,15 @@ const runtimeData = {
         ? lightRoomOverlay.upgrades.find(({ id }) => id === modifier.when.upgradeId)?.runtimeKey
         : undefined,
       stores: legacyAmounts(modifier.flows),
+    })),
+  })),
+  professionPatches: lightRoomOverlay.professionPatches.map((patch) => ({
+    key: professionRuntimeKey(patch.targetProfessionId),
+    delay: patch.intervalSeconds,
+    randomFinds: patch.randomFinds.map((find) => ({
+      store: legacyKeyById.get(find.resourceId),
+      chance: find.chance,
+      amount: find.amount,
     })),
   })),
   upgrades: lightRoomOverlay.upgrades.map((upgrade) => ({

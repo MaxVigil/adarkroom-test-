@@ -99,6 +99,22 @@ var Outside = {
 		return Outside._INCOME[worker].stores;
 	},
 
+	getDisplayName: function(key) {
+		return _(key);
+	},
+
+	appendRandomFindTooltip: function(income, tooltip) {
+		for(var i = 0; income.randomFinds && i < income.randomFinds.length; i++) {
+			var find = income.randomFinds[i];
+			var row = $('<div>').addClass('storeRow randomFindRow');
+			$('<div>').addClass('row_key').text(_(find.store)).appendTo(row);
+			$('<div>').addClass('row_val')
+				.text(_('{0}% per worker per {1}s', Math.round(find.chance * 100), income.delay))
+				.appendTo(row);
+			row.appendTo(tooltip);
+		}
+	},
+
 	getWorkerCount: function(worker) {
 		var count = $SM.get('game.workers["'+worker+'"]');
 		if(typeof count != 'number') return undefined;
@@ -395,6 +411,7 @@ var Outside = {
 			$('<div>').addClass('row_val').text(Engine.getIncomeMsg(incomeStores[s], income.delay)).appendTo(r);
 			r.appendTo(tooltip);
 		}
+		Outside.appendRandomFindTooltip(income, tooltip);
 		
 		return row;
 	},
@@ -423,7 +440,7 @@ var Outside = {
 	
 	updateVillageRow: function(name, num, village) {
 		var id = 'building_row_' + name.replace(' ', '-');
-		var lname = _(name);
+		var lname = Outside.getDisplayName(name);
 		var row = $('div#' + id, village);
 		if(row.length === 0 && num > 0) {
 			row = $('<div>').attr('id', id).addClass('storeRow');
@@ -557,6 +574,7 @@ var Outside = {
 					$('<div>').addClass('row_val').text(Engine.getIncomeMsg(stores[store], income.delay)).appendTo(row);
 					row.appendTo(tooltip);
 				}
+				Outside.appendRandomFindTooltip(income, tooltip);
 				if(needsUpdate) {
 					$SM.setIncome(worker, {
 						delay: income.delay,
