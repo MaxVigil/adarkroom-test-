@@ -31,8 +31,7 @@ var Events = {
 		Events.EventPool = [].concat(
 			Events.Global,
 			Events.Room,
-			Events.Outside,
-      Events.Marketing
+			Events.Outside
 		);
 
 		Events.eventStack = [];
@@ -172,7 +171,7 @@ var Events = {
 	},
 
 	startEnemyAttacks: (delay) => {
-		clearInterval(Events._enemyAttackTimer);
+		Engine.clearInterval(Events._enemyAttackTimer);
 		const scene = Events.activeEvent().scenes[Events.activeScene];
 		Events._enemyAttackTimer = Engine.setInterval(Events.enemyAttack, (delay ?? scene.attackDelay) * 1000);
 	},
@@ -767,8 +766,8 @@ var Events = {
 	},
 
 	clearTimeouts: () => {
-		clearInterval(Events._enemyAttackTimer);
-		Events._specialTimers.forEach(clearInterval);
+		Engine.clearInterval(Events._enemyAttackTimer);
+		Events._specialTimers.forEach(Engine.clearInterval);
 		clearInterval(Events._dotTimer);
 	},
 
@@ -1405,6 +1404,9 @@ var Events = {
 		Button.saveCooldown = false;
 		Events.eventStack.unshift(event);
 		event.eventPanel = $('<div>').attr('id', 'event').addClass('eventPanel').css('opacity', '0');
+		if(options != null && options.className != null) {
+			Events.eventPanel().addClass(options.className);
+		}
 		if(options != null && options.width != null) {
 			Events.eventPanel().css('width', options.width);
 		}
@@ -1488,7 +1490,7 @@ var Events = {
 		}, 500);
 		Engine.setTimeout(function(){
 			// outcome realizes. erase countdown
-			window.clearInterval(time);
+			Engine.clearInterval(time);
 			$SM.remove(state);
 			$SM.removeBranch(Events.delayState);
 			action();

@@ -230,8 +230,8 @@ msgstr ""
 msgid "lights off."
 msgstr ""
 
-#: script/engine.js:165 script/engine.js:583
-msgid "hyper."
+#: script/engine.js:174 script/engine.js:584
+msgid "speed"
 msgstr ""
 
 #: script/engine.js:171 script/space.js:464
@@ -362,16 +362,16 @@ msgstr ""
 msgid "lights on."
 msgstr ""
 
-#: script/engine.js:555
-msgid "Go Hyper?"
+#: script/engine.js:603
+msgid "Game Speed"
 msgstr ""
 
-#: script/engine.js:558
-msgid "turning hyper mode speeds up the game to x2 speed. do you want to do that?"
+#: script/engine.js:606
+msgid "current speed:"
 msgstr ""
 
-#: script/engine.js:581
-msgid "classic."
+#: script/engine.js:609
+msgid "classic"
 msgstr ""
 
 #: script/engine.js:679
@@ -3385,3 +3385,14 @@ msgstr ""
 msgid "ripe for the picking."
 msgstr ""
 
+#: script/engine.js
+msgid "could not import save data"
+msgstr ""
+
+#: script/engine.js
+msgid "the latest save was damaged; a backup was restored."
+msgstr ""
+
+#: script/path.js
+msgid "kinetic"
+msgstr ""
