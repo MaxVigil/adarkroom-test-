@@ -62,6 +62,19 @@ Avoid hidden constants in UI code. Put tunable values in typed, validated catalo
 balance configuration. Prefer deterministic calculations that can be simulated in
 tests.
 
+## Stable IDs and inherited baseline
+
+- Treat `src/game-data/` as the machine-readable A Dark Room baseline.
+- Never rename or recycle a published stable ID. Display names and translations may
+  change without changing IDs.
+- Keep inherited names in `legacyKey` only for compatibility and traceability.
+- Do not mix approved Light Room additions into the inherited baseline. Add them as
+  an explicit overlay after the baseline is validated.
+- When inherited event scenes change, run `node --import tsx tools/generate-event-scenes.ts`
+  and commit the regenerated scene index.
+- Run `pnpm typecheck` and `pnpm test` after catalog changes. A deliberate balance
+  change must update the relevant scenario and be documented as a Light Room change.
+
 ## Change discipline
 
 - Make small, reviewable vertical slices.
