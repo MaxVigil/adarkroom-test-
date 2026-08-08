@@ -92,6 +92,13 @@ tests.
   into old runtime structures, but must not duplicate balance values.
 - Run `pnpm light-room:report` for economy changes and document any value that still
   needs design approval instead of inventing a cost, recipe, or unlock rule.
+- The playable test build supports only English (`en`) and Ukrainian (`uk`). Keep
+  literal player-facing strings covered by `test/game-data/localization.test.ts`.
+- Route game-progress timers through `Engine.setTimeout()` / `Engine.setInterval()`
+  and clear their managed handles through the matching `Engine.clear*()` method so
+  changing the saved speed (`x1`, `x2`, `x3`, `x4`, `x20`) affects active systems.
+- Do not load or register the inherited Penrose cross-promotion. Its source file stays
+  in the frozen baseline only so inherited catalog parity remains reproducible.
 
 ## Change discipline
 

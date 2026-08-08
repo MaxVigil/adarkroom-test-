@@ -58,3 +58,11 @@ requires a separate design decision.
 
 The current English and Ukrainian Logger Hut strings are implementation copy for this
 vertical slice and should receive a dedicated editorial review before release.
+
+## Test-build controls
+
+The current playable build offers `x1`, `x2`, `x3`, `x4`, and `x20` speeds. The
+selection is saved, applies to active managed game timers, and also rescales active
+button cooldowns. Only English and Ukrainian appear in the language menu; unknown
+language values fall back to English. The inherited Penrose cross-promotion is not
+loaded or registered in the playable event pool.
