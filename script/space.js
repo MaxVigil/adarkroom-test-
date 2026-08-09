@@ -343,7 +343,7 @@ var Space = {
 		clearInterval(Space._timer);
 		clearInterval(Space._shipTimer);
 		clearInterval(Space._volumeTimer);
-		clearTimeout(Space._panelTimeout);
+		Engine.clearTimeout(Space._panelTimeout);
 		var body_color;
 		if (Engine.isLightsOff())
 			body_color = '#272823';
@@ -387,11 +387,11 @@ var Space = {
 		clearInterval(Space._shipTimer);
 		clearInterval(Space._volumeTimer);
 		clearTimeout(Engine._saveTimer);
-		clearTimeout(Outside._popTimeout);
-		clearTimeout(Engine._incomeTimeout);
-		clearTimeout(Events._eventTimeout);
-		clearTimeout(Room._fireTimer);
-		clearTimeout(Room._tempTimer);
+		Engine.clearTimeout(Outside._popTimeout);
+		Engine.clearTimeout(Engine._incomeTimeout);
+		Engine.clearTimeout(Events._eventTimeout);
+		Engine.clearTimeout(Room._fireTimer);
+		Engine.clearTimeout(Room._tempTimer);
 		for(var j in Room.Craftables) {
 			Room.Craftables[j].button = null;
 		}

@@ -11,20 +11,36 @@
     "update_pot": "pybabel extract -F lang/babel.cfg -c \"TRANSLATORS\" script -o lang/adarkroom.pot",
     "catalog:check": "vitest run test/game-data",
     "catalog:report": "node --import tsx tools/catalog-report.ts",
-    "catalog:generate": "node --import tsx tools/generate-event-scenes.ts && node --import tsx tools/generate-combat-catalog.ts",
+    "light-room:report": "node --import tsx tools/light-room-report.ts",
+    "catalog:generate": "node --import tsx tools/generate-event-scenes.ts && node --import tsx tools/generate-combat-catalog.ts && node --import tsx tools/generate-light-room-runtime.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "react:build": "vite build",
+    "verify": "pnpm catalog:generate && pnpm react:build && pnpm typecheck && pnpm test && pnpm test:browser"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.12",
+    "@mantine/hooks": "^8.3.12",
     "express": "^4.17.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^26.1.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "jsdom": "^28.0.0",
     "tsx": "^4.23.11",
     "typescript": "^7.0.2",
+    "vite": "^8.0.0",
     "vitest": "^4.1.10"
   }
 }

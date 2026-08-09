@@ -39,6 +39,10 @@
 				lang = localStorage.lang;
 			} catch(e) {}
 		}
+		// This test build intentionally exposes only English and Ukrainian.
+		if(lang != 'en' && lang != 'uk') {
+			lang = 'en';
+		}
 		// if a language different than english requested, load all translations
 		if(lang && lang != 'en'){
 			document.write('<script src="lang/'+lang+'/strings.js"><\/script>');
@@ -57,6 +61,8 @@
 	<script src="script/events.js"></script>
 	<script src="script/room.js"></script>
 	<script src="script/outside.js"></script>
+	<script src="script/generated/light_room_content.js"></script>
+	<script src="script/light_room.js"></script>
 	<script src="script/world.js"></script>
 	<script src="script/path.js"></script>
 	<script src="script/ship.js"></script>
@@ -70,8 +76,8 @@
 	<script src="script/events/outside.js"></script>
 	<script src="script/events/encounters.js"></script>
   <script src="script/events/setpieces.js"></script>
-  <script src="script/events/marketing.js"></script>
-	<script src="script/events/executioner.js"></script>
+  <script src="script/events/executioner.js"></script>
+	<script src="script/guest_house.js"></script>
 	
 	<script type='text/javascript'>
 		var oldIE = false;
@@ -87,7 +93,9 @@
 	<link rel="stylesheet" type="text/css" href="css/world.css" />
 	<link rel="stylesheet" type="text/css" href="css/ship.css" />
   <link rel="stylesheet" type="text/css" href="css/space.css" />
-  <link rel="stylesheet" type="text/css" href="css/fabricator.css" />
+	<link rel="stylesheet" type="text/css" href="css/fabricator.css" />
+	<link rel="stylesheet" type="text/css" href="script/generated/react/light-room-react.css" />
+	<script src="script/generated/react/light-room-react.js"></script>
 	
 	<script src="script/localization.js"></script>
 	<!-- Google tag (gtag.js) -->

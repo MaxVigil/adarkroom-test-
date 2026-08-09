@@ -372,7 +372,7 @@ var StateManager = {
 	//INCOME
 	setIncome: function(source, options) {
 		var existing = $SM.get('income["'+source+'"]');
-		if(typeof existing != 'undefined') {
+		if(typeof existing != 'undefined' && typeof existing.timeLeft == 'number') {
 			options.timeLeft = existing.timeLeft;
 		}
 		$SM.set('income["'+source+'"]', options);
@@ -414,7 +414,14 @@ var StateManager = {
 					}
 
 					if(ok){
-						$SM.addM('stores', income.stores, true);
+						var collected = Object.assign({}, income.stores);
+						if(typeof LightRoom == 'object' && typeof LightRoom.collectIncomeBonus == 'function') {
+							var bonus = LightRoom.collectIncomeBonus(source);
+							for(var bonusStore in bonus) {
+								collected[bonusStore] = (collected[bonusStore] || 0) + bonus[bonusStore];
+							}
+						}
+						$SM.addM('stores', collected, true);
 					}
 					changed = true;
 					if(typeof income.delay == 'number') {
@@ -466,6 +473,9 @@ var StateManager = {
 			return $SM.get('stores["'+name+'"]', true);
 		case 'building':
 			return $SM.get('game.buildings["'+name+'"]', true);
+		case 'settlement upgrade':
+		case 'building upgrade':
+			return $SM.get('game.upgrades["'+name+'"]', true) ? 1 : 0;
 		}
 	},
 

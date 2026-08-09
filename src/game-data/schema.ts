@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const StableIdSchema = z.string().regex(
-  /^(resource|building|profession|item|recipe|weapon|enemy|encounter|loot|perk|location|event|scene|blueprint|system)\.[a-z0-9]+(?:[.-][a-z0-9]+)*$/,
+  /^(resource|building|profession|item|recipe|weapon|enemy|encounter|loot|perk|location|event|scene|blueprint|upgrade|guest|system)\.[a-z0-9]+(?:[.-][a-z0-9]+)*$/,
   'expected a namespaced, lowercase stable ID',
 );
 

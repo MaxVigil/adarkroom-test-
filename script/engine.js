@@ -7,6 +7,8 @@
     SAVE_DISPLAY: 30 * 1000,
     GAME_OVER: false,
 
+    GAME_SPEEDS: [1, 2, 3, 4, 20],
+
     //object event types
     topics: {},
 
@@ -75,8 +77,12 @@
       debug: false,
       log: false,
       dropbox: false,
-      doubleTime: false
+      gameSpeed: 1,
+      doubleTime: false // backwards compatibility for extensions
     },
+
+    _timers: {},
+    _nextTimerId: 1,
 
     init: function(options) {
       this.options = $.extend(
@@ -149,21 +155,13 @@
         .appendTo(menu);
 
       $('<span>')
-        .addClass('appStore menuBtn')
-        .text(_('get the app.'))
-        .click(Engine.getApp)
-        .appendTo(menu);
-
-      $('<span>')
         .addClass('lightsOff menuBtn')
         .text(_('lights off.'))
         .click(Engine.turnLightsOff)
         .appendTo(menu);
 
       $('<span>')
-        .addClass('hyper menuBtn')
-        .text(_('hyper.'))
-        .click(Engine.confirmHyperMode)
+        .attr('id', 'lightRoomReactMenu')
         .appendTo(menu);
 
       $('<span>')
@@ -194,12 +192,6 @@
           .appendTo(menu);
       }
 
-      $('<span>')
-        .addClass('menuBtn')
-        .text(_('github.'))
-        .click(function() { window.open('https://github.com/doublespeakgames/adarkroom'); })
-        .appendTo(menu);
-
       // Register keypress handlers
       $('body').off('keydown').keydown(Engine.keyDown);
       $('body').off('keyup').keyup(Engine.keyUp);
@@ -222,6 +214,7 @@
       }
       Events.init();
       Room.init();
+			if(typeof GuestHouse == 'object') GuestHouse.init();
 
 
       if(typeof $SM.get('stores.wood') != 'undefined') {
@@ -241,9 +234,14 @@
         Engine.turnLightsOff();
       }
 
-      if($SM.get('config.hyperMode', true)){
-        Engine.triggerHyperMode();
+      var savedGameSpeed = $SM.get('config.gameSpeed', true);
+      if(!savedGameSpeed && $SM.get('config.hyperMode', true)) {
+        savedGameSpeed = 2;
       }
+      Engine.setGameSpeed(savedGameSpeed || 1, true);
+			if(typeof LightRoomReact == 'object' && typeof LightRoomReact.mount == 'function') {
+				LightRoomReact.mount(document.getElementById('lightRoomReactMenu'));
+			}
 
       Engine.toggleVolume(Boolean($SM.get('config.soundOn')));
       if(!AudioEngine.isAudioContextRunning()){
@@ -563,40 +561,77 @@
       }
     },
 
-    confirmHyperMode: function(){
-      if (!Engine.options.doubleTime) {
-        Events.startEvent({
-          title: _('Go Hyper?'),
-          scenes: {
-            start: {
-              text: [_('turning hyper mode speeds up the game to x2 speed. do you want to do that?')],
-              buttons: {
-                'yes': {
-                  text: _('yes'),
-                  nextScene: 'end',
-                  onChoose: Engine.triggerHyperMode
-                },
-                'no': {
-                  text: _('no'),
-                  nextScene: 'end'
-                }
-              }
-            }
-          }
-        });
-      } else {
-        Engine.triggerHyperMode();
+    getGameSpeed: function() {
+      var speed = parseInt(Engine.options.gameSpeed, 10);
+      return Engine.GAME_SPEEDS.indexOf(speed) >= 0 ? speed : 1;
+    },
+
+    setGameSpeed: function(speed, noSave) {
+      speed = parseInt(speed, 10);
+      if(Engine.GAME_SPEEDS.indexOf(speed) < 0) speed = 1;
+
+      var previousSpeed = Engine.getGameSpeed();
+      Engine.options.gameSpeed = speed;
+      Engine.options.doubleTime = speed > 1;
+      window.dispatchEvent(new CustomEvent('light-room:speed-change', { detail: { speed: speed } }));
+
+      if(previousSpeed !== speed) {
+        Engine.rescheduleTimers();
+        if(typeof Button !== 'undefined' && Button.rescaleCooldowns) {
+          Button.rescaleCooldowns(speed);
+        }
+      }
+
+      if(!noSave) {
+        $SM.set('config.gameSpeed', speed, true);
+        // Keep the old boolean setting updated for backwards compatibility.
+        $SM.set('config.hyperMode', speed > 1, false);
       }
     },
 
-    triggerHyperMode: function() {
-      Engine.options.doubleTime = !Engine.options.doubleTime;
-      if(Engine.options.doubleTime)
-        $('.hyper').text(_('classic.'));
-      else
-        $('.hyper').text(_('hyper.'));
-
-      $SM.set('config.hyperMode', Engine.options.doubleTime, false);
+    showSpeedMenu: function() {
+      var currentSpeed = Engine.getGameSpeed();
+      Events.startEvent({
+        title: _('Game Speed'),
+        scenes: {
+          start: {
+            text: [_('current speed:') + ' x' + currentSpeed],
+            buttons: {
+              'classic': {
+                text: _('classic') + ' (x1)',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(1); }
+              },
+              'x2': {
+                text: 'x2',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(2); }
+              },
+              'x3': {
+                text: 'x3',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(3); }
+              },
+              'x4': {
+                text: 'x4',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(4); }
+              },
+              'x20': {
+                text: 'x20',
+                nextScene: 'end',
+                onChoose: function() { Engine.setGameSpeed(20); }
+              },
+              'cancel': {
+                text: _('cancel'),
+                nextScene: 'end'
+              }
+            }
+          }
+        }
+      }, {
+        className: 'speedMenuPanel'
+      });
     },
 
     // Gets a guid
@@ -842,25 +877,100 @@
       }
     },
 
-    setInterval: function(callback, interval, skipDouble){
-      if( Engine.options.doubleTime && !skipDouble ){
-        Engine.log('Double time, cutting interval in half');
-        interval /= 2;
+    _scheduleTimer: function(timer) {
+      var speed = timer.skipSpeed ? 1 : Engine.getGameSpeed();
+      var delay = Math.max(0, timer.remaining / speed);
+
+      timer.speed = speed;
+      timer.startedAt = Date.now();
+
+      if(timer.type === 'interval') {
+        timer.nativeId = window.setInterval(function() {
+          timer.callback.call(window);
+        }, delay);
+      } else {
+        timer.nativeId = window.setTimeout(function() {
+          timer.active = false;
+          delete Engine._timers[timer.id];
+          timer.callback.call(window);
+        }, delay);
       }
 
-      return setInterval(callback, interval);
-
+      return timer;
     },
 
-    setTimeout: function(callback, timeout, skipDouble){
+    _createTimer: function(type, callback, delay, skipSpeed) {
+      var timer = {
+        engineTimer: true,
+        id: Engine._nextTimerId++,
+        type: type,
+        callback: callback,
+        remaining: Math.max(0, delay),
+        skipSpeed: Boolean(skipSpeed),
+        active: true,
+        nativeId: null,
+        speed: 1,
+        startedAt: Date.now()
+      };
 
-      if( Engine.options.doubleTime && !skipDouble ){
-        Engine.log('Double time, cutting timeout in half');
-        timeout /= 2;
+      Engine._timers[timer.id] = timer;
+      return Engine._scheduleTimer(timer);
+    },
+
+    _clearTimer: function(timer, type) {
+      if(timer && timer.engineTimer) {
+        if(!timer.active) return;
+
+        timer.active = false;
+        delete Engine._timers[timer.id];
+        if(timer.type === 'interval') {
+          window.clearInterval(timer.nativeId);
+        } else {
+          window.clearTimeout(timer.nativeId);
+        }
+        return;
       }
 
-      return setTimeout(callback, timeout);
+      if(type === 'interval') {
+        window.clearInterval(timer);
+      } else {
+        window.clearTimeout(timer);
+      }
+    },
 
+    clearInterval: function(timer) {
+      Engine._clearTimer(timer, 'interval');
+    },
+
+    clearTimeout: function(timer) {
+      Engine._clearTimer(timer, 'timeout');
+    },
+
+    rescheduleTimers: function() {
+      var now = Date.now();
+
+      Object.keys(Engine._timers).forEach(function(id) {
+        var timer = Engine._timers[id];
+        if(!timer || !timer.active || timer.skipSpeed) return;
+
+        if(timer.type === 'interval') {
+          window.clearInterval(timer.nativeId);
+        } else {
+          var elapsed = Math.max(0, now - timer.startedAt);
+          timer.remaining = Math.max(0, timer.remaining - (elapsed * timer.speed));
+          window.clearTimeout(timer.nativeId);
+        }
+
+        Engine._scheduleTimer(timer);
+      });
+    },
+
+    setInterval: function(callback, interval, skipDouble) {
+      return Engine._createTimer('interval', callback, interval, skipDouble);
+    },
+
+    setTimeout: function(callback, timeout, skipDouble) {
+      return Engine._createTimer('timeout', callback, timeout, skipDouble);
     }
   };
 

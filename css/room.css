@@ -22,6 +22,18 @@ div#buyBtns {
 	left: 300px;
 }
 
+div#guestHouseActions {
+	position: absolute;
+	top: 260px;
+	left: 0px;
+}
+
+div#guestHouseActions:before {
+	content: attr(data-legend);
+	position: relative;
+	top: -5px;
+}
+
 div#storesContainer {
 	position: absolute;
 	top: 0px;

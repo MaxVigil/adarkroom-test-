@@ -63,6 +63,26 @@ describe('safe state paths', () => {
     expect(stateManager.get('stores["cured meat"]')).toBeUndefined();
   });
 
+  it('does not introduce undefined timer values when refreshing income', () => {
+    const manager = loadSaveManager();
+    const state: Record<string, unknown> = {
+      income: { logger: { delay: 10, stores: { wood: 0 } } },
+    };
+    const stateManager = loadLegacy<{
+      setIncome: (source: string, options: { delay: number; stores: Record<string, number> }) => void;
+    }>('script/state_manager.js', 'StateManager', {
+      initialState: state,
+      globals: {
+        SaveManager: manager,
+        $: Object.assign(() => ({}), { Dispatch: () => ({ publish: () => undefined }) }),
+      },
+    });
+
+    stateManager.setIncome('logger', { delay: 10, stores: { wood: 8 } });
+    expect(manager.validate(state)).toBe(true);
+    expect(state).toEqual({ income: { logger: { delay: 10, stores: { wood: 8 } } } });
+  });
+
   it('rejects dangerous and malformed paths without polluting prototypes', () => {
     const manager = loadSaveManager();
     const state: Record<string, unknown> = {};
