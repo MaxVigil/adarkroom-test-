@@ -17,9 +17,9 @@ describe('Light Room overlay foundation', () => {
   it('keeps the inherited baseline frozen and resolves new entities separately', () => {
     expect(baseline.buildings).toHaveLength(13);
     expect(baseline.professions).toHaveLength(10);
-    expect(resolvedCatalog.buildings).toHaveLength(14);
-    expect(resolvedCatalog.professions).toHaveLength(11);
-    expect(resolvedCatalog.upgrades).toHaveLength(1);
+    expect(resolvedCatalog.buildings).toHaveLength(15);
+    expect(resolvedCatalog.professions).toHaveLength(12);
+    expect(resolvedCatalog.upgrades).toHaveLength(4);
     expect(validateLightRoomCatalog()).toEqual([]);
   });
 
@@ -34,30 +34,31 @@ describe('Light Room overlay foundation', () => {
     expect(conditionMet(loggerHut.unlockWhen, { buildingIds: new Set(['building.lodge']) })).toBe(false);
   });
 
-  it('produces four wood per logger and eight after iron axes', () => {
+  it('produces two wood per logger and three after iron axes', () => {
     expect(logger.maximumWorkers).toBe(2);
-    expect(professionFlows(logger)).toEqual({ 'resource.wood': 4 });
-    expect(professionDelta(logger, 2, 10)).toEqual({ 'resource.wood': 8 });
+    expect(professionFlows(logger)).toEqual({ 'resource.wood': 2 });
+    expect(professionDelta(logger, 2, 10)).toEqual({ 'resource.wood': 4 });
     expect(professionFlows(logger, { upgradeIds: new Set(['upgrade.iron-axes']) }))
-      .toEqual({ 'resource.wood': 8 });
+      .toEqual({ 'resource.wood': 3 });
     expect(professionDelta(logger, 2, 10, { upgradeIds: new Set(['upgrade.iron-axes']) }))
-      .toEqual({ 'resource.wood': 16 });
+      .toEqual({ 'resource.wood': 6 });
   });
 
   it('reports the approved population and payback impact', () => {
     expect(loggerHutEconomics(false)).toMatchObject({
       workers: 2,
-      woodPerTenSeconds: 8,
-      woodPerMinute: 48,
-      gathererEquivalent: 8,
-      workersFreed: 6,
+      woodPerTenSeconds: 4,
+      woodPerMinute: 24,
+      gathererEquivalent: 4,
+      workersFreed: 2,
     });
-    expect(loggerHutEconomics(false).woodCostPaybackMinutes).toBeCloseTo(13.8889, 4);
+    expect(loggerHutEconomics(false).woodCostPaybackMinutes).toBeCloseTo(41.6667, 4);
     expect(loggerHutEconomics(true)).toMatchObject({
-      woodPerTenSeconds: 16,
-      woodPerMinute: 96,
-      gathererEquivalent: 16,
-      workersFreed: 14,
+      woodPerTenSeconds: 6,
+      woodPerMinute: 36,
+      gathererEquivalent: 6,
+      workersFreed: 4,
     });
+    expect(loggerHutEconomics(true).woodCostPaybackMinutes).toBeCloseTo(33.3333, 4);
   });
 });

@@ -1019,6 +1019,10 @@ var Room = {
 			case 'building':
 				numThings = $SM.get('game.buildings["' + thing + '"]', true);
 				break;
+			case 'settlement upgrade':
+			case 'building upgrade':
+				numThings = $SM.get('game.upgrades["' + thing + '"]', true) ? 1 : 0;
+				break;
 		}
 
 		if (numThings < 0) numThings = 0;
@@ -1051,6 +1055,10 @@ var Room = {
 			case 'building':
 				$SM.add('game.buildings["' + thing + '"]', 1);
 				break;
+			case 'settlement upgrade':
+			case 'building upgrade':
+				$SM.set('game.upgrades["' + thing + '"]', true);
+				break;
 		}
 
 		// audio
@@ -1058,6 +1066,8 @@ var Room = {
 			case 'weapon':
 			case 'upgrade':
 			case 'tool':
+			case 'settlement upgrade':
+			case 'building upgrade':
 				AudioEngine.playSound(AudioLibrary.CRAFT);
 				break;
 			case 'building':
@@ -1067,7 +1077,7 @@ var Room = {
 	},
 
 	needsWorkshop: function (type) {
-		return type == 'weapon' || type == 'upgrade' || type == 'tool';
+		return type == 'weapon' || type == 'upgrade' || type == 'tool' || type == 'settlement upgrade';
 	},
 
 	craftUnlocked: function (thing) {
@@ -1077,10 +1087,11 @@ var Room = {
 		if ($SM.get('game.builder.level') < 4) return false;
 		var craftable = Room.Craftables[thing];
 		if (Room.needsWorkshop(craftable.type) && $SM.get('game.buildings["' + 'workshop' + '"]', true) === 0) return false;
+		if (typeof craftable.isAvailable == 'function' && !craftable.isAvailable()) return false;
 		var cost = craftable.cost();
 
 		//show button if one has already been built
-		if ($SM.get('game.buildings["' + thing + '"]') > 0) {
+		if ($SM.num(thing, craftable) > 0) {
 			Room.buttons[thing] = true;
 			return true;
 		}
@@ -1149,7 +1160,7 @@ var Room = {
 					craftable.button = new Button.Button({
 						id: 'build_' + k.replace(/ /g, '-'),
 						cost: craftable.cost(),
-						text: _(k),
+						text: craftable.name || _(k),
 						click: Room.build,
 						width: '80px',
 						ttPos: loc.children().length > 10 ? 'top right' : 'bottom right'
@@ -1234,7 +1245,7 @@ var Room = {
 		} else if (e.category == 'income') {
 			Room.updateStoresView();
 			Room.updateIncomeView();
-		} else if (e.stateName.indexOf('game.buildings') === 0) {
+		} else if (e.stateName.indexOf('game.buildings') === 0 || e.stateName.indexOf('game.upgrades') === 0) {
 			Room.updateBuildButtons();
 		}
 	},

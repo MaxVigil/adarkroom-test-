@@ -54,7 +54,7 @@ test('builds the Logger Hut only after the tannery and caps logger jobs at two',
       workers: runtime.$SM.get('game.workers["logger"]', true),
       woodPerCycle: (runtime.$SM.get('income.logger') as { stores: { wood: number } }).stores.wood,
     };
-  })).toEqual({ workers: 2, woodPerCycle: 8 });
+  })).toEqual({ workers: 2, woodPerCycle: 4 });
 
   const saveSnapshot = await page.evaluate(() => {
     const runtime = window as unknown as LoggerRuntimeWindow;
@@ -75,7 +75,7 @@ test('builds the Logger Hut only after the tannery and caps logger jobs at two',
       workers: runtime.$SM.get('game.workers["logger"]', true),
       woodPerCycle: (runtime.$SM.get('income.logger') as { stores: { wood: number } }).stores.wood,
     };
-  })).toEqual({ hut: 1, workers: 2, woodPerCycle: 8 });
+  })).toEqual({ hut: 1, workers: 2, woodPerCycle: 4 });
 
   const normalizedWorkers = await page.evaluate(() => {
     const runtime = window as unknown as LoggerRuntimeWindow;
@@ -86,22 +86,43 @@ test('builds the Logger Hut only after the tannery and caps logger jobs at two',
   expect(normalizedWorkers).toBe(2);
 });
 
-test('applies the catalogued iron-axes modifier without exposing an unapproved recipe', async ({ page }) => {
+test('crafts balanced iron axes in the workshop and applies the logger modifier', async ({ page }) => {
+  await page.evaluate(() => {
+    const runtime = window as unknown as LoggerRuntimeWindow;
+    runtime.$SM.set('game.builder.level', 4, true);
+    runtime.$SM.set('game.temperature.value', 3, true);
+    runtime.$SM.set('game.buildings["workshop"]', 1, true);
+    runtime.$SM.set('game.buildings["logger hut"]', 1, true);
+    runtime.$SM.set('game.workers["logger"]', 2, true);
+    runtime.$SM.set('stores.wood', 300, true);
+    runtime.$SM.set('stores.leather', 50, true);
+    runtime.$SM.set('stores.iron', 40, true);
+    runtime.Room.updateBuildButtons();
+  });
+  await expect(page.locator('#build_iron-axes')).toBeAttached();
+  await page.locator('#build_iron-axes').click({ force: true });
+
   const result = await page.evaluate(() => {
     const runtime = window as unknown as LoggerRuntimeWindow;
-    runtime.$SM.set('game.workers["logger"]', 2, true);
-    runtime.$SM.set('game.upgrades["iron axes"]', true, true);
     runtime.Outside.updateVillageIncome();
     return {
       woodPerCycle: (runtime.$SM.get('income.logger') as { stores: { wood: number } }).stores.wood,
       ironAxesCraftable: Boolean(runtime.Room.Craftables['iron axes']),
+      purchased: runtime.$SM.get('game.upgrades["iron axes"]', true),
+      stores: {
+        wood: runtime.$SM.get('stores.wood', true),
+        leather: runtime.$SM.get('stores.leather', true),
+        iron: runtime.$SM.get('stores.iron', true),
+      },
       acquisitionStatus: runtime.LightRoom.data.upgrades[0]?.acquisitionStatus,
     };
   });
   expect(result).toEqual({
-    woodPerCycle: 16,
-    ironAxesCraftable: false,
-    acquisitionStatus: 'pending-design',
+    woodPerCycle: 6,
+    ironAxesCraftable: true,
+    purchased: true,
+    stores: { wood: 0, leather: 0, iron: 0 },
+    acquisitionStatus: 'approved',
   });
 });
 

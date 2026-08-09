@@ -90,6 +90,12 @@ tests.
   `script/generated/light_room_content.js`.
 - The playable legacy adapter in `script/light_room.js` may translate canonical data
   into old runtime structures, but must not duplicate balance values.
+- Treat `src/light-room/guest-house.ts` as the source of truth for Guest House costs,
+  timing, rooms, queue limits, caretaker rates, upgrades, guests, and service prices.
+  `script/guest_house.js` may orchestrate the legacy event UI but must consume generated
+  values and must never create supplies while reserving them.
+- A guest visit permits at most one completed service. Preserve rooms, FIFO queue,
+  waiting guest, reservations, next-visit delay, and previewed guest in save data.
 - Run `pnpm light-room:report` for economy changes and document any value that still
   needs design approval instead of inventing a cost, recipe, or unlock rule.
 - Model random production bonuses as catalog data and pure functions. State whether
@@ -106,6 +112,20 @@ tests.
 - A pending-balance entity may have validated IDs, rules, and save data, but it must
   not be exposed as a playable purchase or event until every required tuning value is
   approved. Reports and handoffs must distinguish functional core from playable UI.
+
+## Incremental React bridge
+
+- Build migrated UI with `pnpm react:build`; do not hand-edit files under
+  `script/generated/react/`.
+- Keep all game rules and mutable legacy access outside React components. Components
+  consume immutable cached snapshots and dispatch commands through a narrow adapter.
+- During coexistence, one legacy adapter is the only permitted React-side access to
+  globals such as `Engine`; do not read `$SM`, `Room`, `Outside`, or jQuery nodes from
+  components.
+- A migrated surface must have a semantic React Testing Library test and retain its
+  critical Playwright journey before the legacy UI for that surface is removed.
+- Use `pnpm verify` before handoff when a change touches catalogs, React, saves, or a
+  critical player journey.
 
 ## Change discipline
 

@@ -1,5 +1,4 @@
 import { baseline } from '../game-data/index.js';
-import { guestHouseDesign } from './guest-house.js';
 import {
   type LightRoomProfession,
   type LightRoomProfessionPatch,
@@ -12,8 +11,8 @@ export const resolvedCatalog = {
   buildings: [...baseline.buildings, ...lightRoomOverlay.buildings],
   professions: [...baseline.professions, ...lightRoomOverlay.professions],
   professionPatches: lightRoomOverlay.professionPatches,
-  pendingBuildings: [guestHouseDesign.building],
-  pendingProfessions: [guestHouseDesign.caretaker],
+  pendingBuildings: [],
+  pendingProfessions: [],
   upgrades: lightRoomOverlay.upgrades,
 };
 
@@ -80,13 +79,16 @@ export function loggerHutEconomics(hasIronAxes = false) {
   })['resource.wood']! * workers;
   const gathererEquivalent = woodPerCycle;
   const extraWoodPerMinute = (woodPerCycle - workers) * (60 / logger.intervalSeconds);
+  const ironAxes = lightRoomOverlay.upgrades.find(({ id }) => id === 'upgrade.iron-axes');
+  const investedWood = hut.cost.amounts['resource.wood']!
+    + (hasIronAxes ? (ironAxes?.cost?.amounts['resource.wood'] ?? 0) : 0);
   return {
     workers,
     woodPerTenSeconds: woodPerCycle,
     woodPerMinute: woodPerCycle * (60 / logger.intervalSeconds),
     gathererEquivalent,
     workersFreed: gathererEquivalent - workers,
-    woodCostPaybackMinutes: hut.cost.amounts['resource.wood']! / extraWoodPerMinute,
+    woodCostPaybackMinutes: investedWood / extraWoodPerMinute,
   };
 }
 

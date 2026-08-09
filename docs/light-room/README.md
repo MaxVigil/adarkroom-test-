@@ -36,22 +36,21 @@ pnpm test:browser
 | Maximum | 1 building |
 | Profession | `profession.logger` |
 | Worker slots | 2 |
-| Base output | 4 wood per logger per 10 seconds |
-| Iron-axes output | 8 wood per logger per 10 seconds |
+| Base output | 2 wood per logger per 10 seconds |
+| Iron-axes output | 3 wood per logger per 10 seconds |
 | Upkeep | none |
 
-At two workers, the hut produces 8 wood per 10 seconds, or 48 per minute. The
-increment over two inherited gatherers is 36 per minute, so the 500-wood part of the
-construction cost pays back in about 13.9 minutes. Two loggers replace eight
-gatherers at base output and sixteen after iron axes, freeing six or fourteen workers.
+At two workers, the hut produces 4 wood per 10 seconds, or 24 per minute. The
+increment over two inherited gatherers is 12 per minute, so the 500-wood part of the
+construction cost pays back in about 41.7 minutes. Two loggers replace four gatherers
+at base output and six after iron axes, freeing two or four workers.
 
-## Intentionally unresolved
+## Iron axes
 
-`upgrade.iron-axes` is catalogued and its approved production modifier is implemented,
-but its recipe, price, station, and acquisition interaction have not been approved.
-It is therefore not exposed as a craftable action. A compatible save flag can activate
-the modifier, which lets the rule and migration be tested without presenting an
-invented mechanic to players.
+`upgrade.iron-axes` is an approved one-time Workshop upgrade. It requires the Workshop,
+the Logger Hut, and available iron; it costs 300 wood, 50 leather, and 40 iron. The
+upgrade raises output from two to three wood per logger per 10 seconds. The combined
+800-wood investment pays back in about 33.3 minutes versus two gatherers.
 
 The manual gather button also remains unchanged. Its later hiding or transformation
 requires a separate design decision.
@@ -73,23 +72,34 @@ Both finds may succeed during the same cycle. With `n` hunters, the game perform
 rolls for scales and `n` separate rolls for teeth. The normal income collector applies
 the result, so speed changes affect the cycle consistently with other professions.
 
-## Guest House functional core
+## Guest House
 
-The Guest House is represented by stable IDs `building.guest-house` and
-`profession.guest-caretaker`. The validated domain rules already cover:
+The playable Guest House uses stable IDs `building.guest-house` and
+`profession.guest-caretaker`:
 
-- one base room and a maximum of two rooms;
-- a persistent FIFO guest queue;
-- persistence across save migration and reload;
-- the inherited Master's three lessons and the Scout's two services;
-- transferring existing settlement supplies into a reservation without creating
-  resources;
-- a parameterized caretaker effect on the next-visit delay.
+- unlock: compass; construction: 1000 wood, 100 fur, 50 leather;
+- one base room, a maximum of two rooms, and one persistent FIFO queue slot;
+- eligible visits every 20–30 minutes, with one paid service per visit;
+- the inherited Master's three lessons and Scout's two services at inherited prices;
+- one caretaker who reduces the visit delay by 25% and reserves two owned units per
+  10-second cycle without creating resources;
+- second room (600 wood, 100 leather), pantry (500 wood, 100 leather, 50 cured meat),
+  and notice board (400 wood, 50 leather, 10 scales) upgrades;
+- a 10% pantry service discount, three-unit upgraded reservation rate, 20% notice-board
+  visit reduction, and next-guest preview.
 
-The building remains `pending-balance`, so it is not yet shown as a playable build
-action. Construction cost, base visit interval, queue capacity, and caretaker reserve
-rate require product approval. After approval, those values belong in the catalog;
-the legacy adapter may expose them but must not duplicate them.
+The combined caretaker and notice-board reduction leaves a 12–18 minute visit window.
+Rooms, queue, waiting guest, reservations, next visit, and next-guest preview persist
+through saves. The Guest House disables the duplicate inherited random Master and
+Scout arrivals once it owns their scheduling.
+
+## React migration: first slice
+
+Vite now builds a production React bundle beside the legacy runtime. The speed control
+is the first migrated surface: Mantine renders it, `useSyncExternalStore` reads one
+cached immutable snapshot, and a narrow adapter dispatches the existing speed-menu
+command. Economy, timers, and saves remain in the game runtime. `pnpm verify` generates
+catalogs, builds React, checks types, runs unit tests, and runs browser journeys.
 
 ## Test-build controls
 

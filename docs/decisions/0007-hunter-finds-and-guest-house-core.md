@@ -4,6 +4,9 @@
 - Date: 2026-08-08
 - Owner: MaxVigil
 
+> Guest House activation and balance are completed by ADR 0008. The hunter-find
+> decision in this document remains current.
+
 ## Decision
 
 The inherited hunter profession receives a Light Room overlay patch. Every working

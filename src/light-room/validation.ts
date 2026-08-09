@@ -12,7 +12,7 @@ export function validateLightRoomCatalog(): LightRoomCatalogIssue[] {
     ...baseline.blueprints, ...baseline.locations, ...baseline.events, ...baseline.scenes,
     ...baseline.enemies, ...baseline.combatEncounters, ...baseline.lootTables,
     ...lightRoomOverlay.buildings, ...lightRoomOverlay.professions, ...lightRoomOverlay.upgrades,
-    guestHouseDesign.building, guestHouseDesign.caretaker, ...guestHouseDesign.guests,
+    ...guestHouseDesign.guests,
   ];
   const ids = new Set<string>();
   for (const entity of allEntities) {
@@ -58,6 +58,11 @@ export function validateLightRoomCatalog(): LightRoomCatalogIssue[] {
   for (const upgrade of lightRoomOverlay.upgrades) {
     check(upgrade.id, upgrade.affectsId, 'affected entity');
     checkCondition(upgrade.id, upgrade.unlockWhen);
+    for (const buildingId of upgrade.requiresBuildingIds) check(upgrade.id, buildingId, 'required building');
+    for (const resourceId of Object.keys(upgrade.cost?.amounts ?? {})) check(upgrade.id, resourceId, 'cost resource');
+    if (upgrade.acquisitionStatus === 'approved' && (!upgrade.cost || !upgrade.craftLocation)) {
+      issues.push({ code: 'incomplete-approved-upgrade', message: `${upgrade.id} is approved without acquisition data` });
+    }
   }
   checkCondition(guestHouseDesign.building.id, guestHouseDesign.building.unlockWhen);
   for (const guest of guestHouseDesign.guests) {

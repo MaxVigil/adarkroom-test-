@@ -161,9 +161,7 @@
         .appendTo(menu);
 
       $('<span>')
-        .addClass('hyper menuBtn')
-        .text(_('speed') + ' x1.')
-        .click(Engine.showSpeedMenu)
+        .attr('id', 'lightRoomReactMenu')
         .appendTo(menu);
 
       $('<span>')
@@ -216,6 +214,7 @@
       }
       Events.init();
       Room.init();
+			if(typeof GuestHouse == 'object') GuestHouse.init();
 
 
       if(typeof $SM.get('stores.wood') != 'undefined') {
@@ -240,6 +239,9 @@
         savedGameSpeed = 2;
       }
       Engine.setGameSpeed(savedGameSpeed || 1, true);
+			if(typeof LightRoomReact == 'object' && typeof LightRoomReact.mount == 'function') {
+				LightRoomReact.mount(document.getElementById('lightRoomReactMenu'));
+			}
 
       Engine.toggleVolume(Boolean($SM.get('config.soundOn')));
       if(!AudioEngine.isAudioContextRunning()){
@@ -571,7 +573,7 @@
       var previousSpeed = Engine.getGameSpeed();
       Engine.options.gameSpeed = speed;
       Engine.options.doubleTime = speed > 1;
-      $('.hyper').text(_('speed') + ' x' + speed + '.');
+      window.dispatchEvent(new CustomEvent('light-room:speed-change', { detail: { speed: speed } }));
 
       if(previousSpeed !== speed) {
         Engine.rescheduleTimers();

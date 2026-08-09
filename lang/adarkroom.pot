@@ -3400,3 +3400,59 @@ msgstr ""
 #: script/outside.js
 msgid "{0}% per worker per {1}s"
 msgstr ""
+
+#: script/guest_house.js
+msgid "a teacher is waiting for a place to stay"
+msgstr ""
+
+#: script/guest_house.js
+msgid "guests"
+msgstr ""
+
+#: script/guest_house.js
+msgid "next expected traveller: {0}"
+msgstr ""
+
+#: script/guest_house.js
+msgid "not now"
+msgstr ""
+
+#: script/guest_house.js
+msgid "rooms: {0}/{1}"
+msgstr ""
+
+#: script/guest_house.js
+msgid "the builder suggests a guest house"
+msgstr ""
+
+#: script/guest_house.js
+msgid "the caretaker has written down every offer"
+msgstr ""
+
+#: script/guest_house.js
+msgid "the guest leaves after sharing what they know"
+msgstr ""
+
+#: script/guest_house.js
+msgid "the guest rooms are quiet"
+msgstr ""
+
+#: script/guest_house.js
+msgid "the traveller waits until the settlement is ready"
+msgstr ""
+
+#: script/guest_house.js
+msgid "waiting in line: {0}"
+msgstr ""
+
+#: script/guest_house.js
+msgid "{0} arrives at the guest house"
+msgstr ""
+
+#: script/guest_house.js
+msgid "{0} settles into the guest house"
+msgstr ""
+
+#: script/guest_house.js
+msgid "{0} waits for a free guest room"
+msgstr ""

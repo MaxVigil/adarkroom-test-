@@ -1,7 +1,8 @@
 # React migration readiness for Light Room
 
-- Status: Recommended migration plan
+- Status: In progress; first UI slice complete
 - Date: 2026-08-08
+- Updated: 2026-08-09
 
 ## Outcome
 
@@ -40,10 +41,12 @@ after migration.
    storage, and localization ports. Wrap the existing runtime without changing the
    visible UI.
 2. **React shell beside the legacy screen.** Add Vite and mount one React root. Keep
-   the old runtime loaded and connect it through the adapter.
+   the old runtime loaded and connect it through the adapter. **Completed for the
+   speed-control root.**
 3. **Low-risk vertical slice.** Migrate settings, speed, language, and the bottom menu.
    This proves state subscription, commands, localization, styling, and persistence
-   without touching progression.
+   without touching progression. **Speed is complete; language and remaining menu
+   controls are next.**
 4. **Settlement slice.** Migrate resource rows, buildings, jobs, tooltips, Logger Hut,
    and Guest House using catalog-driven view models.
 5. **Events and expeditions.** Migrate only after event state and combat commands have
@@ -81,12 +84,23 @@ paid service is required for the migration.
 ## Definition of ready for React work
 
 - [ ] all tunable content consumed from validated catalogs;
-- [ ] one immutable snapshot and command boundary exists;
+- [x] one immutable snapshot and command boundary exists for the migrated speed slice;
 - [ ] clock, random source, storage, and localization are injectable;
 - [ ] current save schema has versioned migrations and fixtures;
 - [ ] critical settlement and expedition journeys have browser parity tests;
 - [ ] no new feature adds DOM manipulation outside the legacy adapter;
-- [ ] a single React shell can coexist with the current playable build.
+- [x] a single React shell can coexist with the current playable build.
+
+## Implemented bridge
+
+- `src/react/legacy-game-adapter.ts` is the only React-side seam into the current
+  global runtime for this slice.
+- `src/react/SpeedControl.tsx` has no knowledge of jQuery, saves, or timers.
+- Vite produces a checked-in compatibility bundle under `script/generated/react/`.
+- React Testing Library checks the semantic button and command dispatch; the existing
+  Playwright speed journey verifies Ukrainian copy, x20 timing, and persistence.
+- `process.env.NODE_ENV` is fixed to production at build time so the IIFE bundle does
+  not depend on a Node.js `process` global in the browser.
 
 ## Primary references
 

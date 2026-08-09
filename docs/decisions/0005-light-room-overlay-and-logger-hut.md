@@ -4,6 +4,9 @@
 - Date: 2026-08-08
 - Owner: MaxVigil
 
+> The original 4-to-8 logger values and pending iron-axes boundary are superseded by
+> ADR 0008. This document remains as the history of the first overlay slice.
+
 ## Decision
 
 Approved Light Room additions are stored in a separate, validated overlay under

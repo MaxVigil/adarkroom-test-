@@ -4428,6 +4428,62 @@ msgstr "кінетична"
 msgid "{0}% per worker per {1}s"
 msgstr "{0}% на працівника за {1} с"
 
+#: ../../script/guest_house.js
+msgid "a teacher is waiting for a place to stay"
+msgstr "учитель чекає на місце для ночівлі"
+
+#: ../../script/guest_house.js
+msgid "guests"
+msgstr "гості"
+
+#: ../../script/guest_house.js
+msgid "next expected traveller: {0}"
+msgstr "наступний очікуваний мандрівник: {0}"
+
+#: ../../script/guest_house.js
+msgid "not now"
+msgstr "не зараз"
+
+#: ../../script/guest_house.js
+msgid "rooms: {0}/{1}"
+msgstr "кімнати: {0}/{1}"
+
+#: ../../script/guest_house.js
+msgid "the builder suggests a guest house"
+msgstr "будівниця пропонує звести гостьовий будинок"
+
+#: ../../script/guest_house.js
+msgid "the caretaker has written down every offer"
+msgstr "доглядач записав усі пропозиції гостя"
+
+#: ../../script/guest_house.js
+msgid "the guest leaves after sharing what they know"
+msgstr "гість іде, поділившись своїми знаннями"
+
+#: ../../script/guest_house.js
+msgid "the guest rooms are quiet"
+msgstr "у кімнатах для гостей тихо"
+
+#: ../../script/guest_house.js
+msgid "the traveller waits until the settlement is ready"
+msgstr "мандрівник чекатиме, доки поселення буде готове"
+
+#: ../../script/guest_house.js
+msgid "waiting in line: {0}"
+msgstr "чекають у черзі: {0}"
+
+#: ../../script/guest_house.js
+msgid "{0} arrives at the guest house"
+msgstr "{0} прибуває до гостьового будинку"
+
+#: ../../script/guest_house.js
+msgid "{0} settles into the guest house"
+msgstr "{0} оселяється в гостьовому будинку"
+
+#: ../../script/guest_house.js
+msgid "{0} waits for a free guest room"
+msgstr "{0} чекає на вільну кімнату"
+
 
 #~ msgid "Export"
 #~ msgstr "Експорт"

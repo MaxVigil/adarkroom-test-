@@ -1,0 +1,21 @@
+#lightRoomReactMenu {
+  display: inline-block;
+}
+
+.light-room-react-speed {
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.light-room-react-speed:hover,
+.light-room-react-speed:focus-visible {
+  text-decoration: underline;
+}
+
+.light-room-react-speed:focus-visible {
+  outline: 1px dotted currentColor;
+  outline-offset: 2px;
+}

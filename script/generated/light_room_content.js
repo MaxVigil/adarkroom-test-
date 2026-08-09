@@ -14,6 +14,10 @@ var LightRoomData = {
         "fur": 50,
         "leather": 20
       },
+      "unlockWhen": {
+        "kind": "has-building",
+        "key": "tannery"
+      },
       "requiresBuilding": "tannery",
       "availableMessage": {
         "en": "the builder says a logger's hut would keep the woodpile growing",
@@ -22,6 +26,31 @@ var LightRoomData = {
       "builtMessage": {
         "en": "the logger's hut stands at the forest edge",
         "uk": "хатина лісорубів стоїть на краю лісу"
+      }
+    },
+    {
+      "key": "guest house",
+      "name": {
+        "en": "Guest House",
+        "uk": "Гостьовий будинок"
+      },
+      "maximum": 1,
+      "cost": {
+        "wood": 1000,
+        "fur": 100,
+        "leather": 50
+      },
+      "unlockWhen": {
+        "kind": "has-item",
+        "key": "compass"
+      },
+      "availableMessage": {
+        "en": "the builder says travellers need a place where they can wait",
+        "uk": "будівниця каже, що мандрівникам потрібне місце, де вони зможуть зачекати"
+      },
+      "builtMessage": {
+        "en": "the guest house is ready; no teacher needs to be turned away",
+        "uk": "гостьовий будинок готовий; тепер жодного вчителя не доведеться проганяти"
       }
     }
   ],
@@ -36,16 +65,28 @@ var LightRoomData = {
       "maximum": 2,
       "delay": 10,
       "stores": {
-        "wood": 4
+        "wood": 2
       },
       "modifiers": [
         {
           "upgrade": "iron axes",
           "stores": {
-            "wood": 8
+            "wood": 3
           }
         }
       ]
+    },
+    {
+      "key": "caretaker",
+      "name": {
+        "en": "caretaker",
+        "uk": "доглядач"
+      },
+      "requiresBuilding": "guest house",
+      "maximum": 1,
+      "delay": 10,
+      "stores": {},
+      "modifiers": []
     }
   ],
   "professionPatches": [
@@ -73,7 +114,235 @@ var LightRoomData = {
         "en": "iron axes",
         "uk": "залізні сокири"
       },
-      "acquisitionStatus": "pending-design"
+      "acquisitionStatus": "approved",
+      "cost": {
+        "wood": 300,
+        "leather": 50,
+        "iron": 40
+      },
+      "craftLocation": "workshop",
+      "requiresBuildings": [
+        "logger hut",
+        "workshop"
+      ],
+      "unlockWhen": {
+        "kind": "has-resource",
+        "key": "iron"
+      },
+      "availableMessage": {
+        "en": "the workshop can fit the loggers with iron axes",
+        "uk": "у майстерні можна зробити залізні сокири для лісорубів"
+      },
+      "builtMessage": {
+        "en": "the new axes bite deeper, but careful work still takes time",
+        "uk": "нові сокири рубають глибше, але добра робота все одно потребує часу"
+      },
+      "effect": "logger-output"
+    },
+    {
+      "key": "guest second room",
+      "name": {
+        "en": "second guest room",
+        "uk": "друга кімната для гостей"
+      },
+      "acquisitionStatus": "approved",
+      "cost": {
+        "wood": 600,
+        "leather": 100
+      },
+      "craftLocation": "building",
+      "requiresBuildings": [
+        "guest house"
+      ],
+      "unlockWhen": {
+        "kind": "has-building",
+        "key": "guest house"
+      },
+      "availableMessage": {
+        "en": "the guest house has space for another room",
+        "uk": "у гостьовому будинку можна облаштувати ще одну кімнату"
+      },
+      "builtMessage": {
+        "en": "two travellers can now stay at once",
+        "uk": "тепер одночасно можуть зупинитися двоє мандрівників"
+      },
+      "effect": "guest-second-room"
+    },
+    {
+      "key": "guest pantry",
+      "name": {
+        "en": "guest pantry",
+        "uk": "комора для гостей"
+      },
+      "acquisitionStatus": "approved",
+      "cost": {
+        "wood": 500,
+        "leather": 100,
+        "cured meat": 50
+      },
+      "craftLocation": "building",
+      "requiresBuildings": [
+        "guest house"
+      ],
+      "unlockWhen": {
+        "kind": "has-building",
+        "key": "guest house"
+      },
+      "availableMessage": {
+        "en": "a pantry would keep hospitality supplies set aside",
+        "uk": "комора допоможе завчасно відкладати припаси для гостинності"
+      },
+      "builtMessage": {
+        "en": "carefully stored supplies make every visit a little easier",
+        "uk": "завчасно складені припаси трохи полегшують кожен візит"
+      },
+      "effect": "guest-pantry"
+    },
+    {
+      "key": "guest notice board",
+      "name": {
+        "en": "travellers notice board",
+        "uk": "дошка оголошень для мандрівників"
+      },
+      "acquisitionStatus": "approved",
+      "cost": {
+        "wood": 400,
+        "leather": 50,
+        "scales": 10
+      },
+      "craftLocation": "building",
+      "requiresBuildings": [
+        "guest house"
+      ],
+      "unlockWhen": {
+        "kind": "has-building",
+        "key": "guest house"
+      },
+      "availableMessage": {
+        "en": "a notice board could guide travellers toward the village",
+        "uk": "дошка оголошень допоможе мандрівникам знаходити поселення"
+      },
+      "builtMessage": {
+        "en": "word of the guest house travels farther now",
+        "uk": "тепер звістка про гостьовий будинок шириться далі"
+      },
+      "effect": "guest-notice-board"
     }
-  ]
+  ],
+  "guestHouse": {
+    "buildingKey": "guest house",
+    "name": {
+      "en": "Guest House",
+      "uk": "Гостьовий будинок"
+    },
+    "caretakerKey": "caretaker",
+    "queueCapacity": 1,
+    "visitIntervalSeconds": {
+      "min": 1200,
+      "max": 1800
+    },
+    "caretaker": {
+      "intervalSeconds": 10,
+      "visitReductionFraction": 0.25,
+      "reserveUnitsPerCycle": 2,
+      "pantryReserveUnitsPerCycle": 3
+    },
+    "pantryDiscountFraction": 0.1,
+    "noticeBoardVisitReductionFraction": 0.2,
+    "upgrades": {
+      "secondRoom": "guest second room",
+      "pantry": "guest pantry",
+      "noticeBoard": "guest notice board"
+    },
+    "guests": [
+      {
+        "key": "guest.wandering-master",
+        "name": {
+          "en": "The Master",
+          "uk": "Майстер"
+        },
+        "inheritedEventTitle": "The Master",
+        "services": [
+          {
+            "key": "lesson.evasion",
+            "name": {
+              "en": "learn evasion",
+              "uk": "навчитися ухилятися"
+            },
+            "cost": {
+              "cured meat": 100,
+              "fur": 100,
+              "torch": 1
+            },
+            "action": "grant-perk",
+            "grants": "evasive"
+          },
+          {
+            "key": "lesson.precision",
+            "name": {
+              "en": "learn precision",
+              "uk": "навчитися точності"
+            },
+            "cost": {
+              "cured meat": 100,
+              "fur": 100,
+              "torch": 1
+            },
+            "action": "grant-perk",
+            "grants": "precise"
+          },
+          {
+            "key": "lesson.force",
+            "name": {
+              "en": "learn force",
+              "uk": "навчитися сили"
+            },
+            "cost": {
+              "cured meat": 100,
+              "fur": 100,
+              "torch": 1
+            },
+            "action": "grant-perk",
+            "grants": "barbarian"
+          }
+        ]
+      },
+      {
+        "key": "guest.scout",
+        "name": {
+          "en": "The Scout",
+          "uk": "Розвідниця"
+        },
+        "inheritedEventTitle": "The Scout",
+        "services": [
+          {
+            "key": "service.map",
+            "name": {
+              "en": "buy map",
+              "uk": "купити мапу"
+            },
+            "cost": {
+              "fur": 200,
+              "scales": 10
+            },
+            "action": "apply-map"
+          },
+          {
+            "key": "lesson.scouting",
+            "name": {
+              "en": "learn scouting",
+              "uk": "навчитися розвідки"
+            },
+            "cost": {
+              "fur": 1000,
+              "scales": 50,
+              "teeth": 20
+            },
+            "action": "grant-perk",
+            "grants": "scout"
+          }
+        ]
+      }
+    ]
+  }
 };

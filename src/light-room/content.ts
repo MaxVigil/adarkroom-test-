@@ -1,5 +1,10 @@
 import type { z } from 'zod';
 import type { LightRoomOverlaySchema } from './schema.js';
+import {
+  guestCaretakerProfession,
+  guestHouseBuilding,
+  guestHouseUpgrades,
+} from './guest-house.js';
 
 const GDD = 'https://maxvigil.notion.site/Light-Room-Game-Design-Document-3b581cc4e8c281ebb8dbe7f693972701';
 const LOGGER_DECISION = 'https://maxvigil.notion.site/3b581cc4e8c2818685f0ff1c7ac69c1d';
@@ -29,7 +34,7 @@ export const lightRoomContent = {
       en: "the logger's hut stands at the forest edge",
       uk: 'хатина лісорубів стоїть на краю лісу',
     },
-  }],
+  }, guestHouseBuilding],
   professions: [{
     id: 'profession.logger',
     origin: 'new',
@@ -39,12 +44,12 @@ export const lightRoomContent = {
     requiresBuildingId: 'building.logger-hut',
     maximumWorkers: 2,
     intervalSeconds: 10,
-    flows: { 'resource.wood': 4 },
+    flows: { 'resource.wood': 2 },
     modifiers: [{
       when: { kind: 'has-upgrade', upgradeId: 'upgrade.iron-axes' },
-      flows: { 'resource.wood': 8 },
+      flows: { 'resource.wood': 3 },
     }],
-  }],
+  }, guestCaretakerProfession],
   professionPatches: [{
     origin: 'modified',
     decisionRef: GDD,
@@ -63,6 +68,21 @@ export const lightRoomContent = {
     name: { en: 'iron axes', uk: 'залізні сокири' },
     affectsId: 'profession.logger',
     unlockWhen: { kind: 'has-resource', resourceId: 'resource.iron' },
-    acquisitionStatus: 'pending-design',
-  }],
+    acquisitionStatus: 'approved',
+    cost: {
+      kind: 'fixed',
+      amounts: { 'resource.wood': 300, 'resource.leather': 50, 'resource.iron': 40 },
+    },
+    craftLocation: 'workshop',
+    requiresBuildingIds: ['building.logger-hut', 'building.workshop'],
+    availableMessage: {
+      en: 'the workshop can fit the loggers with iron axes',
+      uk: 'у майстерні можна зробити залізні сокири для лісорубів',
+    },
+    builtMessage: {
+      en: 'the new axes bite deeper, but careful work still takes time',
+      uk: 'нові сокири рубають глибше, але добра робота все одно потребує часу',
+    },
+    effect: 'logger-output',
+  }, ...guestHouseUpgrades],
 } satisfies z.input<typeof LightRoomOverlaySchema>;

@@ -9,6 +9,13 @@
     return value[locale] || value.en;
   };
 
+  var runtimeConditionMet = function(condition) {
+    if(!condition) return true;
+    if(condition.kind === 'has-building') return $SM.get('game.buildings["' + condition.key + '"]', true) > 0;
+    if(condition.kind === 'has-upgrade') return Boolean($SM.get('game.upgrades["' + condition.key + '"]', true));
+    return $SM.get('stores["' + condition.key + '"]', true) > 0;
+  };
+
   for(var i = 0; i < LightRoomData.buildings.length; i++) {
     var definition = LightRoomData.buildings[i];
     Room.Craftables[definition.key] = {
@@ -19,9 +26,38 @@
       buildMsg: localize(definition.builtMessage),
       type: 'building',
       requiresBuilding: definition.requiresBuilding,
+      isAvailable: (function(condition) {
+        return function() { return runtimeConditionMet(condition); };
+      })(definition.unlockWhen),
       cost: (function(cost) {
         return function() { return Object.assign({}, cost); };
       })(definition.cost)
+    };
+  }
+
+  for(var upgradeIndex = 0; upgradeIndex < LightRoomData.upgrades.length; upgradeIndex++) {
+    var upgrade = LightRoomData.upgrades[upgradeIndex];
+    if(upgrade.acquisitionStatus !== 'approved') continue;
+    Room.Craftables[upgrade.key] = {
+      name: localize(upgrade.name),
+      button: null,
+      maximum: 1,
+      availableMsg: localize(upgrade.availableMessage),
+      buildMsg: localize(upgrade.builtMessage),
+      maxMsg: localize(upgrade.builtMessage),
+      type: upgrade.craftLocation === 'workshop' ? 'settlement upgrade' : 'building upgrade',
+      cost: (function(cost) {
+        return function() { return Object.assign({}, cost); };
+      })(upgrade.cost),
+      isAvailable: (function(definition) {
+        return function() {
+          if(!runtimeConditionMet(definition.unlockWhen)) return false;
+          for(var i = 0; i < definition.requiresBuildings.length; i++) {
+            if($SM.get('game.buildings["' + definition.requiresBuildings[i] + '"]', true) <= 0) return false;
+          }
+          return true;
+        };
+      })(upgrade)
     };
   }
 
@@ -68,6 +104,7 @@
   window.LightRoom = {
     data: LightRoomData,
     localize: localize,
+    conditionMet: runtimeConditionMet,
     collectIncomeBonus: function(source) {
       var income = Outside._INCOME[source];
       var workers = Outside.getWorkerCount(source) || 0;

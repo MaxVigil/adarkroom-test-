@@ -473,6 +473,9 @@ var StateManager = {
 			return $SM.get('stores["'+name+'"]', true);
 		case 'building':
 			return $SM.get('game.buildings["'+name+'"]', true);
+		case 'settlement upgrade':
+		case 'building upgrade':
+			return $SM.get('game.upgrades["'+name+'"]', true) ? 1 : 0;
 		}
 	},
 

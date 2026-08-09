@@ -64,7 +64,18 @@ export const LightRoomUpgradeSchema = OverlayIdentitySchema.extend({
   id: StableIdSchema,
   affectsId: StableIdSchema,
   unlockWhen: UnlockConditionSchema,
-  acquisitionStatus: z.literal('pending-design'),
+  acquisitionStatus: z.enum(['pending-design', 'approved']),
+  cost: FixedCostSchema.optional(),
+  craftLocation: z.enum(['workshop', 'building']).optional(),
+  requiresBuildingIds: z.array(StableIdSchema).default([]),
+  availableMessage: LocalizedTextSchema.optional(),
+  builtMessage: LocalizedTextSchema.optional(),
+  effect: z.enum([
+    'logger-output',
+    'guest-second-room',
+    'guest-pantry',
+    'guest-notice-board',
+  ]).optional(),
 });
 
 export const LightRoomOverlaySchema = z.object({

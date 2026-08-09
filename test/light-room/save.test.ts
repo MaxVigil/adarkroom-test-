@@ -28,7 +28,7 @@ describe('Light Room catalog save migration', () => {
     });
   });
 
-  it('preserves pending Guest House visits and maps its future runtime aliases', () => {
+  it('preserves the complete playable Guest House state and maps runtime aliases', () => {
     expect(migrateLightRoomState({
       game: {
         buildings: { 'guest house': 1 },
@@ -36,6 +36,11 @@ describe('Light Room catalog save migration', () => {
         guestHouse: {
           rooms: [{ visitId: 'master-1', guestId: 'guest.wandering-master' }],
           queue: [{ visitId: 'scout-1', guestId: 'guest.scout' }],
+          waiting: [{ visitId: 'master-2', guestId: 'guest.wandering-master' }],
+          reserved: { 'master-1': { 'resource.fur': 20 } },
+          nextVisitSeconds: 720,
+          nextGuestId: 'guest.scout',
+          arrivalCursor: 3,
         },
       },
     })).toMatchObject({
@@ -44,6 +49,11 @@ describe('Light Room catalog save migration', () => {
       guestHouse: {
         rooms: [{ visitId: 'master-1', guestId: 'guest.wandering-master' }],
         queue: [{ visitId: 'scout-1', guestId: 'guest.scout' }],
+        waiting: [{ visitId: 'master-2', guestId: 'guest.wandering-master' }],
+        reserved: { 'master-1': { 'resource.fur': 20 } },
+        nextVisitSeconds: 720,
+        nextGuestId: 'guest.scout',
+        arrivalCursor: 3,
       },
     });
   });
